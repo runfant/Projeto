@@ -1,0 +1,226 @@
+{% case section.settings.collection_results_per_row1 %}
+  {% when '2' %}
+  	{%- assign grid_item_width = 'col-6' -%}
+	{%- assign row = 'two-items' -%}
+  {% when '3' %}
+  	{%- assign grid_item_width = 'col-6 col-md-4' -%}
+	{%- assign row = 'three-items' -%}
+  {% when '4' %}
+  	{%- assign grid_item_width = 'col-6 col-md-4 col-lg-3' -%}
+	{%- assign row = 'four-items' -%}
+  {% when '5' %}
+  	{%- assign grid_item_width = 'col-6 col-md-4 col-lg-3 col5' -%}
+	{%- assign row = 'five-items' -%}
+{% endcase %}
+
+<div class="suppermarket-featured-products featured-products" id="featured-products-{{section.id}}" data-featured-products>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">               
+                {% if section.settings.featured_products_title != blank %}
+                <div class="widget-title not-before style-3">   
+                    <h3 class="box-title">
+                        <span class="title"> 
+                            {% include 'multilang' with section.settings.featured_products_title %}
+                        </span>
+                    </h3>
+
+                    {% if section.settings.countdown != blank %}
+                    <div class="countdown countdown-style-market">
+                        {% include 'multilang' with section.settings.text_countdown %}
+                        <div class="countdown-item countdown-suppermarket" data-countdown-normal data-countdown-value="{{ section.settings.countdown }}"></div>
+                    </div>        
+                    {% endif %}
+
+                    {% if section.settings.view_all != blank %}
+                    <a class="view_all" href="{{ section.settings.link_view_all }}" title="{{ section.settings.view_all }}">
+                        {% include 'multilang' with section.settings.view_all %}
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="widget-product suppermarket-widget-product">
+                    <div class="products-grid row {{ row }}" data-row="{{ section.settings.collection_results_per_row1 }}">
+                        {% for product in collections[section.settings.show_slider_featured_collection].products limit:section.settings.slider_featured_limit_all %}
+                        <div class="grid-item {{ grid_item_width }}{% if settings.product_image_border %} grid-item-border{% endif %}">
+                            {% include 'suppermarket-product-grid-item' %}
+                        </div>
+
+                        {% else %}
+                        {% for product in (1..section.settings.slider_featured_limit_all) %}
+                        <div class="grid-item {{ grid_item_width }}">
+                            <div class="grid-view-item no-product">
+                                <div class="product-top">
+                                    <div class="not_img">
+                                        Product Img
+                                    </div>
+                                </div>
+
+                                <div class="product-bottom">
+                                    <div class="product-title">
+                                        <span>
+                                        Your product's name
+                                        </span>`
+                                    </div>
+
+                                    <div class="price-box">
+                                        <span> $250.00 </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    {% assign margin_bottom =  section.settings.margin_bottom %} 
+
+    @media (max-width: 767px) {
+        #featured-products-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+        #featured-products-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_tab }}px;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        #featured-products-{{section.id}} {
+            margin-bottom: {{ margin_bottom }}px;
+        }
+    }	
+</style>
+
+{% schema %}
+    {
+        "name": "Featured Products",
+        "class": "suppermarket-featured-products-sections",
+        "settings": [            
+            {
+                "type": "header",
+                "content": "Widget Title"
+            },
+            {
+                "type": "text",
+                "id": "featured_products_title",
+                "label": "Title",
+                "default": "Flash Deals",
+                "info": "======================"
+            },
+            {
+                "type": "text",
+                "id": "text_countdown",
+                "label": "Text Countdown",
+                "default": "Ends in:"
+            },
+            {
+                "type": "textarea",
+                "id": "countdown",
+                "label": "TCountdown",
+                "default" : "2020/01/7 0:0:00",
+                "info": "======================"
+            },
+            {
+                "type" : "text",
+                "id" : "view_all",
+                "label" : "Text view all"
+            },
+            {
+                "type" : "url",
+                "label" : "Link view all",
+                "id" : "link_view_all"
+            },
+            {
+                "type": "header",
+                "content": "Widget Product"
+            },
+            {
+                "type": "collection",
+                "id": "show_slider_featured_collection",
+                "label": "Collection to use"
+            },
+            {
+                "type": "range",
+                "id": "slider_featured_limit_all",
+                "label": "Number of new products to show",
+                "min": 3,
+                "max": 20,
+                "step": 1,
+                "default": 10
+            },
+            {
+                "type": "select",
+                "id": "collection_results_per_row1",
+                "label": "Products per row",
+                "options": [
+                    {
+                        "value": "2",
+                        "label": "2"
+                    },
+                    {
+                        "value": "3",
+                        "label": "3"
+                    },
+                    {
+                        "value": "4",
+                        "label": "4"
+                    },
+                    {
+                        "value": "5",
+                        "label": "5"
+                    }
+                ],
+                "default": "5"
+            },
+            {
+                "type": "header",
+                "content": "Margin Bottom:"
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_mb",
+                "label": "Mobile",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_tab",
+                "label": "Tablet",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },             
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "label": "Margin Bottom",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            }	  
+        ],
+        "presets": [
+            {
+                "name": "Featured Products",
+                "category": "Supermarket"     
+            }
+        ]
+    }
+{% endschema %}
+
+

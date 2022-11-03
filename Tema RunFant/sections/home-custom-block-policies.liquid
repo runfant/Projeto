@@ -1,0 +1,214 @@
+<section class="policies-block" id="home-policies-{{ section.id }}">
+  <div class="{% if section.settings.layout == 'default' %}container{% elsif section.settings.layout == 'full' %}container-fluid{% else %}container-padd60{% endif %}">
+    <div class="bg-policies-block">
+      <div class="row policies-slider" {% if section.blocks.size > 1 %}data-policies-slider{% endif %} data-row="{{ section.blocks.size }}">      
+        {% for block in section.blocks %}
+
+        {% case section.blocks.size %}
+        {% when 1 %}
+        {%- assign column_size = 'col-12' -%}
+        {% when 2 %}
+        {%- assign column_size = 'col-12 col-md-6' -%}
+        {% when 3 %}
+        {%- assign column_size = 'col-12 col-md-6 col-lg-4' -%}
+        {% when 4 %}
+        {%- assign column_size = 'col-12 col-md-6 col-lg-4 col-xl-3' -%}
+        {% endcase %}
+
+        <div class="policy-item {{ column_size }}">
+          <a href="{{ block.settings.link }}" title="">
+            {% if block.settings.icon != blank %}
+            <span class="policy-icon">
+              {{ block.settings.icon }}
+            </span>
+            {% endif %}
+
+            <span class="policy-text">
+              {% include 'multilang' with block.settings.text %}
+            </span>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>    
+  </div>
+</section>
+
+<style>
+    @media (max-width: 767px) {
+        #home-policies-{{ section.id }} {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+        #home-policies-{{ section.id }} {
+            margin-bottom: {{ section.settings.margin_bottom_tab }}px;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        #home-policies-{{ section.id }} {
+            margin-bottom: {{ section.settings.margin_bottom }}px;
+        }
+    }
+
+    {% unless section.settings.display_padding %}
+     #home-policies-{{ section.id }} .bg-policies-block {
+        background-color: {{ section.settings.bg_color }};
+     }
+    {% endunless %}
+    
+    #home-policies-{{ section.id }} {
+        background-color: {{ section.settings.bg_color_block }};
+    }
+
+    #home-policies-{{ section.id }} {
+        border-top: 1px solid {{ section.settings.border_block }};      
+    }
+    
+    #home-policies-{{ section.id }} .policy-item a {
+        border: 1px solid {{ section.settings.border }};
+        background-color: {{ section.settings.bg_color }};
+        color: {{ section.settings.color }};
+        {% if section.blocks.size == 1 %}
+        padding: 18px 0 16px;
+        {% endif %}
+    }
+    
+    #home-policies-{{ section.id }} .policy-text:before {
+        background-color: {{ section.settings.color }};
+    }
+
+    {% if section.blocks.size == 1 %}
+        #home-policies-{{ section.id }} .policy-item .policy-text:before {
+            display: none;
+        }
+    {% endif %}
+</style>
+
+{% schema %}
+    {
+        "name": "Policies Block",
+        "max_blocks": 4,
+        "class": "home-custom-block-policies-sections",		
+        "settings": [
+            {
+                "type": "select",
+                "id": "layout",
+                "label": "Policies Block Layout:",
+                "options": [
+                    {
+                        "value": "default",
+                        "label": "Default"
+                    },
+                    {
+                        "value": "padd_60",
+                        "label": "Boxed"
+                    },
+                    {
+                        "value": "full",
+                        "label": "Full Width"
+                    }
+                ],
+                "default": "default"
+            },
+            {
+                "type": "checkbox",
+                "id": "display_padding",
+                "label": "Display padding between banner blocks",
+                "default": true
+            },
+            {
+                "type" : "color",
+                "id": "bg_color_block",
+                "label" : "Background Block",
+                "default" : "#ebebeb"
+            },
+            {
+                "type": "color",
+                "id": "border_block",
+                "label" : "Border Block",
+                "default" : "#fafafa"
+            },
+            {
+                "type" : "color",
+                "id" : "color",
+                "label" : "Text color",
+                "default" : "#232323"
+            },
+            {
+                "type" : "color",
+                "id": "bg_color",
+                "label" : "Background color column",
+                "default" : "#fafafa"
+            },
+            {
+                "type" : "color",
+                "id" : "border",
+                "label" : "Border color",
+                "default" : "#fafafa"
+            },
+            {
+                "type": "header",
+                "content": "Margin Bottom:"
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_mb",
+                "label": "Mobile",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 40
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_tab",
+                "label": "Tablet",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 40
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "label": "Margin Bottom Pc",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 55
+            }	
+        ],
+        "blocks" : [
+            {
+                "type" : "Text",
+                "name" : "Text",
+                "settings":[
+                    {
+                        "type": "text",
+                        "id" : "icon",
+                        "label" : "Icon",
+                        "info" : "[Find your Icon](https://fontawesome.com/v4.7.0/icons/)."
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "text",
+                        "label" : "text",
+                        "default" : "Free Shipping on all orders *"
+                    },
+                    {
+                        "type" : "url",
+                        "id" : "link",
+                        "label" : "Link"
+                    }
+                ]
+            }
+        ],
+        "presets": [{
+            "name": "Policies Block",
+            "category": "text"
+        }]
+    }
+{% endschema %}

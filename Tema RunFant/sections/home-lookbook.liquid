@@ -1,0 +1,421 @@
+{% if section.blocks.size > 0 %}
+<div class="home-lookbook" id="home-lookbook-{{section.id}}">
+    <div class="container">
+        {% if section.settings.widget_title != blank %}
+        <div class="widget-title{% if section.settings.title_style == 'style_2' %} not-before{% endif %}">
+            <h3 class="box-title">
+                <span class="title">
+                    {% include 'multilang' with section.settings.widget_title %}
+                </span>
+            </h3>
+            {% if section.settings.widget_des != blank %}
+            <p>
+                {% include 'multilang' with section.settings.widget_des %}
+            </p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="lookbook-content">
+            <div class="lookbook-custom">
+                <div class="row">
+                    {% for block in section.blocks %}
+                    <div class="item col-12 col-md-6">
+                        <div class="images-contain">
+                        {% if block.settings.image_slide != blank %}
+
+                        {%- assign img_url = block.settings.image_slide | img_url: 'master' -%}
+
+                        <a href="{{ block.settings.link }}" class="slide-image">
+                            <img data-src="{{ img_url }}" {%include 'lazyload' %} alt="{{ block.settings.image_slide.alt | default: shop.name }}">
+                        </a>
+
+                        {% else %}
+
+                        <div class="not_img">
+                            570 x 610px
+                        </div>
+                        {% endif %}
+
+                        {% if block.settings.lb_product_1 != blank %}
+                        <div class="select-icon lb-icon-1-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_1 }}" style="top:{{ block.settings.top_position_1 }}%; left:{{ block.settings.left_position_1 }}%;">
+                            <span class="glyphicon"></span>
+                        </div>
+                        {% endif %}
+
+                        {% if block.settings.lb_product_2 != blank %}
+                        <div class="select-icon lb-icon-2-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_2 }}" style="top:{{ block.settings.top_position_2 }}%; left:{{ block.settings.left_position_2 }}%;">
+                            <span class="glyphicon"></span>
+                        </div>
+                        {% endif %}
+
+                        {% if block.settings.lb_product_3 != blank %}
+                        <div class="select-icon lb-icon-3-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_3 }}" style="top:{{ block.settings.top_position_3 }}%; left:{{ block.settings.left_position_3 }}%;">
+                            <span class="glyphicon"></span>
+                        </div>
+                        {% endif %}
+
+                        {% if block.settings.lb_product_4 != blank %}
+                        <div class="select-icon lb-icon-4-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_4 }}" style="top:{{ block.settings.top_position_4 }}%; left:{{ block.settings.left_position_4 }}%;">
+                            <span class="glyphicon"></span>
+                        </div>
+                        {% endif %}
+
+                        <style type="text/css">
+                            #home-lookbook-{{section.id}} .lb-icon-1-{{ block.id }} .glyphicon {
+                                background-color: {{ block.settings.dots_bg_color_1 }};
+                            }
+
+                            #home-lookbook-{{section.id}} .lb-icon-1-{{ block.id }} .glyphicon:before,
+                            #home-lookbook-{{section.id}} .lb-icon-1-{{ block.id }} .glyphicon:after {
+                                background-color: {{ block.settings.dots_color_1 }};
+                            }
+
+                            #home-lookbook-{{section.id}} .lb-icon-1-{{ block.id }}:before{
+                                color: {{ block.settings.dots_shadow_color_1 }};
+                            }
+
+                            #home-lookbook-{{section.id}} .lb-icon-2-{{ block.id }} .glyphicon {
+                                background-color: {{ block.settings.dots_bg_color_2 }};
+                            }
+
+                            #home-lookbook-{{section.id}} .lb-icon-2-{{ block.id }} .glyphicon:before,
+                            #home-lookbook-{{section.id}} .lb-icon-2-{{ block.id }} .glyphicon:after {
+                                background-color: {{ block.settings.dots_color_2 }};
+                            }
+
+                            #home-lookbook-{{section.id}} .lb-icon-2-{{ block.id }}:before{
+                                color: {{ block.settings.dots_shadow_color_2 }};
+                            }
+
+                            #home-lookbook-{{section.id}} .lb-icon-3-{{ block.id }} .glyphicon {
+                                background-color: {{ block.settings.dots_bg_color_3 }};
+                            }
+
+                            #home-lookbook-{{section.id}} .lb-icon-3-{{ block.id }} .glyphicon:before,
+                            #home-lookbook-{{section.id}} .lb-icon-3-{{ block.id }} .glyphicon:after {
+                                background-color: {{ block.settings.dots_color_3 }};
+                            }
+
+                            #home-lookbook-{{section.id}} .lb-icon-3-{{ block.id }}:before{
+                                color: {{ block.settings.dots_shadow_color_3 }};
+                            }
+
+                            #home-lookbook-{{section.id}} .lb-icon-4-{{ block.id }} .glyphicon {
+                                background-color: {{ block.settings.dots_bg_color_4 }};
+                            }
+
+                            #home-lookbook-{{section.id}} .lb-icon-4-{{ block.id }} .glyphicon:before,
+                            #home-lookbook-{{section.id}} .lb-icon-4-{{ block.id }} .glyphicon:after {
+                                background-color: {{ block.settings.dots_color_4 }};
+                            }
+
+                            #home-lookbook-{{section.id}} .lb-icon-4-{{ block.id }}:before{
+                                color: {{ block.settings.dots_shadow_color_4 }};
+                            }
+                        </style>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+  </div>
+</div>
+
+<style>
+    {% assign margin_bottom =  section.settings.margin_bottom %}
+    @media (max-width: 767px) {
+        #home-lookbook-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+        #home-lookbook-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_tab }}px;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        #home-lookbook-{{section.id}} {
+            margin-bottom: {{ margin_bottom }}px;
+        }
+    }
+</style>
+{% endif %}
+
+
+{% schema %}
+    {
+        "name": "Home Lookbook",
+        "class": "home-lookbook-sections",
+        "settings": [
+            {
+                "type": "header",
+                "content": "Header"
+            },
+            {
+                "type": "text",
+                "id": "widget_title",
+                "label": "Widget Title"
+            },
+            {
+                "type" : "textarea",
+                "id" : "widget_des",
+                "label" : "Description"
+            },
+            {
+                "type": "select",
+                "id": "title_style",
+                "label": "Title Style:",
+                "options": [
+                    {
+                        "value": "style_1",
+                        "label": "Style 1"
+                    },
+                    {
+                        "value": "style_2",
+                        "label": "Style 2"
+                    }
+                ],
+                "default": "style_1"
+            },
+            {
+                "type": "header",
+                "content": "Margin Bottom:"
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_mb",
+                "label": "Mobile",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_tab",
+                "label": "Tablet",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "label": "Desktop",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            }
+        ],
+        "blocks": [
+            {
+                "type": "image",
+                "name": "Image",
+                "settings":[
+                    {
+                        "type": "image_picker",
+                        "id": "image_slide",
+                        "label" : "Select Image",
+                        "info": "Recommended Image: Width x Height (270 x 380)px"
+                    },
+                    {
+                        "type": "header",
+                        "content": "Lookbook Product",
+                        "info" : "======================="
+                    },
+                    {
+                        "type" : "header",
+                        "content" : "Product 1"
+                    },
+                    {
+                        "type" : "product",
+                        "id" : "lb_product_1",
+                        "label" : "Select Product"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "top_position_1",
+                        "label" : "Top Position",
+                        "default" : "10",
+                        "info" : "Unit %"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "left_position_1",
+                        "label" : "Left Position",
+                        "default" : "10",
+                        "info" : "Unit %"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "dots_color_1",
+                        "label" : "Select Icon Color",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "dots_bg_color_1",
+                        "label" : "Select Icon Background color",
+                        "default" : "#323232"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "dots_shadow_color_1",
+                        "label" : "Select Icon Shadow Color",
+                        "default" : "#fff",
+                        "info" : "======================="
+                    },
+
+                    {
+                        "type" : "header",
+                        "content" : "Product 2"
+                    },
+                    {
+                        "type" : "product",
+                        "id" : "lb_product_2",
+                        "label" : "Select Product"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "top_position_2",
+                        "label" : "Top Position",
+                        "default" : "10",
+                        "info" : "Unit %"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "left_position_2",
+                        "label" : "Left Position",
+                        "default" : "10",
+                        "info" : "Unit %"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "dots_color_2",
+                        "label" : "Select Icon Color",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "dots_bg_color_2",
+                        "label" : "Select Icon Background color",
+                        "default" : "#323232"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "dots_shadow_color_2",
+                        "label" : "Select Icon Shadow Color",
+                        "default" : "#fff",
+                        "info" : "======================="
+                    },
+                    {
+                        "type" : "header",
+                        "content" : "Product 3"
+                    },
+                    {
+                        "type" : "product",
+                        "id" : "lb_product_3",
+                        "label" : "Select Product"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "top_position_3",
+                        "label" : "Top Position",
+                        "default" : "10",
+                        "info" : "Unit %"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "left_position_3",
+                        "label" : "Left Position",
+                        "default" : "10",
+                        "info" : "Unit %"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "dots_color_3",
+                        "label" : "Select Icon Color",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "dots_bg_color_3",
+                        "label" : "Select Icon Background color",
+                        "default" : "#323232"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "dots_shadow_color_3",
+                        "label" : "Select Icon Shadow Color",
+                        "default" : "#fff",
+                        "info" : "======================="
+                    },
+
+                    {
+                        "type" : "header",
+                        "content" : "Product 4"
+                    },
+                    {
+                        "type" : "product",
+                        "id" : "lb_product_4",
+                        "label" : "Select Product"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "top_position_4",
+                        "label" : "Top Position",
+                        "default" : "10",
+                        "info" : "Unit %"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "left_position_4",
+                        "label" : "Left Position",
+                        "default" : "10",
+                        "info" : "Unit %"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "dots_color_4",
+                        "label" : "Select Icon Color",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "dots_bg_color_4",
+                        "label" : "Select Icon Background color",
+                        "default" : "#323232"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "dots_shadow_color_4",
+                        "label" : "Select Icon Shadow Color",
+                        "default" : "#fff",
+                        "info" : "======================="
+                    }
+                ]
+            }
+
+        ],
+        "presets": [
+            {
+                "name": "Home Lookbook",
+                "category": "Lookbook",
+                "blocks": [
+                    {
+                        "type": "image"
+                    },
+                    {
+                        "type": "image"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

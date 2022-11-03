@@ -1,0 +1,172 @@
+<section class="home-store-info" id="home-store-info-{{ section.id }}">
+    <div class="{% if section.settings.layout == 'default' %}container{% elsif section.settings.layout == 'full' %}container-fluid{% else %}container-padd60{% endif %}">
+        <div class="row store-slider">
+            {% for block in section.blocks %}
+
+            {% case section.blocks.size %}
+                {% when 1 %}
+                    {%- assign column_size = 'col-12' -%}
+                {% when 2 %}
+                    {%- assign column_size = 'col-12 col-sm-6' -%}
+                {% when 3 %}
+                    {%- assign column_size = 'col-12 col-sm-6 col-md-4' -%}
+                {% when 4 %}
+                    {%- assign column_size = 'col-12 col-sm-6 col-md-4 col-xl-3' -%}
+            {% endcase %}
+
+            <div class="{{ column_size }} store-item">
+                <div class="inner">
+                    {% if block.settings.icon != blank %}
+                    <span class="store-icon">
+                        {{ block.settings.icon }}
+                    </span>
+                    {% endif %}
+
+                    {% if block.settings.title != blank %}
+                    <h3 class="store-title">
+                        {% include 'multilang' with block.settings.title %}
+                    </h3>
+                    {% endif %}
+
+                    {% if block.settings.text != blank %}
+                    <p class="store-text">
+                        {% include 'multilang' with block.settings.text %}
+                    </p>
+                    {% endif %}             
+                </div>
+            </div>
+            {% endfor %}
+        </div>    
+    </div>
+</section>
+
+<style>
+    @media (max-width: 767px) {
+        #home-store-info-{{ section.id }} {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+        #home-store-info-{{ section.id }} {
+            margin-bottom: {{ section.settings.margin_bottom_tab }}px;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        #home-store-info-{{ section.id }} {
+            margin-bottom: {{ section.settings.margin_bottom }}px;
+        }
+    }
+    
+    #home-store-info-{{ section.id }} {
+        border-color: {{ section.settings.border_block }};
+    }
+
+    #home-store-info-{{ section.id }} .store-item {
+        border-color: {{ section.settings.border_item }};
+    }
+</style>
+
+{% schema %}
+    {
+        "name": "Store Info",
+        "max_blocks": 4,
+        "class": "home-store-info-sections",		
+        "settings": [
+            {
+                "type": "select",
+                "id": "layout",
+                "label": "Layout:",
+                "options": [
+                    {
+                        "value": "default",
+                        "label": "Default"
+                    },
+                    {
+                        "value": "padd_60",
+                        "label": "Boxed"
+                    },
+                    {
+                        "value": "full",
+                        "label": "Full Width"
+                    }
+                ],
+                "default": "default"
+            },
+            {
+                "type": "color",
+                "id": "border_block",
+                "label" : "Border Block",
+                "default" : "#e0e0e0"
+            },
+            {
+                "type": "color",
+                "id": "border_item",
+                "label" : "Border Item",
+                "default" : "#e3e3e3"
+            }, 
+            {
+                "type": "header",
+                "content": "Margin Bottom:"
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_mb",
+                "label": "Mobile",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 40
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_tab",
+                "label": "Tablet",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 40
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "label": "Margin Bottom Pc",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 55
+            }	
+        ],
+        "blocks" : [
+            {
+                "type" : "Text",
+                "name" : "Text",
+                "settings":[
+                    {
+                        "type": "text",
+                        "id" : "icon",
+                        "label" : "Icon",
+                        "info" : "[Find your Icon](https://fontawesome.com/v4.7.0/icons/)."
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "title",
+                        "label" : "Heading",
+                        "default" : "Worldwide Delivery"
+                    },
+                    {
+                        "type" : "textarea",
+                        "id" : "text",
+                        "label" : "Descriptions",
+                        "default" : "Metus tellus multricies a quam sit amet lorem diam libero de cosmopolis."
+                    }                
+                ]
+            }
+        ],
+        "presets": [{
+            "name": "Store Info",
+            "category": "text"
+        }]
+    }
+{% endschema %}

@@ -1,0 +1,633 @@
+{% include 'style-navigation-supermarket' %}
+
+<div class="wrapper-navigation" data-sticky-pc>
+    {% if section.settings.display_fixtop_menu and section.settings.logo_fix != blank %}
+    <div class="header-logo logo-fixed">
+        <a class="logo-img" href="/" title="Logo">
+            <img data-src="{{ section.settings.logo_fix | img_url: 'master' }}" 
+                src="{{ section.settings.logo_fix | img_url: 'master' }}"
+                alt="{{ section.settings.logo_fix.alt | default: shop.name }}" itemprop="logo" class="lazyautosizes lazyloaded" data-sizes="auto">
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="main-menu jas-mb-style">
+        <div class="container">
+            <div class="mb-area">
+                {% if section.settings.display_vertical_menu %}
+                <div class="wrapper-left">                        
+                    <div class="vertical-menu">
+                        <div class="categories-title">
+                            <a href="#" class="icon-nav">
+                                <span class="icon-line"></span>
+                            </a>
+
+                            {% if section.settings.categories_title != blank %}
+                            <h3 class="title">
+                                {% include 'multilang' with section.settings.categories_title %}                               
+                            </h3>
+                            {% endif %}
+
+                            {% if section.settings.view_all != blank %}
+                            <a class="view_all" href="{{ section.settings.link_view_all }}" title="{{ section.settings.view_all }}">
+                                {% include 'multilang' with section.settings.view_all %}
+                            </a>
+                            {% endif %}
+                        </div>
+
+                        <nav class="nav-bar" role="navigation">
+                            {% include 'supermarket-vertical-menu' %}
+                        </nav>    
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="{% if section.settings.display_vertical_menu %}wrapper-right{% else %}wrapper-full{% endif %}">
+                    <div class="horizontal-menu">
+                        <nav class="nav-bar" role="navigation">
+                            {% include 'site-nav' %}
+                        </nav>
+
+                        {% if section.settings.fb_like_code_text != blank %}
+                        <div class="fb-like-code">
+                            <a href="{{ section.settings.social_facebook_link }}" title="Facebook" target="_blank">            
+                                <i class="fa fa-facebook-square fa-lg" aria-hidden="true"></i>   
+                                {% include 'multilang' with section.settings.fb_like_code_text %}                                 
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>                      
+                </div>                
+            </div>
+        </div>
+    </div>
+
+    {% if section.settings.display_fixtop_menu %}
+    <div class="fixed-right-menu">
+        <div class="search-fixed">
+            <a href="#" title="Search Icon" class="icon-search" data-search-mobile-toggle>
+                {% include 'icon-search' %}
+            </a>
+        </div>
+        
+        <div class="cart-fixed cart-icon" data-cart-header-supermarket>             
+            <a href="#" title="Cart Icon" data-cart-toggle>
+                {% include 'icon-cart' %}
+
+                <span class="cartCount" data-cart-count>
+                    {{ cart.item_count }}
+                </span>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    window.fixtop_menu = {{ section.settings.display_fixtop_menu }};
+</script>
+
+{% schema %}
+    {
+        "name": "Navigation Supermarket",
+        "max_blocks": 15,
+        "settings": [  
+            {
+                "type": "header",
+                "content": "Fixed Top Menu"
+            },
+            {
+                "type": "checkbox",
+                "id": "display_fixtop_menu",
+                "label": "Display Fix Top Menu?",
+                "default": true
+            },
+            {
+                "type": "image_picker",
+                "id": "logo_fix",
+                "label": "Logo image when enable Fixed Top Menu",
+                "info": "95px x 44px recommended"
+            },
+            {
+                "type": "header",
+                "content": "Horizontal Menu"
+            },
+            {
+                "type": "link_list",
+                "id": "horizontal_linklist",
+                "label": "Menu",
+                "default": "main-menu"
+            },
+            {
+                "type": "textarea",
+                "id": "fb_like_code_text",
+                "label": "Facebook Like Text",
+                "default": "Like us"
+            },
+            {
+                "type": "text",
+                "id": "social_facebook_link",
+                "label": "Link Facebook",
+                "info": "https:\/\/facebook.com\/shopify"
+            },
+            {
+                "type": "header",
+                "content": "Navigation Text alignment"
+            },
+
+            {
+                "type": "select",
+                "id": "alignment",
+                "label": "Text alignment",
+                "default": "left",
+                "options": [
+                    {
+                        "value": "left",
+                        "label": "Left"
+                    },
+                    {
+                        "value": "center",
+                        "label": "Center"
+                    },
+                    {
+                        "value": "right",
+                        "label": "Right"
+                    }
+                ]
+            },
+            {
+                "type": "header",
+                "content": "Vertical Menu"
+            },
+            {
+                "type": "checkbox",
+                "id": "display_vertical_menu",
+                "label": "Display Vertical Menu?",
+                "default": true,
+                "info": "================="
+            },
+            {
+                "type": "link_list",
+                "id": "vertical_linklist",
+                "label": "Menu",
+                "default": "main-menu"
+            },            
+            {
+                "type" : "text",
+                "id" : "categories_title",
+                "label" : "Title Categories",
+                "default" : "Categories" 
+            },
+            {
+                "type" : "text",
+                "id" : "view_all",
+                "label" : "Text view all",
+                "default" : "View All" 
+            },
+            {
+                "type" : "url",
+                "label" : "Link view all",
+                "id" : "link_view_all"
+            },
+
+            {
+                "type": "checkbox",
+                "id": "show_menu_at_mb",
+                "label": "Show Vertical Menu at Homepage?",
+                "default": true
+            },
+            {
+                "type" : "color",
+                "id" : "bg_title", 
+                "label" : "Background Categories",
+                "default" : "#f8f8f8"
+            },
+            {
+                "type" : "color",
+                "id" : "color_title",
+                "label" : "Color Title",
+                "default" : "#232323"
+            },
+            {
+                "type" : "color",
+                "id" : "color_view_all",
+                "label" : "Color Text view all",
+                "default" : "#848484"
+            }, 
+            {
+                "type" : "header",
+                "content" : "Settings"
+            },
+            {
+                "type" : "color",
+                "id" : "bg_menu",
+                "label" : "Background Main Menu",
+                "default" : "#fff"
+            },		  
+            {
+                "type" : "color",
+                "id" : "bg_dropdown_menu",
+                "label" : "Background Dropdown and Vertical Menu",
+                "default" : "#fff",
+                "info" : "======================="
+            },
+            {
+                "type" : "color",
+                "id" : "color_menu_lv1",
+                "label" : "Level 1 Menu Color",
+                "default" : "#232323"
+            },
+            {
+                "type" : "color",
+                "id" : "hover_color_mnu_lv1",
+                "label" : "Level 1 Menu color when hover",
+                "default" : "#232323"
+            },
+            {
+                "type" : "text",
+                "id" : "font_size_mnu_lv1",
+                "label" : "Font size Menu level 1",
+                "default" : "12px",
+                "info" : "======================="
+            },
+            {
+                "type" : "color",
+                "id" : "color_menu_lv2",
+                "label" : "Level 2 Menu Color",
+                "default" : "#232323"
+            },
+            {
+                "type" : "color",
+                "id" : "hover_color_mnu_lv2",
+                "label" : "Level 2 Menu color when hover",
+                "default" : "#232323"
+            },
+            {
+                "type" : "text",
+                "id" : "font_size_mnu_lv2",
+                "label" : "Font size Menu level 2",
+                "default" : "12px",
+                "info" : "======================="
+            },
+            {
+                "type" : "color",
+                "id" : "color_menu_lv3",
+                "label" : "Level 3 and Vertical Menu Color",
+                "default" : "#3c3c3c"
+            },
+            {
+                "type" : "color",
+                "id" : "hover_color_mnu_lv3",
+                "label" : "Level 3 Menu color when hover",
+                "default" : "#0688e2"
+            },
+            {
+                "type" : "text",
+                "id" : "font_size_mnu_lv3",
+                "label" : "Font size Menu level 3",
+                "default" : "12px",
+                "info" : "======================="
+            },
+            {
+                "type" : "header",
+                "content" : "Label"
+            },
+            {
+                "type" : "checkbox",
+                "id" : "enable_sale",
+                "label" : "Display Label Sale",
+                "default" : true
+            },
+            {
+                "type" : "text",
+                "id" : "lb_sale",
+                "label" : "Label sale",
+                "default" : "Sale"
+            },
+            {
+                "type" : "textarea",
+                "id" : "sale_item",
+                "label" : "Label Sale Items"
+            },
+            {
+                "type" : "color",
+                "id" : "bg_lb_sale",
+                "label" : "Background color label sale",
+                "default" : "#ef6454"
+            },
+            {
+                "type" : "color",
+                "id" : "color_lb_sale",
+                "label" : "Text Color label sale",
+                "default" : "#fff"
+            },
+            {
+                "type" : "checkbox",
+                "id" : "enable_new",
+                "label" : "Display Label New",
+                "default" : true
+            },
+            {
+                "type" : "text",
+                "id" : "lb_new",
+                "label" : "Label New",
+                "default" : "New"
+            },
+            {
+                "type" : "textarea",
+                "id" : "new_item",
+                "label" : "Label New Items"
+            },
+            {
+                "type" : "color",
+                "id" : "bg_lb_new",
+                "label" : "Background color label New",
+                "default" : "#06bfe2"
+            },
+            {
+                "type" : "color",
+                "id" : "color_lb_new",
+                "label" : "Text Color label New",
+                "default" : "#fff"
+            },
+            {
+                "type" : "checkbox",
+                "id" : "enable_hot",
+                "label" : "Display Label Hot",
+                "default" : true
+            },
+            {
+                "type" : "text",
+                "id" : "lb_hot",
+                "label" : "Label Hot",
+                "default" : "Hot"
+            },
+            {
+                "type" : "textarea",
+                "id" : "hot_item",
+                "label" : "Label Hot Items"
+            },
+            {
+                "type" : "color",
+                "id" : "bg_lb_hot",
+                "label" : "Background color label Hot",
+                "default" : "#ffbb49"
+            },
+            {
+                "type" : "color",
+                "id" : "color_lb_hot",
+                "label" : "Text Color label Hot",
+                "default" : "#fff"
+            },
+            {
+                "type": "header",
+                "content": "Mega Menu"
+            },
+            {
+                "type": "checkbox",
+                "id": "display_megamenu",
+                "label": "Display Mega Menu?",
+                "default": true
+            }
+        ],
+
+        "blocks": [
+            {
+                "type": "style_1",
+                "name": "Style 1",
+                "settings": [
+                    {
+                        "type" : "header",
+                        "content" : "Column Menu"
+                    },
+                    {
+                        "type": "text",
+                        "id": "megamenu_items_1",
+                        "label": "Mega Menu Items for Style 1",
+                        "default": "Catalog",
+                        "info": "Use \"|\" when use language , For ex: Collections | Sammlungen"
+                    },		  		  
+                    {
+                        "type" : "header",
+                        "content" : "Product"
+                    },
+                    {
+                        "type": "text",
+                        "id": "title_featured_product",
+                        "label": "Title Product",
+                        "default" : "Featured Products"
+                    },
+                    {
+                        "type": "product",
+                        "id": "featured_product",
+                        "label": "Product"
+                    },
+                    {
+                        "type" : "header",
+                        "content" : "Banner"
+                    },	  
+                    {
+                        "type": "image_picker",
+                        "id": "banner_first_style_1",
+                        "label": "Upload a new image",
+                        "info": "210px x 337px recommended"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_banner_first_style_1",
+                        "label": "Link image "
+                    }
+                ]
+            },	  
+            {
+                "type": "style_2",
+                "name": "Style 2",
+                "settings": [
+                    {
+                        "type" : "header",
+                        "content" : "Column Menu"
+                    },
+                    {
+                        "type": "text",
+                        "id": "megamenu_items_2",
+                        "label": "Mega Menu Items for Style 2",
+                        "default": "Catalog",
+                        "info": "Use \"|\" when use language , For ex: Collections | Sammlungen "
+                    },
+                    {
+                        "type" : "header",
+                        "content" : "Banner"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "banner_first_style_2",
+                        "label": "Upload a new image 1",
+                        "info": "210px x 165px recommended"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_banner_first_style_2",
+                        "label": "Link image 1 ",
+                        "info": "=============="
+                    },	  
+                    {
+                        "type": "image_picker",
+                        "id": "banner_second_style_2",
+                        "label": "Upload a new image 2",
+                        "info": "210px x 165px recommended"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_banner_second_style_2",
+                        "label": "Link image 2 ",
+                        "info": "=============="
+                    },		  
+                    {
+                        "type": "image_picker",
+                        "id": "banner_third_style_2",
+                        "label": "Upload a new image 3",
+                        "info": "210px x 337px recommended"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_banner_third_style_2",
+                        "label": "Link image 3"
+                    }
+                ]
+            },	  
+            {
+                "type": "style_3",
+                "name": "Style 3",
+                "settings": [		  
+                    {
+                        "type": "text",
+                        "id": "megamenu_items_3",
+                        "label": "Mega Menu Items for Style 3",
+                        "default": "Catalog",
+                        "info": "Use \"|\" when use language , For ex: Collections | Sammlungen "
+                    }
+                ]
+            },	
+            {
+                "type": "style_4",
+                "name": "Style 4",
+                "settings": [
+                    {
+                        "type" : "header",
+                        "content" : "Column Menu"
+                    },
+                    {
+                        "type": "text",
+                        "id": "megamenu_items_4",
+                        "label": "Mega Menu Items for Style 4",
+                        "default": "Catalog",
+                        "info": "Use \"|\" when use language , For ex: Collections | Sammlungen "
+                    },		  		  		  
+                    {
+                        "type" : "header",
+                        "content" : "Banner"
+                    },	  
+                    {
+                        "type": "image_picker",
+                        "id": "banner_first_style_4",
+                        "label": "Upload a new image",
+                        "info": "210px x 320px recommended"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_banner_first_style_4",
+                        "label": "Link image"
+                    }
+                ]
+            },
+            {
+                "type": "style_5",
+                "name": "Style 5",
+                "settings": [
+                    {
+                        "type" : "header",
+                        "content" : "Column Menu"
+                    },
+                    {
+                        "type": "text",
+                        "id": "megamenu_items_5",
+                        "label": "Mega Menu Items for Style 5",
+                        "default": "Catalog",
+                        "info": "Use \"|\" when use language , For ex: Collections | Sammlungen "
+                    },
+                    {
+                        "type" : "header",
+                        "content" : "Banner"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "banner_first_style_5",
+                        "label": "Upload a new image 1",
+                        "info": "200px x 337px recommended"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_banner_first_style_5",
+                        "label": "Link image 1 ",
+                        "info": "=============="
+                    },	  
+                    {
+                        "type": "image_picker",
+                        "id": "banner_second_style_5",
+                        "label": "Upload a new image 2",
+                        "info": "200px x 165px recommended"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_banner_second_style_5",
+                        "label": "Link image 2 ",
+                        "info": "=============="
+                    },		  
+                    {
+                        "type": "image_picker",
+                        "id": "banner_third_style_5",
+                        "label": "Upload a new image 3",
+                        "info": "200px x 165px recommended"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_banner_third_style_5",
+                        "label": "Link image 3"
+                    },
+                    {
+                        "type" : "header",
+                        "content" : "Custom Block"
+                    },
+                    {
+                        "type": "checkbox",
+                        "id": "display_cms_custom",
+                        "label": "Display Custom Block?",
+                        "default": true
+                    },
+                    {
+                        "type": "text",
+                        "id": "cms_custom_title",
+                        "label": "Custom Block Title",
+                        "default": "Custom Block"
+                    },
+                    {
+                        "type": "textarea",
+                        "id": "quote",
+                        "label": "Custom Block Content"
+                    },
+                    {
+                        "type": "text",
+                        "id": "cms_read_more_text",
+                        "label": "Read More Text",
+                        "default": "Read More"
+                    },
+                    {
+                        "type": "url",
+                        "id": "cms_read_more_link",
+                        "label": "Read More Link "
+                    }
+                ]
+            } 
+        ]
+    }
+{% endschema %}

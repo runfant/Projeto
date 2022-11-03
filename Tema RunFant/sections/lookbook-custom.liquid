@@ -1,0 +1,315 @@
+{% if section.blocks.size > 0 %}
+<section class="lookbook-content" id="lookbook-{{ section.id }}">
+  <div class="lookbook-custom">
+    <div class="row" data-layout="masonry" data-isotope='{ "itemSelector": "[data-gridItem]", "layoutMode": "masonry" }'>
+      {% for block in section.blocks %}
+      
+      {% if block.settings.size_image == 'normal' %}
+      {%- assign grid_item_width = 'col-6 col-md-3' -%}
+      {% else %}
+      {%- assign grid_item_width = 'col-6 col-md-6' -%}
+      {% endif %}
+      
+      {% if block.settings.dpl_slide_img %}
+      <div data-gridItem class="item {{ grid_item_width }}">
+        <div class="images-contain">
+          {% if block.settings.image_slide != blank %}
+
+          {%- assign img_url = block.settings.image_slide | img_url: 'master' -%}
+
+          <a href="{{ block.settings.link }}" class="slide-image">
+            <img src="{{ img_url }}" alt="{{ block.settings.image_slide.alt | default: shop.name }}">
+          </a>
+
+          {% else %}
+
+          <div class="not_img">
+            270 x 380px
+          </div>   
+          {% endif %}
+
+          {% if block.settings.lb_product_1 != blank %}
+          <div class="select-icon lb-icon-1-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_1 }}" style="top:{{ block.settings.top_position_1 }}%; left:{{ block.settings.left_position_1 }}%;">
+            <span class="glyphicon"></span>
+          </div>
+          {% endif %}
+
+          {% if block.settings.lb_product_2 != blank %}
+          <div class="select-icon lb-icon-2-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_2 }}" style="top:{{ block.settings.top_position_2 }}%; left:{{ block.settings.left_position_2 }}%;">
+            <span class="glyphicon"></span>
+          </div>
+          {% endif %}
+
+          {% if block.settings.lb_product_3 != blank %}
+          <div class="select-icon lb-icon-3-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_3 }}" style="top:{{ block.settings.top_position_3 }}%; left:{{ block.settings.left_position_3 }}%;">
+            <span class="glyphicon"></span>
+          </div>
+          {% endif %}
+
+          <style type="text/css">
+            #lookbook-{{section.id}} .lb-icon-1-{{ block.id }} .glyphicon {
+              background-color: {{ block.settings.dots_bg_color_1 }};
+            }
+
+            #lookbook-{{section.id}} .lb-icon-1-{{ block.id }} .glyphicon:before,
+            #lookbook-{{section.id}} .lb-icon-1-{{ block.id }} .glyphicon:after {
+              background-color: {{ block.settings.dots_color_1 }};
+            }
+
+            #lookbook-{{section.id}} .lb-icon-1-{{ block.id }}:before{
+              color: {{ block.settings.dots_shadow_color_1 | color_modify: 'alpha', 0.3 }};
+            } 
+
+            #lookbook-{{section.id}} .lb-icon-2-{{ block.id }} .glyphicon {
+              background-color: {{ block.settings.dots_bg_color_2 }};
+            }
+
+            #lookbook-{{section.id}} .lb-icon-2-{{ block.id }} .glyphicon:before,
+            #lookbook-{{section.id}} .lb-icon-2-{{ block.id }} .glyphicon:after {
+              background-color: {{ block.settings.dots_color_2 }};
+            }
+
+            #lookbook-{{section.id}} .lb-icon-2-{{ block.id }}:before{
+              color: {{ block.settings.dots_shadow_color_2 | color_modify: 'alpha', 0.3 }};
+            } 
+
+            #lookbook-{{section.id}} .lb-icon-3-{{ block.id }} .glyphicon {
+              background-color: {{ block.settings.dots_bg_color_3 }};
+            }
+
+            #lookbook-{{section.id}} .lb-icon-3-{{ block.id }} .glyphicon:before,
+            #lookbook-{{section.id}} .lb-icon-3-{{ block.id }} .glyphicon:after {
+              background-color: {{ block.settings.dots_color_3 }};
+            }
+
+            #lookbook-{{section.id}} .lb-icon-3-{{ block.id }}:before{
+              color: {{ block.settings.dots_shadow_color_3 | color_modify: 'alpha', 0.3 }};
+            } 
+          </style> 
+        </div>                  
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div> 
+</section>
+
+{% if section.settings.display_product_detail_share %}
+<div class="share_toolbox justify-content-center">  
+  {% include 'multilang' with section.settings.share_text %}
+  <div class="addthis_inline_share_toolbox"></div>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-595b0ea2fb9c5869"></script>
+</div>
+{% endif %}
+
+{% if section.settings.button != blank %}
+<div class="bottom text-center">
+  <a href="{{ section.settings.link }}" class="btn">
+    {% include 'multilang' with section.settings.button %}
+  </a>
+</div>
+{% endif %}
+{% endif %}
+
+
+{% schema %}
+  {
+    "name": "Lookbook Custom",
+    "max_blocks": 20,
+    "settings": [ 
+      {
+        "type": "checkbox",
+        "id": "display_product_detail_share",
+        "label": "Display Product Share?",
+        "default": true
+      },
+	  {
+        "type": "text",
+        "id": "share_text",
+        "label": "Share Text",
+        "default": "Share"
+      },
+      {
+        "type": "text",
+        "id": "button",
+        "label": "Lookbook Button"
+      },
+      {
+        "type": "url",
+        "id": "link",
+        "label": "Lookbook link"
+      }           
+    ],
+
+    "blocks" : [
+      {
+        "type": "image",
+        "name": "Image",
+
+        "settings":[
+          {
+            "type": "checkbox",
+            "id": "dpl_slide_img",
+            "label" : "Enable",
+            "default" : true
+          },
+          {
+            "type": "image_picker",
+            "id": "image_slide",
+            "label" : "Select Image",
+            "info": "Recommended Image: Width x Height (270 x 380)px"
+          }, 
+	      {
+            "type": "select",
+            "id": "size_image",
+            "label": "Size Image",
+            "default": "normal",
+            "options": [
+              {
+                "value": "normal",
+                "label": "Normal"
+              },
+              {
+                "value": "large",
+                "label": "Large"
+              }         
+            ]
+          },
+		  {
+			"type": "header",
+			"content": "Lookbook Product",
+			"info" : "======================="
+		  },
+	      {
+			"type" : "header",
+			"content" : "Product 1"
+		  },
+		  {
+			"type" : "product",
+			"id" : "lb_product_1",
+			"label" : "Select Product"
+		  },
+		  {
+			"type" : "text",
+			"id" : "top_position_1",
+			"label" : "Top Position",
+			"default" : "10",
+			"info" : "Unit %" 
+		  },
+		  {
+			"type" : "text",
+			"id" : "left_position_1",
+			"label" : "Left Position",
+			"default" : "10",
+			"info" : "Unit %" 
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_color_1",
+			"label" : "Select Icon Color",
+			"default" : "#fff"
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_bg_color_1",
+			"label" : "Select Icon Background color",
+			"default" : "#323232"			
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_shadow_color_1",
+			"label" : "Select Icon Shadow Color with opacity 30%",
+			"default" : "#fff",
+		    "info" : "======================="
+		  },
+
+		  {
+			"type" : "header",
+			"content" : "Product 2"
+		  },
+		  {
+			"type" : "product",
+			"id" : "lb_product_2",
+			"label" : "Select Product"
+		  },
+		  {
+			"type" : "text",
+			"id" : "top_position_2",
+			"label" : "Top Position",
+			"default" : "10",
+			"info" : "Unit %" 
+		  },
+		  {
+			"type" : "text",
+			"id" : "left_position_2",
+			"label" : "Left Position",
+			"default" : "10",
+			"info" : "Unit %" 
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_color_2",
+			"label" : "Select Icon Color",
+			"default" : "#fff"
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_bg_color_2",
+			"label" : "Select Icon Background color",
+			"default" : "#323232"			
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_shadow_color_2",
+			"label" : "Select Icon Shadow Color with opacity 30%",
+			"default" : "#fff",
+		    "info" : "======================="
+		  },
+
+		  {
+			"type" : "header",
+			"content" : "Product 3"
+		  },
+		  {
+			"type" : "product",
+			"id" : "lb_product_3",
+			"label" : "Select Product"
+		  },
+		  {
+			"type" : "text",
+			"id" : "top_position_3",
+			"label" : "Top Position",
+			"default" : "10",
+			"info" : "Unit %" 
+		  },
+		  {
+			"type" : "text",
+			"id" : "left_position_3",
+			"label" : "Left Position",
+			"default" : "10",
+			"info" : "Unit %" 
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_color_3",
+			"label" : "Select Icon Color",
+			"default" : "#fff"
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_bg_color_3",
+			"label" : "Select Icon Background color",
+			"default" : "#323232"			
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_shadow_color_3",
+			"label" : "Select Icon Shadow Color with opacity 30%",
+			"default" : "#fff",
+		    "info" : "======================="
+		  }
+        ]
+      }
+    ]
+  }
+{% endschema %}

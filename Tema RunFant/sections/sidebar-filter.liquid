@@ -1,0 +1,921 @@
+{% if current_tags == blank %}
+	{% assign has_refined = false %}
+{% else %}
+	{% assign has_refined = true %} 
+{% endif %}
+
+
+{% if section.settings.display_sidebar or settings.category_layout == "right_sidebar" or template.suffix == 'right-sidebar' %}
+
+{% if settings.category_layout == "right_sidebar" or settings.category_layout == "express_order" or template.suffix == 'express-order' or settings.category_layout == "mansory" or template.suffix == 'mansory' or settings.category_layout == "full_with" or template.suffix == 'fullwidth' or template.suffix == 'right-sidebar' or settings.category_layout == "with_banner" or template.suffix == 'with-banner' %}
+<div class="sidebar-label">
+    <span class="icon-filter">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" version="1.1" x="0px" y="0px" viewBox="0 0 48 48" xml:space="preserve"><g><path d="M6,48c-0.552,0-1-0.447-1-1v-7c0-0.553,0.448-1,1-1s1,0.447,1,1v7C7,47.553,6.552,48,6,48z"></path><path d="M6,31c-0.552,0-1-0.447-1-1V1c0-0.553,0.448-1,1-1s1,0.447,1,1v29C7,30.553,6.552,31,6,31z"></path><g><path d="M6,41c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S9.309,41,6,41z M6,31c-2.206,0-4,1.794-4,4s1.794,4,4,4s4-1.794,4-4    S8.206,31,6,31z"></path><path d="M42,48c-0.552,0-1-0.447-1-1V26c0-0.553,0.448-1,1-1s1,0.447,1,1v21C43,47.553,42.552,48,42,48z"></path><path d="M42,17c-0.552,0-1-0.447-1-1V1c0-0.553,0.448-1,1-1s1,0.447,1,1v15C43,16.553,42.552,17,42,17z"></path><path d="M42,27c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S45.309,27,42,27z M42,17c-2.206,0-4,1.794-4,4s1.794,4,4,4    s4-1.794,4-4S44.206,17,42,17z"></path><path d="M24,48c-0.552,0-1-0.447-1-1V21c0-0.553,0.448-1,1-1s1,0.447,1,1v26C25,47.553,24.552,48,24,48z"></path><path d="M24,12c-0.552,0-1-0.447-1-1V1c0-0.553,0.448-1,1-1s1,0.447,1,1v10C25,11.553,24.552,12,24,12z"></path><path d="M24,22c-3.309,0-6-2.691-6-6s2.691-6,6-6c3.309,0,6,2.691,6,6S27.309,22,24,22z M24,12c-2.206,0-4,1.794-4,4s1.794,4,4,4    s4-1.794,4-4S26.206,12,24,12z"></path></g></g></svg>
+    </span>
+    <span class="sidebar_more" {% if settings.enable_multilang %}data-translate="collections.sidebar.sidebar_more"{% endif %}>
+        {{ 'collections.sidebar.sidebar_more' | t }}
+    </span>
+</div>
+{% endif %}
+
+<div class="sidebar">
+    <a href="javascript:void(0)" title="{{ 'cart.general.close_cart' | t }}" class="close-sidebar close">
+        {% include 'icon-close' %}    
+    </a>
+  
+    {% if section.settings.enable_categories %}
+    <div class="widget sidebar-links">
+        {% if section.settings.title_categories != blank %}
+        <div class="widget-title">
+            <h3 class="sidebar-title">
+                {% include 'multilang' with section.settings.title_categories %}
+            </h3>
+        </div>
+        {% endif %}
+
+        <div class="widget-content">
+            <ul>
+                {% if section.settings.style_categories == 'style_show_all' %}
+                {% for category in collections %}
+                <li>
+                    <a href="{{ category.url }}" {% if collection.handle == category.handle %}class="active"{% endif %}>              
+                        {% include 'multilang' with category.title %}
+                    </a>
+                </li>     
+                {% endfor %}
+               
+                {% elsif section.settings.style_categories == 'style_main_menu' %}
+                {% comment %} Get Categories From Main Menu {% endcomment %}
+
+                {% for link in linklists.main-menu.links %}
+                {%if link.url contains '/collections/'%}
+                <li class="sidebar-link-lv1 {% if linklists[link.handle] != empty %} dropdown{% if link.active %} open{% endif %}{% endif %}">
+                    <a href="{{ link.url }}" {% if link.active %}class="active"{% endif %}>
+                        {% include 'multilang' with link.title %}
+                    </a>
+
+                    {% if linklists[link.handle] != empty %}
+                    <span class="icon-dropdown">
+                        <i class="fa fa-angle-down"></i>
+                    </span>
+                    {% assign link_child = link.handle %}
+                    {% include 'dropdown-cat' with link_child %}
+                    {% endif %}
+                </li>   
+                {%endif%}
+                {%endfor%}
+
+                {% else %}
+                {% assign cat_link_list = section.settings.link_list | handleize %}
+
+                {% for link in linklists[cat_link_list].links %}
+                <li class="sidebar-link-lv1{% if linklists[link.handle] != empty %} dropdown{% if link.active %} open{% endif %}{% endif %}">
+                    <a href="{{ link.url }}" {% if link.active %}class="active"{% endif %}>
+                        {% include 'multilang' with link.title %}
+                    </a>
+
+                    {% if linklists[link.handle] != empty %}
+                    <span class="icon-dropdown">
+                        <i class="fa fa-angle-down"></i>
+                    </span>
+                    {% assign link_child = link.handle %}
+                    {% include 'dropdown-cat' with link_child %}
+                    {% endif %}
+                </li>        
+                {% endfor %}        
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+  
+    <div class="sidebar-filter" data-has-collapse>
+        {% if settings.category_layout == "right_sidebar" or settings.category_layout == "express_order" or template.suffix == 'express-order' or settings.category_layout == "mansory" or template.suffix == 'mansory' or settings.category_layout == "full_with" or template.suffix == 'fullwidth' or template.suffix == 'right-sidebar' or settings.category_layout == "with_banner" or template.suffix == 'with-banner' %}
+        <a href="javascript:void(0)" title="{{ 'cart.general.close_cart' | t }}" class="close-sidebar close">
+            {% include 'icon-close' %}    
+        </a>
+        {% endif %}
+        
+        <div class="refined-widgets"{% if has_refined == false %} style="display:none"{% endif %}>
+            <div class="widget-title">
+                <h3 class="sidebar-title">
+                    <span {% if settings.enable_multilang %}data-translate="collections.sidebar.refined_by"{% endif %}>
+                        {{ 'collections.sidebar.refined_by' | t }}           
+                    </span>
+
+                <a href="javascript:void(0)" class="clear-all text-hover" {% if has_refined == false %}style="display:none"{% endif %} {% if settings.enable_multilang %}data-translate="collections.sidebar.clear_all"{% endif %}>
+                    {{ 'collections.sidebar.clear_all' | t }}
+                </a>
+                </h3>
+            </div>
+
+            <div class="widget-content">
+                <ul class="refined">    
+                    {% for t in current_tags %}
+                    {% assign tag = t | strip %}
+                    {% assign tag_value = tag | handleize %}
+                    <li>
+                        <input type="checkbox" value="{{ tag_value }}" {% if current_tags contains tag %}checked{% endif %}/>
+                        <a href="{{tag_value}}" class="selected-tag">
+                          {% if settings.enable_multilang and tag contains '|' %}
+                          <span class="lang1">{{tag | split: '|' | first}}&nbsp;X</span>
+                          <span class="lang2">{{tag | split: '|' | last}}&nbsp;X</span>
+                          {% else %}
+                          <span>{{tag | split: '|' | first}}&nbsp;X</span>
+                          {% endif %}
+                          
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>                  
+        </div>
+        
+        {% for block in section.blocks %}  
+
+        {% if block.type == 'filter_color' %}
+        {% if block.settings.enable %}
+        <div class="widget sidebar-tags filter-color">
+            {% if block.settings.title != blank %}
+            <div class="widget-title">
+                <h3 class="sidebar-title">
+                    {% include 'multilang' with block.settings.title %}
+
+                    <a href="javascript:void(0)" class="clear text-hover" style="display:none" {% if settings.enable_multilang %}data-translate="collections.sidebar.clear"{% endif %}>
+                    {{ 'collections.sidebar.clear' | t }}
+                    </a>
+                </h3>
+            </div>
+            {% endif %}
+
+            <div class="widget-content">
+                <ul class="list-tags">
+                    {% for i in (1..20) %}
+                    {% capture color_text %}color_text_{{ i }}{% endcapture %}
+                    {% capture color %}color_img_{{ i }}{% endcapture %}
+
+                    {% if block.settings[color] != blank %}
+                    {%- assign img_url = block.settings[color] | img_url: '30x30' -%}
+                    {% else %}
+                    {%- assign img_url = '' -%}
+                    {% endif %}
+
+                    {% if color_text != blank %}
+                    {% assign tag = block.settings[color_text] | strip %}
+                    {% if collection.tags contains tag %} 
+                    <li>
+                        {% assign tag_value = tag | handleize %}
+                        <input type="checkbox" value="{{ tag_value }}" {% if current_tags contains tag %}checked{% endif %}/>
+
+                        <a href="javascript:void(0)" {% if current_tags contains tag %}class="active"{% endif %} title="{{tag}}">
+                            <img src="{{ img_url }}" alt="">
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% endif %}      
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+
+        {% if block.type == 'filter_text' %}
+        {% if block.settings.enable %}
+        <div class="widget sidebar-tags{% if block.settings.title == 'Size | Größe' %} filter-size{% endif %}">
+            {% assign tags = block.settings.list_tags | split: ',' %}
+
+            {% if block.settings.title != blank %}
+            <div class="widget-title">
+                <h3 class="sidebar-title">
+                    {% include 'multilang' with block.settings.title %}
+
+                    <a href="javascript:void(0)" class="clear text-hover" style="display:none" {% if settings.enable_multilang %}data-translate="collections.sidebar.clear"{% endif %}>
+                    {{ 'collections.sidebar.clear' | t }}
+                    </a>
+                </h3>
+            </div>
+            {% endif %}
+
+            <div class="widget-content">
+                <ul class="list-tags">
+                    {% for t in tags %}
+                    {% assign tag = t | strip %}
+                    {% assign tag_value = tag | handleize %} 
+
+                    {% if current_tags contains tag %}
+                    <li>
+                        {% if settings.enable_multilang and tag contains '|' %}
+                        <input type="checkbox" class="lang1" value="{{ tag_value | split: '|' | first }}" checked/>
+                        <label class="lang1">
+                            {{ tag | split: '|' | first }}
+                        </label>
+
+                        <input type="checkbox" class="lang2" value="{{ tag_value | split: '|' | last }}" checked/>
+                        <label class="lang2">
+                            {{ tag | split: '|' | last }}
+                        </label>
+
+                        {% else %}
+                        <input type="checkbox" value="{{ tag_value | split: '|' | first }}" checked/>
+                        <label>
+                            {{ tag | split: '|' | first }}
+                        </label>
+                        {% endif %}
+                    </li>
+                    {% else %}
+
+                    {% if collection.tags contains tag %} 
+                    <li>
+                        {% if settings.enable_multilang and tag contains '|' %}
+                        <input type="checkbox" class="lang1" value="{{ tag_value | split: '|' | first }}"/>
+                        <label class="lang1">
+                            {{ tag | split: '|' | first }}
+                        </label>
+
+                        <input type="checkbox" class="lang2" value="{{ tag_value | split: '|' | last }}"/>
+                        <label class="lang2">
+                            {{ tag | split: '|' | last }}
+                        </label>
+
+                        {% else %}
+                        <input type="checkbox" value="{{ tag_value | split: '|' | first }}"/>
+                        <label>
+                            {{ tag | split: '|' | first }}
+                        </label>
+                        {% endif %}
+                    </li>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% endfor %} 
+    </div>
+   
+    {% if section.settings.enable_product %}
+    <div class="widget sidebar-widget-product" data-sidebar-product>
+        {% if section.settings.title_product != blank %}
+        <div class="widget-title">   
+            <h3 class="sidebar-title">
+                {% include 'multilang' with section.settings.title_product %}
+            </h3>
+        </div>
+        {% endif %}
+
+        {% if section.settings.collection == blank %}
+        <div class="widget-product">
+            <div class="grid-item {{ grid_item_width }}">
+                <div class="grid-view-item no-product">
+                    <div class="product-top">
+                        <div class="not_img">
+                            Product Img
+                        </div>
+                    </div>
+
+                    <div class="product-bottom">
+                        <div class="product-title">
+                            <span>
+                                Your product's name
+                            </span>
+                        </div>
+
+                        <div class="price-box">
+                            <span> $250.00 </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="widget-product">
+            <div class="products-grid row">
+                {% for product in collections[section.settings.collection].products limit:section.settings.limit %}
+                <div class="grid-item col-12{% if settings.product_image_border %} grid-item-border{% endif %} ">
+                    {% include 'sidebar-product-grid' %}
+                </div>
+                {% endfor %}
+            </div> 
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if section.settings.enable_img_1 %}
+    <div class="widget sidebar-banner">
+        {% if section.settings.image_img_1 != blank %}
+        {%- assign img_url = section.settings.image_img_1 | img_url: 'original', crop: 'center' -%}
+
+        {% if section.settings.link_img_1 != blank %}
+        <a class="animate-scale" href="{{ section.settings.link_img_1 }}">
+        {% endif %}
+        <img data-src="{{ img_url }}"
+            src="{{ img_url }}" alt="{{ section.settings.image_img_1.alt | default: shop.name }}"
+            class="lazyautosizes lazyloaded" data-sizes="auto">
+        {% if section.settings.link_img_1 != blank %}
+        </a>
+        {% endif %}
+
+        {% else %}
+        <div class="not_img">
+            210 x 165px
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+  
+    {% if section.settings.enable_img_2 %}
+    <div class="widget sidebar-banner">
+        {% if section.settings.image_img_2 != blank %}
+        {%- assign img_url = section.settings.image_img_2 | img_url: 'original', crop: 'center' -%}
+
+        {% if section.settings.link_img_2 != blank %}
+        <a class="animate-scale" href="{{ section.settings.link_img_2 }}">
+        {% endif %}
+        <img data-src="{{ img_url }}"
+            src="{{ img_url }}" alt="{{ section.settings.image_img_2.alt | default: shop.name }}"
+            class="lazyautosizes lazyloaded" data-sizes="auto">
+        {% if section.settings.link_img_2 != blank %}
+        </a>
+        {% endif %}
+
+        {% else %}
+        <div class="not_img">
+            210 x 165px
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+  
+    {% if section.settings.enable_custom_block %}	
+    <div class="widget sidebar-cms-custom">
+        {% if section.settings.title_custom_block != blank %}
+        <div class="widget-title">   
+            <h3 class="sidebar-title">
+                {% include 'multilang' with section.settings.title_custom_block | escape  %}
+            </h3>
+        </div>
+        {% endif %}
+
+        <div class="widget-content">
+        {% if section.settings.quote_custom_block != blank %}
+        {% if settings.enable_multilang and section.settings.quote_custom_block contains '|' %}
+        <div class="rte-setting lang1">
+            {{ section.settings.quote_custom_block | split: '|' | first }}
+        </div>
+        <div class="rte-setting lang2">
+            {{ section.settings.quote_custom_block | split: '|' | last }}
+        </div>
+        {% else %}
+        <div class="rte-setting">
+            {{ section.settings.quote_custom_block | split: '|' | first }}
+        </div>
+        {% endif %}
+        {% endif %}
+        </div>
+    </div>  
+    {% endif %}
+  
+</div>
+{% endif %}
+
+
+{% schema %}
+    {
+        "name": "Sidebar",
+        "class": "col-12 col-xl-3 col-sidebar",
+        "max_blocks": 20,
+        "settings": [
+            {
+                "type": "checkbox",
+                "id": "display_sidebar",
+                "label": "Enable Sidebar",
+                "default": true
+            },
+            {
+                "type": "select",
+                "id": "show_sidebar",
+                "label": "Show Sidebar on:",
+                "options": [
+                    {
+                        "value": "left",
+                        "label": "Left"
+                    },
+                    {
+                        "value": "right",
+                        "label": "Right"
+                    }          
+                ],
+                "default": "left",
+                "info": "Default: Left"
+            },
+
+            {
+                "type": "header",
+                "content": "Categories"
+            },
+            {
+                "type": "checkbox",
+                "id": "enable_categories",
+                "label": "Enable",
+                "default": true
+            },
+            {
+                "type": "text",
+                "id": "title_categories",
+                "label": "Title"
+            },
+            {
+                "type": "radio",
+                "id": "style_categories",
+                "label": "Show all \/ Only a few categories",
+                "options": [
+                    {
+                        "value": "style_show_all",
+                        "label": "Show all"
+                    },
+                    {
+                        "value": "style_main_menu",
+                        "label": "Get Categories From Main Menu"
+                    },
+                    {
+                        "value": "style_little",
+                        "label": "Only a few categories"
+                    }                    
+                ]
+            },
+            {
+                "type": "link_list",
+                "id": "link_list",
+                "label": "Choose a menu",
+                "default": "main-menu"
+            },
+            {
+                "type": "header",
+                "content": "Product Slider"
+            },
+            {
+                "type": "checkbox",
+                "id": "enable_product",
+                "label": "Enable",
+                "default": true
+            },
+            {
+                "type": "text",
+                "id": "title_product",
+                "label": "Title"
+            },
+            {
+                "id": "collection",
+                "type": "collection",
+                "label": "Collection"
+            },
+            {
+                "type": "text",
+                "id": "limit",
+                "label": "Number of products to show",
+                "default": "8"
+            },       
+            {
+                "type": "header",
+                "content": "Block Image 1"
+            },
+            {
+                "type": "checkbox",
+                "id": "enable_img_1",
+                "label": "Enable",
+                "default": true
+            },
+            {
+                "type": "image_picker",
+                "id": "image_img_1",
+                "label": "Image"
+            },
+            {
+                "type": "url",
+                "id": "link_img_1",
+                "label": "Link Image",
+                "info": "Optional"
+            },
+
+            {
+                "type": "header",
+                "content": "Block Image 2"
+            },
+            {
+                "type": "checkbox",
+                "id": "enable_img_2",
+                "label": "Enable",
+                "default": true
+            },
+            {
+                "type": "image_picker",
+                "id": "image_img_2",
+                "label": "Image"
+            },
+            {
+                "type": "url",
+                "id": "link_img_2",
+                "label": "Link Image",
+                "info": "Optional"
+            },
+            {
+                "type": "header",
+                "content": "Custom Block"
+            },
+            {
+                "type": "checkbox",
+                "id": "enable_custom_block",
+                "label": "Enable",
+                "default": true
+            },
+            {
+                "type": "text",
+                "id": "title_custom_block",
+                "label": "Heading",
+                "default": "Custom Block"
+            },
+            {
+                "type": "textarea",
+                "id": "quote_custom_block",
+                "label": "Text",
+                "default": "<p>Add customer reviews and testimonials to showcase your store’s happy customers.</p>"
+            }	  
+        ],
+        "blocks": [
+            {
+                "type": "filter_color",
+                "name": "Filter Color",
+                "settings": [
+                    {
+                        "type": "checkbox",
+                        "id": "enable",
+                        "label": "Enable",
+                        "default": true
+                    },
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Filter Title"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_1",
+                        "label": "Color text 1",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_1",
+                        "label": "Color image 1"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_2",
+                        "label": "Color text 2",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_2",
+                        "label": "Color image 2"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_3",
+                        "label": "Color text 3",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_3",
+                        "label": "Color image 3"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_4",
+                        "label": "Color text 4",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_4",
+                        "label": "Color image 4"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_5",
+                        "label": "Color text 5",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_5",
+                        "label": "Color image 5"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_6",
+                        "label": "Color text 6",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_6",
+                        "label": "Color image 6"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_7",
+                        "label": "Color text 7",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_7",
+                        "label": "Color image 7"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_8",
+                        "label": "Color text 8",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_8",
+                        "label": "Color image 8"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_9",
+                        "label": "Color text 9",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_9",
+                        "label": "Color image 9"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_10",
+                        "label": "Color text 10",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_10",
+                        "label": "Color image 10"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_11",
+                        "label": "Color text 11",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_11",
+                        "label": "Color image 11"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_12",
+                        "label": "Color text 12",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_12",
+                        "label": "Color image 12"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_13",
+                        "label": "Color text 13",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_13",
+                        "label": "Color image 13"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_14",
+                        "label": "Color text 14",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_14",
+                        "label": "Color image 14"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_15",
+                        "label": "Color text 15",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_15",
+                        "label": "Color image 15"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_16",
+                        "label": "Color text 16",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_16",
+                        "label": "Color image 16"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_17",
+                        "label": "Color text 17",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_17",
+                        "label": "Color image 17"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_18",
+                        "label": "Color text 18",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_18",
+                        "label": "Color image 18"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_19",
+                        "label": "Color text 19",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_19",
+                        "label": "Color image 19"
+                    },
+                    {
+                        "type": "text",
+                        "id": "color_text_20",
+                        "label": "Color text 20",
+                        "info": "i.e \"Red\"."
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "color_img_20",
+                        "label": "Color image 20"
+                    }
+                ]
+            },
+            {
+                "type": "filter_text",
+                "name": "Filter Text",
+                "settings": [
+                    {
+                        "type": "checkbox",
+                        "id": "enable",
+                        "label": "Enable",
+                        "default": true
+                    },
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Filter Title"
+                    },
+                    {
+                        "type": "textarea",
+                        "id": "list_tags",
+                        "label": "List Tags",
+                        "info": "Separate by a comma, i.e \"Dincidunteros, Nectellus, Solutmades\"."
+                    }
+                ]
+            }                      
+        ]
+    }
+{% endschema %}
+
+<style> 
+    @media (max-width: 1199px) {  
+        {% unless settings.category_layout == "right_sidebar" or template.suffix == 'right-sidebar' %}
+        {% unless section.settings.display_sidebar %}
+        .halo-collection-content .sidebar-label {
+            display: none !important;
+        }
+        {% endunless %}
+        {% endunless %}
+    }
+  
+    @media (min-width: 1200px) { 
+        {% unless settings.category_layout == "full_with" or template.suffix == 'fullwidth' %}
+        {% if section.settings.display_sidebar or settings.category_layout == "right_sidebar" or template.suffix == 'right-sidebar' %}
+        .halo-collection-content .products-grid .col5 .sizes-list {
+            margin-bottom: 8px;
+        }
+
+        .halo-collection-content .products-grid .col5 .sizes-list li a {
+            min-width: 23px;
+            padding: 1px 5px 0px;
+            font-size: 10px;
+        }
+
+        .halo-collection-content .products-grid .col5 .item-swatch label,
+        .halo-collection-content .products-grid .col5 .item-swatch a {
+            width: 23px;
+            height: 23px;
+            line-height: 23px;
+        }
+        
+        .halo-collection-content .products-grid .grid-item-mansory.col5 .countdown-grid-item>span {
+            display: none;
+        }
+        {% endif %}
+        {% endunless %}
+        
+        {% unless settings.category_layout == "right_sidebar" or template.suffix == 'right-sidebar' %}
+        {% unless section.settings.display_sidebar %}
+        .halo-collection-content .col-main {
+            width: 100%;
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
+            max-width: 100%;
+        }  
+        
+        {% else %}
+        
+        {% if section.settings.show_sidebar == 'right' %}
+        .halo-collection-content > .row {
+            -webkit-flex-direction: row-reverse;
+            -moz-flex-direction: row-reverse;
+            -ms-flex-direction: row-reverse;
+            flex-direction: row-reverse;
+        }
+        {% endif %}
+        {% endunless %}
+        
+        {% else %}
+        .halo-collection-content > .row {
+            -webkit-flex-direction: row-reverse;
+            -moz-flex-direction: row-reverse;
+            -ms-flex-direction: row-reverse;
+            flex-direction: row-reverse;
+        }
+        {% endunless %}
+    } 
+  
+  {% if section.settings.display_sidebar %}
+  {% if settings.category_layout == "full_with" or template.suffix == 'fullwidth' %}
+    @media (min-width: 1200px) and (max-width: 1449px) {
+        .halo-collection-content .products-grid .col5 .sizes-list {
+            margin-bottom: 8px;
+        }
+
+        .halo-collection-content .products-grid .col5 .sizes-list li a {
+            min-width: 23px;
+            padding: 1px 5px 0px;
+            font-size: 10px;
+        }
+
+        .halo-collection-content .products-grid .col5 .item-swatch label,
+        .halo-collection-content .products-grid .col5 .item-swatch a {
+            width: 23px;
+            height: 23px;
+            line-height: 23px;
+        }
+    }
+    
+    @media (min-width: 1350px) {
+        .collection-template-fullwidth .toolbar .column-left {
+            width: 49.5%;
+            padding-right: 30px;
+            padding-left: 30px;
+        }
+        
+        .collection-template-fullwidth .toolbar .filters-toolbar__view-as {
+            -webkit-box-pack: flex-end;
+            -moz-box-pack: flex-end;
+            -ms-flex-pack: flex-end;
+            -webkit-justify-content: flex-end;
+            justify-content: flex-end;
+        }
+    }
+  {% endif %}
+  {% endif %}
+</style>

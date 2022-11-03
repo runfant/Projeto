@@ -1,0 +1,145 @@
+
+{% if section.settings.display_gdpr %}
+<div id="accept-cookies" class="cookieMessage" > 
+    <div class="block-cookies">
+        <div class="des">
+            {% include 'multilang' with section.settings.content %}
+        </div>
+
+        {% if section.settings.privacy_policy_text != blank or section.settings.accept_cookies_text != blank %}
+        <div class="group-action-links">
+            {% if section.settings.privacy_policy_text != blank %}
+            <a target="_blank" href="{{ section.settings.privacy_policy_link }}" class="notification-cookies privacy-link">
+                {% include 'multilang' with section.settings.privacy_policy_text %}
+            </a>
+            {% endif %}
+
+            {% if section.settings.accept_cookies_text != blank %}
+            <a href="#" class="notification-cookies accept_cookies_link" data-accept-cookie>
+                {% include 'multilang' with section.settings.accept_cookies_text %}
+                <span class="icon">✔</span>
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>   
+</div>
+
+<style>
+    #accept-cookies .block-cookies,
+    #accept-cookies .accept_cookies_link,
+    #accept-cookies .privacy-link:hover {
+        color:{{ section.settings.text_color }};
+    }
+
+    #accept-cookies .privacy-link,
+    #accept-cookies .accept_cookies_link:hover {
+        color:{{ section.settings.privacy_policy_color }};
+    }
+
+    #accept-cookies{
+        background: {{section.settings.bg_color | color_modify: 'alpha', 0.9 }};
+    }
+
+    @media (min-width: 1200px) {
+        #accept-cookies{
+            {% if section.settings.show_gdp == 'right' %}
+            right: 15px;
+            {% else %}
+            left: 15px;
+            {% endif %}
+        }
+    } 
+</style>
+
+<script>
+    $(document).ready(function() {
+        var gdprCookie = $('#accept-cookies');
+
+        gdprCookie.show();
+
+        if ($.cookie('cookieMessage') == 'closed') {
+            gdprCookie.remove();
+        }
+
+        gdprCookie.find('[data-accept-cookie]').on('click', function(e) {
+            e.preventDefault();
+            gdprCookie.remove();
+            $.cookie('cookieMessage', 'closed', {expires: 1, path:'/'});
+        });
+    })
+</script>
+{% endif %}
+
+
+{% schema %}
+  {
+    "name": "GDPR Modal",
+    "settings": [
+		{
+            "type": "checkbox",
+            "id": "display_gdpr",
+            "label": "Enable",
+            "default": true
+        },
+        {
+            "type": "radio",
+            "id": "show_gdp",
+            "label": "Show GDPR Modal on the:",
+            "options": [
+                {
+                "value": "left",
+                "label": "Left"
+                },
+                {
+                "value": "right",
+                "label": "Right"
+                }
+            ],
+            "default": "left",
+            "info": "Only Desktop"
+        },
+        {
+            "type": "color",
+            "id": "bg_color",
+            "label": "Background Color with Opacity 90%",
+            "default": "#141414"
+        },
+        {
+            "type": "color",
+            "id": "text_color",
+            "label": "Text Color",
+            "default": "#fff"
+        },
+        {
+            "type": "color",
+            "id": "privacy_policy_color",
+            "label": "Privacy Policy Text Color",
+            "default": "#818181"
+        },
+        {
+            "type": "textarea",
+            "id": "content",
+            "label": "Description text"
+        },        
+        {
+            "type": "text",
+            "id": "privacy_policy_text",
+            "label": "Privacy Policy Text"
+        },
+        {
+            "type": "text",
+            "id": "privacy_policy_link",
+            "label": "Privacy Policy Link",
+            "info": "https:\/\/policies.google.com"
+        },
+        {
+            "type": "text",
+            "id": "accept_cookies_text",
+            "label": "Accept Cookies Text"
+        }
+	]
+  }
+{% endschema %}
+
+

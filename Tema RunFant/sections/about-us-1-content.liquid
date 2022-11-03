@@ -1,0 +1,197 @@
+<div class="about-us-content">
+  <div class="container">
+    {% if section.settings.left_heading != blank or section.settings.left_content != blank %}
+    <div class="col-left">
+      {% if section.settings.left_heading != blank %}
+      <h3 class="heading">{% include 'multilang' with section.settings.left_heading %}</h3>
+      {% endif %}
+      {% if section.settings.left_content != blank %}
+      <div class="content">
+        {% include 'multilang' with section.settings.left_content %}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+    {% if section.settings.right_heading != blank or section.settings.right_content != blank %}
+    <div class="col-right">
+      {% if section.settings.right_heading != blank %}
+      <h3 class="heading">{% include 'multilang' with section.settings.right_heading %}</h3>
+      {% endif %}
+      {% if section.settings.right_content != blank %}
+      <div class="content">
+        {% include 'multilang' with section.settings.right_content %}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+
+
+<style>
+  .about-us-slideshow{
+    padding:50px 0px 230px;
+    position:relative;
+  }
+  .slideshow{
+    padding-top: 110px;
+    position:static;
+
+  }
+
+
+    .slider-item{
+      padding-right: 50px;
+      display:none;
+      
+    }
+    .slider-item:first-child,&.slick-slide{
+        display:block;
+      }
+   .slideshow .content{
+      text-align: left;
+      margin-bottom:55px;
+    }
+   .slideshow .info{
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flex;
+      display: -o-flex;
+      display: flex;
+      -webkit-align-items:center;
+      -moz-align-items:center;
+      -ms-align-items:center;
+      align-items:center;
+      margin-bottom: 18px;
+    }
+  .slideshow .info .text{
+      padding-left:20px;
+      
+    }
+
+  .slideshow .info .text label{
+      display: block;
+      text-transform: uppercase;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+   .slideshow .info .text  span.name{
+      text-transform: uppercase;
+      font-weight: 700;
+      position:relative;
+      
+    }
+
+.slideshow .info .text span.name:before{
+    content:'';
+    height:1px;
+    width:100%;
+    position: absolute;
+    bottom:-1px;
+    left:0;
+  }
+    .qoute{
+      font-size: 18px;
+      line-height: 32px;
+      position:relative;
+      letter-spacing: 0.02em;
+      padding-top:10px;
+      margin-bottom: 50px;
+      
+    }
+  .qoute:after{
+      content:'\f10e';
+      font-family: fontAwesome;
+      color:inherit;
+      font-size: 34px;
+      position: absolute;
+      top:0;
+      right:-50px;
+    }
+  .about-us-content{
+    padding:65px 0px 0px;
+    overflow:hidden;
+  }
+
+   .about-us-content h3.heading{
+      text-transform: uppercase;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      line-height: normal;
+      position: relative;
+      margin-bottom: 40px;
+
+    }
+
+
+  .about-us-content h3.heading:after{ 
+      content:'';
+      display:block;
+      width:40px;
+      height:2px;
+      background-color: #232323;
+      position: absolute;
+      left:0;
+      bottom:-20px;
+    }
+
+  .about-us-content  .content{
+      text-align: left;
+      line-height: {{settings.body_font_size | plus:10}}px;
+    }
+
+  .about-us-content  .col-left{
+      margin-bottom:70px;
+    }
+@media (min-width:992px){
+  .about-us-1 .about-us-content .col-left,.about-us-1 .about-us-content .col-right{
+    width:50%;
+    padding-right:40px;
+    margin-bottom:0px;
+    float:left;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "About Us Content",
+  "class": "about-us-1-content",
+  "settings": [
+    {
+      "type":"header",
+      "content":"Left Column"
+    },
+    {
+      "type":"text",
+      "id":"left_heading",
+      "label":"Heading",
+      "default":"About Store"
+    },
+    {
+      "type":"textarea",
+      "id":"left_content",
+      "label":"Content",
+      "default":"Quisquemos sodales suscipit tortor ditaemcos condimentum de cosmo lacus meleifend menean diverra loremous. Nullam sit amet orci rutrum risus laoreet semper vel non magna. Mauris vel sem a lectus vehicula ultricies. Etiam semper sollicitudin lectus indous scelerisque. Curabitur vel tristique lacus. Nam risus mauris, accumsan et eleifend vitae, dignissim at eros. Vivamus pellentesque duiex a interdum."
+    },
+    {
+      "type":"header",
+      "content":"Right Column"
+    },
+    {
+      "type":"text",
+      "id":"right_heading",
+      "label":"Heading",
+      "default":"Contact Us"
+    },
+    {
+      "type":"textarea",
+      "id":"right_content",
+      "label":"Content",
+      "default":"Quisquemos sodales suscipit tortor ditaemcos condimentum de cosmo lacus meleifend menean diverra loremous. Nullam sit amet orci rutrum risus laoreet semper vel non magna. Mauris vel sem a lectus vehicula ultricies. Etiam semper sollicitudin lectus indous scelerisque. Curabitur vel tristique lacus. Nam risus mauris, accumsan et eleifend vitae, dignissim at eros. Vivamus pellentesque duiex a interdum."
+    }
+  ]
+}
+{% endschema %}

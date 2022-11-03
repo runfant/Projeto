@@ -1,0 +1,598 @@
+{% if section.blocks.size > 0 %}
+<div class="home-custom-block" id="custom-block-{{section.id}}">
+    <div class="{% if section.settings.layout == 'default' %}container{% else %}container-fluid{% endif %}">
+        {% if section.settings.widget_title != blank %}
+        <div class="widget-title{% if section.settings.title_style == 'style_2' %} not-before{% endif %}">   
+            <h3 class="box-title">
+                <span class="title"> 
+                    {% include 'multilang' with section.settings.widget_title %}
+                </span>
+            </h3>
+            {% if section.settings.widget_des != blank %}
+            <p>
+                {% include 'multilang' with section.settings.widget_des %}
+            </p>        
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="row">
+            {% for block in section.blocks %}
+            
+            {% if block.type == 'smallImg' %}
+            <div class="col-12">
+                <div class="custom-block-banner banner-small-img">
+                    <div class="row{% if block.settings.banner_is == 'right'%} flex-md-row-reverse{% endif %}">
+                        <div class="img-box col-12 col-md-6 column">
+                            <a class="animate-scale" href="{{ block.settings.link }}">
+                                {%- assign img_url = block.settings.image | img_url: 'original', crop: 'center' -%}
+                                {% if block.settings.image != blank %}
+                                <img data-src="{{ img_url }}"
+                                    src="{{ img_url }}" alt="{{ block.settings.image.alt | default: shop.name }}" itemprop="logo"
+                                    class="lazyautosizes lazyloaded" data-sizes="auto">
+                                {% else %}
+                                <div class="not_img">
+                                585 x 485px
+                                </div>   
+                                {% endif %}
+                            </a>
+                        </div>
+                        
+                        {% if block.settings.banner_heading != blank or block.settings.banner_des != blank or block.settings.banner_button != blank %}
+                        <div class="col-12 col-md-6 column">               
+                            <div class="banner-content" 
+                                style="{% if block.settings.bg_banner_content != blank %}
+                                        background-color: {{ block.settings.bg_banner_content }};
+                                        {% endif %}">
+                                {% if block.settings.banner_heading != blank %}
+                                <h2 class="banner-heading"
+                                    style="{% if block.settings.font_size_banner_heading != blank %}
+                                            font-size: {{ block.settings.font_size_banner_heading }} !important;
+                                            {% endif %}
+                                            {% if block.settings.color_banner_heading != blank %}
+                                            color:{{ block.settings.color_banner_heading }};
+                                            {% endif %}">
+                                    <span class="line" style="background-color: {{ block.settings.color_banner_heading }};"></span>
+                                    {% include 'multilang' with block.settings.banner_heading  %}
+                                </h2>
+                                {% endif %}
+
+                                {% if block.settings.banner_des != blank %}
+                                <p class="banner-des"
+                                    style="{% if block.settings.font_size_banner_des != blank %}
+                                            font-size: {{ block.settings.font_size_banner_des }};
+                                            {% endif %}
+                                            {% if block.settings.color_banner_des != blank %}
+                                            color: {{ block.settings.color_banner_des }};
+                                            {% endif %}">
+                                    {% include 'multilang' with block.settings.banner_des  %}
+                                </p>
+                                {% endif %}
+
+                                {% if block.settings.banner_button != blank %}
+                                <a href="{{ block.settings.link }}" class="banner-button btn"
+                                    style="{% if block.settings.bg_banner_button != blank %}
+                                            background-color:{{ block.settings.bg_banner_button }};
+                                            {% endif %}
+                                            {% if block.settings.border_banner_button != blank %}
+                                            border-color:{{ block.settings.border_banner_button }};
+                                            {% endif %}
+                                            {% if block.settings.color_banner_button != blank %}
+                                            color:{{ block.settings.color_banner_button }};
+                                            {% endif %}">
+                                    {% include 'multilang' with block.settings.banner_button %}
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>          
+                </div>      
+            </div>
+            
+            {% elsif block.type == 'largeImg' %}
+            <div class="col-12 no-padd">
+                <div class="custom-block-banner banner-large-img{% if block.settings.display_parallax %} banner-parallax{% endif %}">
+                    <div class="img-box">
+                        <a href="{{ block.settings.link }}">
+                            {%- assign img_url = block.settings.image | img_url: 'master' -%}
+
+                            {% if block.settings.display_parallax %}
+                            <div class="parallax-image" style="background-image: url({{img_url}});"></div> 
+                            {% endif %}
+
+                            {% if block.settings.image != blank %}
+                            <img data-src="{{ img_url }}"
+                                src="https:{{ img_url }}" alt="{{ block.settings.image.alt | default: shop.name }}" itemprop="logo"
+                                class="lazyautosizes lazyloaded" data-sizes="auto">
+                            {% else %}
+                            <div class="not_img">
+                            1880 x 720px
+                            </div>   
+                            {% endif %}                        
+                        </a>
+
+                        {% if block.settings.countdown != blank %}
+                        <div class="sub-banner-countdown countdown-{{ block.id }}" data-countdown data-countdown-value="{{ block.settings.countdown }}">
+                        </div>
+
+                        <style>
+                        .custom-block-banner .clock-item {
+                            border-color: {{ block.settings.color_banner_heading | color_modify: 'alpha', 0.7 }};
+                            color: {{ block.settings.color_banner_heading }};
+                        }
+                        </style>
+                        {% endif %}
+                    </div>
+                
+                    {% if block.settings.banner_heading != blank or block.settings.banner_des != blank or block.settings.countdown!= blank or block.settings.banner_button != blank %}
+                    <div class="banner-content inner {% if block.settings.alignment == 'left' %}abs_left{% elsif block.settings.alignment == 'right' %}abs_right{% else %}abs_center{% endif %}">
+                        {% if block.settings.banner_heading != blank %}
+                        <h2 class="banner-heading"
+                            style="{% if block.settings.font_size_banner_heading != blank %}
+                                font-size: {{ block.settings.font_size_banner_heading }};
+                                {% endif %}
+                                {% if block.settings.color_banner_heading != blank %}
+                                color:{{ block.settings.color_banner_heading }};
+                                {% endif %}">
+                        <span class="line" style="background-color: {{ block.settings.color_banner_heading }};"></span>
+                        {% include 'multilang' with block.settings.banner_heading  %}
+                        </h2>
+                        {% endif %}
+
+                        {% if block.settings.banner_des != blank %}
+                        <p class="banner-des{% if block.settings.countdown != blank %} has-coundown{% endif %}"
+                            style="{% if block.settings.font_size_banner_des != blank %}
+                                    font-size: {{ block.settings.font_size_banner_des }};
+                                    {% endif %}
+                                    {% if block.settings.color_banner_des != blank %}
+                                    color: {{ block.settings.color_banner_des }};
+                                    {% endif %}">
+                        {% include 'multilang' with block.settings.banner_des  %}
+                        </p>
+                        {% endif %}
+
+                        {% if block.settings.countdown != blank %}
+                            <div class="sub-banner-countdown countdown-{{ block.id }}" data-countdown data-countdown-value="{{ block.settings.countdown }}">
+                            </div>
+
+                            <style>
+                            .custom-block-banner .clock-item {
+                                border-color: {{ block.settings.color_banner_heading | color_modify: 'alpha', 0.7 }};
+                                color: {{ block.settings.color_banner_heading }};
+                            }
+                            </style>
+                        {% endif %}
+
+                        {% if block.settings.banner_button != blank %}
+                        <a href="{{ block.settings.link }}" class="banner-button btn"
+                        style="{% if block.settings.bg_banner_button != blank %}
+                                background-color:{{ block.settings.bg_banner_button }};
+                                {% endif %}
+                                {% if block.settings.border_banner_button != blank %}
+                                border-color:{{ block.settings.border_banner_button }};
+                                {% endif %}
+                                {% if block.settings.color_banner_button != blank %}
+                                color:{{ block.settings.color_banner_button }};
+                                {% endif %}
+                                {% if block.settings.min_width_banner_button != blank %}
+                                min-width:{{ block.settings.min_width_banner_button }};
+                                {% endif %}">
+                        {% include 'multilang' with block.settings.banner_button %}
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}  
+                </div>
+
+                {% if block.settings.display_parallax and block.settings.dpl_down_arrow %}
+                <a href="#" class="scroll-down" data-scroll-down style="color: {{ block.settings.color_banner_heading }};">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" zoomAndPan="disable" x="0px" y="0px" viewBox="0 0 36 18" xml:space="preserve">
+                        <style type="text/css">
+                            .st0{fill:none;stroke:#fff;stroke-width:1.5;}
+                        </style>
+                        <line class="st0" x1="36" y1="0" x2="18" y2="18"></line>
+                        <line class="st0" x1="0" y1="0" x2="18" y2="18"></line>
+                    </svg>
+                </a>
+                {% endif %}
+            </div>
+
+            {% if block.settings.display_parallax %}
+            <style>
+            @media (min-width: 1200px) {
+                .banner-parallax .parallax-image {
+                    height: {{ block.settings.height_img_parallax }};
+                }
+            }            
+            </style>
+            {% endif %}
+
+            {% endif %}        
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+  {% assign margin_bottom =  section.settings.margin_bottom %}  
+
+    @media (max-width: 767px) {
+        #custom-block-{{ section.id }} {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+        #custom-block-{{ section.id }} {
+            margin-bottom: {{ section.settings.margin_bottom_tab }}px;
+        }
+    }
+  
+    @media (min-width: 1200px) {
+        #custom-block-{{ section.id }} {
+        margin-bottom: {{ margin_bottom }}px;
+        }
+    }	
+
+    #custom-block-{{ section.id }} .img-box {
+        text-align: {{ section.settings.img_align }};
+    }
+</style>
+{% endif %}
+
+
+{% schema %}
+  {
+    "name": "Custom Block Banners",
+	"class": "home-custom-block-baner-sections",
+    "max_blocks": 3,
+    "settings": [
+        {
+            "type": "select",
+            "id": "layout",
+            "label": "Banner Layout:",
+            "options": [
+                {
+                    "value": "default",
+                    "label": "Default"
+                },
+                {
+                    "value": "full",
+                    "label": "Full Width"
+                }
+            ],
+            "default": "full"
+        },
+        {
+            "type": "header",
+            "content": "Header"
+        },
+        {
+            "type": "text",
+            "id": "widget_title",
+            "label": "Widget Title"
+        },
+        {
+            "type" : "textarea",
+            "id" : "widget_des",
+            "label" : "Description"
+        },
+        {
+            "type": "select",
+            "id": "title_style",
+            "label": "Title Style:",
+            "options": [
+                {
+                    "value": "style_1",
+                    "label": "Style 1" 
+                },
+                { 
+                    "value": "style_2",
+                    "label": "Style 2" 
+                }          
+            ],
+            "default": "style_1"
+        },
+        {
+            "type": "select",
+            "id": "img_align",
+            "label": "Image Align:",
+            "default": "center",
+            "options": [
+                {
+                    "value": "center",
+                    "label": "Center"
+                },
+                {
+                    "value": "left",
+                    "label": "Left"
+                },              
+                {
+                    "value": "right",
+                    "label": "Right"
+                }
+            ]
+        }, 
+        {
+            "type": "header",
+            "content": "Margin Bottom:"
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom_mb",
+            "label": "Mobile",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 25
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom_tab",
+            "label": "Tablet",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 30
+        },             
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin Bottom",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 30
+        }	    
+    ],
+    "blocks": [
+        {
+            "type": "smallImg",
+            "name": "Small Image",
+            "settings": [
+            {
+                "type": "select",
+                "id": "banner_is",
+                "label": "Banner is:",
+                "default": "left",
+                "options": [
+                {
+                    "value": "left",
+                    "label": "Left"
+                },              
+                {
+                    "value": "right",
+                    "label": "Right"
+                }
+                ]
+            }, 
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label" : "Select Image"
+            },
+            {
+                "type": "header",
+                "content": "Banner Content"
+            },
+            {
+                "type" : "color",
+                "id" : "bg_banner_content",
+                "label" : "Background Banner Content",
+                "default" : "#fafafa"
+            },
+            {
+                "type" : "text",
+                "id" : "banner_heading",
+                "label" : "Banner Heading",
+                "default" : "Metropolis"
+            },
+            {
+                "type" : "text",
+                "id" : "font_size_banner_heading",
+                "label" : "Heading Font Size ",
+                "default" : "20px"
+            },
+            {
+                "type" : "color",
+                "id" : "color_banner_heading",
+                "label" : "Heading Color",
+                "default" : "#232323"
+            },
+            {
+                "type" : "textarea",
+                "id" : "banner_des",
+                "label" : "Banner Description",
+                "default": "Pellentesque posuere orci lobortis scelerisque blandit. Donec id tellus lacinia an tincidunt risus an consequat delit quisquemos."
+            },
+            {
+                "type" : "text",
+                "id" : "font_size_banner_des",
+                "label" : "Description Font Size",
+                "default" : "12px"
+            },
+            {
+                "type" : "color",
+                "id" : "color_banner_des",
+                "label" : "Description Color",
+                "default" : "#232323"
+            },
+            {
+                "type" : "text",
+                "id" : "banner_button",
+                "label" : "Button Banner",
+                "default" : "Shop Now"
+            },
+            {
+                "type" : "url",
+                "id" : "link",
+                "label" : "Banner Link"
+            },
+            {
+                "type" : "color",
+                "id" : "bg_banner_button",
+                "label" : "Background Button",
+                "default" : "#fff"
+            },
+            {
+                "type" : "color",
+                "id" : "border_banner_button",
+                "label" : "Border Button",
+                "default" : "#5a5a5a"
+            },
+            {
+                "type" : "color",
+                "id" : "color_banner_button",
+                "label" : "Button Color",
+                "default" : "#232323"
+            }		  
+        ]
+    },
+        {
+            "type": "largeImg",
+            "name": "Large Image",
+            "settings": [           
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label" : "Select Image"
+                },
+                {
+                    "type": "header",
+                    "content": "Parallax"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "display_parallax",
+                    "label": "Display Parallax",
+                    "default": false
+                },
+                {
+                    "type" : "checkbox",
+                    "id" : "dpl_down_arrow",
+                    "label" : "Display icon Scroll Down",
+                    "default" : false
+                },                
+                {
+                    "type" : "text",
+                    "id" : "height_img_parallax",
+                    "label" : "Height Parallax Image",
+                    "default" : "970px"
+                },
+                {
+                    "type": "header",
+                    "content": "Banner Content"
+                },
+                {
+                    "type": "select",
+                    "id": "alignment",
+                    "label": "Text alignment",
+                    "default": "left",
+                    "options": [
+                        {
+                            "value": "left",
+                            "label": "Left"
+                        },
+                        {
+                            "value": "center",
+                            "label": "Center"
+                        },
+                        {
+                            "value": "right",
+                            "label": "Right"
+                        }
+                    ]
+                },
+                {
+                    "type" : "text",
+                    "id" : "banner_heading",
+                    "label" : "Banner Heading",
+                    "default" : "Metropólis"
+                },
+                {
+                    "type" : "text",
+                    "id" : "font_size_banner_heading",
+                    "label" : "Heading Font Size ",
+                    "default" : "40px"
+                },
+                {
+                    "type" : "color",
+                    "id" : "color_banner_heading",
+                    "label" : "Heading Color",
+                    "default" : "#232323"
+                },
+                {
+                    "type" : "textarea",
+                    "id" : "banner_des",
+                    "label" : "Banner Description",
+                    "default": "Pellentesque posuere orci lobortis scelerisque blandit. Donec id tellus lacinia an tincidunt risus an consequat delit quisquemos."
+                },
+                {
+                    "type" : "text",
+                    "id" : "font_size_banner_des",
+                    "label" : "Description Font Size",
+                    "default" : "12px"
+                },
+                {
+                    "type" : "color",
+                    "id" : "color_banner_des",
+                    "label" : "Description Color",
+                    "default" : "#232323"
+                },
+                {
+                    "type" : "textarea",
+                    "id" : "countdown",
+                    "label" : "Countdown"
+                },
+                {
+                    "type" : "text",
+                    "id" : "banner_button",
+                    "label" : "Button Banner",
+                    "default" : "Shop The Looks"
+                },
+                {
+                    "type" : "url",
+                    "id" : "link",
+                    "label" : "Banner Link"
+                },
+                {
+                    "type" : "color",
+                    "id" : "bg_banner_button",
+                    "label" : "Background Button",
+                    "default" : "#232323"
+                },
+                {
+                    "type" : "color",
+                    "id" : "border_banner_button",
+                    "label" : "Border Button",
+                    "default" : "#232323"
+                },
+                {
+                    "type" : "color",
+                    "id" : "color_banner_button",
+                    "label" : "Button Color",
+                    "default" : "#fff"
+                },
+                {
+                    "type" : "text",
+                    "id" : "min_width_banner_button",
+                    "label" : "Banner Button Min Width",
+                    "default" : "237px"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Custom Block Banners",
+            "category": "Banner",
+            "blocks": [
+                {
+                    "type": "largeImg"
+                }         
+            ]
+        }
+    ]
+  }
+{% endschema %}

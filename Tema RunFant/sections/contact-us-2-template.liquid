@@ -1,0 +1,382 @@
+
+<div class="contact-us-page">
+
+  
+  <div class="container">
+  	{% include 'breadcrumb' %}
+    
+    <header class="page-heading">
+      {% if settings.enable_multilang and section.settings.contact_title contains '|' %}
+      <h2 class="lang1">
+        {{ section.settings.contact_title | split: '|' | first }}
+      </h2>
+      <h2 class="lang2">
+        {{ section.settings.contact_title | split: '|' | last }}
+      </h2>
+      {% else %}
+      <h2>
+        {{ section.settings.contact_title | split: '|' | first }}
+      </h2>
+      {% endif %}
+      {% include 'multilang-block' with section.settings.contact_text_desc, class:'des' %}
+    </header> 
+    
+    {% if page.content != blank %}
+    <div class="rte">
+      {{ page.content }}
+    </div>
+    {% endif %}
+    
+    <div class="wrapper">
+      <div class="row">
+        <div class="col-md-7 col-lg-8 col-xl-7 form-contact">     
+          <div class="form-heading">
+            <h3 class="title">
+              {% include 'multilang' with section.settings.form_title%}
+            </h3>
+            <p>
+              {% include 'multilang' with section.settings.form_subtitle %}
+            </p>  
+          </div>
+          
+          {% form 'contact' %}
+
+          {% comment %}
+          Successful message
+          {% endcomment %}
+
+          {% if form.posted_successfully? %}
+          <p class="note form-success" {% if settings.enable_multilang %}data-translate="contact.form.post_success"{% endif %}>
+            {{ 'contact.form.post_success' | t }}
+          </p>
+          {% endif %}
+
+          {{ form.errors | default_errors }}
+
+          <div id="contactFormWrapper">          
+            <div class="form-group">
+              <label for="contactFormName">
+                <span {% if settings.enable_multilang %}data-translate="contact.form.name"{%endif%}>
+                  {{ 'contact.form.name' | t }}
+                </span>
+              </label>
+              <input type="text" id="contactFormName" name="contact[name]" autocapitalize="words" placeholder="{{ section.settings.contact_your_name }}">
+            </div>
+
+            <div class="form-group">
+              <label for="contactFormPhone">
+                <span {% if settings.enable_multilang %}data-translate="contact.form.phone"{%endif%}>
+                  {{ 'contact.form.phone' | t }}
+                </span>
+              </label>
+              <input type="tel" name="contact[phone]" id="contactFormPhone" pattern="[0-9]*" placeholder="{{ section.settings.contact_phone_number }}">
+            </div>
+
+            <div class="form-group">
+              <label for="contactFormEmail">
+                <span {% if settings.enable_multilang %}data-translate="contact.form.email"{%endif%}>
+                  {{ 'contact.form.email' | t }}
+                </span>
+                <em>*</em>
+              </label>
+              <input type="email" name="contact[email]" id="contactFormEmail" autocorrect="off" autocapitalize="off" placeholder="{{ section.settings.contact_your_email }}">
+            </div>
+
+            <div class="form-group">
+              <label for="contactFormMessage">
+                <span {% if settings.enable_multilang %}data-translate="contact.form.message"{%endif%}>
+                  {{ 'contact.form.message' | t }}
+                </span>
+                <em>*</em>
+              </label>
+              <textarea rows="8" name="contact[body]" id="contactFormMessage" {% if settings.enable_multilang %}data-translate="contact.form.placeholder_message" translate-item="placeholder"{%endif%} placeholder="{{ 'contact.form.placeholder_message' | t }}"></textarea>
+            </div>
+
+            <input type="submit" class="btn" {% if settings.enable_multilang %}data-translate="contact.form.submit_contact"{%endif%} value="{{ 'contact.form.submit_contact' | t }}">
+          </div>
+          {% endform %}
+        </div>
+        
+        {% if section.settings.display_location %}
+        <div class="col-md-5 info">
+          <div class="inner">
+          {% if section.settings.top_title != '' and section.settings.top_content != '' %}
+            <div class="info-block top-content">
+              {% if section.settings.top_title != '' %}
+                <h3 class="title">
+                  {% include 'multilang' with section.settings.top_title %}
+                </h3>
+                {% if section.settings.top_content != '' %}
+                  {% include 'multilang-block' with section.settings.top_content, class: 'info-content'  %}
+                {% endif %}
+              {% endif %}
+              <a href="mailto:{{section.settings.email}}" class="btn">
+                {% include 'multilang' with section.settings.email_button %}
+              </a>
+            </div>
+          {% endif %}
+          {% if section.settings.bot_content != '' and section.settings.bot_title != '' %}
+            <div class="info-block">
+            {% if section.settings.bot_title != '' %}
+              <h3 class="title">
+                {% include 'multilang' with section.settings.bot_title %}
+              </h3>
+            {% endif %}
+            {% if section.settings.bot_content != '' %}
+              {% include 'multilang-block' with section.settings.bot_content, class: 'info-content' %}
+            {% endif %}
+          {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>     
+    </div>
+  </div>    
+</div>
+
+<style>
+  .page-heading {
+    text-align: center;
+    position: relative;
+    width:70%;
+    margin:0 auto;
+    margin-bottom: 55px;
+  }
+  .page-heading:before {
+    content:'';
+    display:block;
+    width: 30%;
+    max-width: 315px;
+    height:1px;
+    background-color: #a6a6a6;
+    position: absolute;
+    bottom:0;
+    left:50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+  }
+  .page-heading h2{
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    font-size: 30px;
+    margin-bottom: 22px;
+  }
+  .page-heading .des{
+    padding-bottom: 18px;
+    margin-bottom: 0px;
+  }
+  .form-contact{
+    padding-top:40px;
+  }
+  .form-heading{
+    margin-bottom:25px;
+  }
+  .form-heading h3.title{
+    font-size: {{settings.body_font_size | plus: 2}}px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 26px;
+  }
+  .contact-form input[type="text"],.contact-form input[type="tel"],.contact-form input[type="email"],.contact-us-page .form-group textarea{
+    max-width:630px;
+  }
+  .info .inner{
+    background-color: {{section.settings.background_color}};
+    padding:40px 55px;
+  }
+  .info .top-content{
+    margin-bottom: 50px;
+  }
+  .info h3.title{
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: {{settings.body_font_size | plus:2}}px;
+    letter-spacing: 0.05em;
+    margin-bottom: 25px;
+  }
+  .info .info-content{
+    line-height: {{settings.body_font_size | plus:12}}px;
+  }
+  .info .top-content .info-content{
+    margin-bottom: 25px;
+  }
+   .info .top-content .btn{
+    background-color: {{section.settings.email_button_bgc}};
+    color: {{section.settings.email_button_txtc}};
+    border-color: {{section.settings.email_button_bdc}};
+    margin-top: 0;
+  }
+  .info .top-content .btn:hover{
+    background-color: {{section.settings.email_button_bgc_h}};
+    color: {{section.settings.email_button_txtc_h}};
+    border-color: {{section.settings.email_button_bdc_h}};
+  }
+  
+  @media (max-width: 991px){
+    .info .inner{
+      padding:40px 20px;
+    }
+    .page-heading h2{
+      font-size: 24px;
+    }
+  }
+
+  @media (max-width: 767px){
+    .page-heading h2{
+      font-size: 20px;
+    }
+  }
+</style>
+
+
+{% schema %}
+    {
+    "name": "Contact Page",
+    "class":"contact-template-2",
+    "settings": [
+      {
+        "type": "text",
+        "id": "contact_title",
+        "label": "Title",
+        "default": "Drop Us A Line"
+      },
+      {
+        "type": "textarea",
+        "id": "contact_text_desc",
+        "label": "Text Description"
+      },
+      {
+        "type": "header",
+        "content": "Contact Form"
+      },
+      {
+        "type": "text",
+        "id": "form_title",
+        "label": "Form Title",
+        "default":"Send us an email:"
+      },
+      {
+        "type": "text",
+        "id": "form_subtitle",
+        "label": "Form Subtitle",
+        "default":"ASK US ANYTHING! WE'LL GET BACK TO YOU WITHIN 24-48 HOURS."
+      },
+      {
+        "type": "text",
+        "id": "contact_your_name",
+        "label": "Placeholder text in Your Name"
+      },
+      {
+        "type": "text",
+        "id": "contact_phone_number",
+        "label": "Placeholder text in Your Phone"
+      },
+      {
+        "type": "text",
+        "id": "contact_your_email",
+        "label": "Placeholder text in Your Email"
+      },
+      {
+        "type": "header",
+        "content": "Store Info"
+      },
+      {
+        "type": "checkbox",
+        "id": "display_location",
+        "label": "Display Info",
+        "default": true 
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background Color",
+        "default": "#fafafa" 
+      },
+      {
+        "type": "paragraph",
+        "content": "Top Content"
+      },
+      {
+        "type": "text",
+        "id": "top_title",
+        "label": "Title",
+        "default": "Chat with us:" 
+      },
+      {
+        "type": "textarea",
+        "id": "top_content",
+        "label": "Content",
+        "default": "IF YOU HAVE AN ISSUE OR QUESTION THAT REQUIRES IMMEDIATE ASSISTANCE, YOU CAN CLICK BELOW TO CHAT LIVE WITH A CUSTOMER SERVICE REPRESENTATIVE. IF WE AREN'T AVAILABLE, DROP US AN EMAIL TO THE LEFT AND WE'LL RESPOND WITHIN 24-48 HOURS.",
+        "info":"Use [lang2] to separate multiple language" 
+      },
+      {
+        "type": "text",
+        "id": "email_button",
+        "label": "Email Button",
+        "default": "Message us" 
+      },
+      {
+        "type": "text",
+        "id": "email",
+        "label": "Email"
+      },
+      {
+        "type": "color",
+        "id": "email_button_bgc",
+        "label": "Email Button Backgoround Color",
+        "default": "rgba(250,250,250,0)" 
+      },
+      {
+        "type": "color",
+        "id": "email_button_txtc",
+        "label": "Email Button Text Color",
+        "default": "#232323" 
+      },
+      {
+        "type": "color",
+        "id": "email_button_bdc",
+        "label": "Email Button Border Color",
+        "default": "#232323" 
+      },
+      {
+        "type": "color",
+        "id": "email_button_bgc_h",
+        "label": "Email Button Backgoround Color Hover",
+        "default": "#232323" 
+      },
+      {
+        "type": "color",
+        "id": "email_button_txtc_h",
+        "label": "Email Button Text Color Hover",
+        "default": "#fff" 
+      },
+      {
+        "type": "color",
+        "id": "email_button_bdc_h",
+        "label": "Email Button Border Color Hover",
+        "default": "#232323" 
+      },
+      {
+        "type": "paragraph",
+        "content": "Bottom Content"
+      },
+      {
+        "type": "text",
+        "id": "bot_title",
+        "label": "Title",
+        "default": "Chat with us:" 
+      },
+      {
+        "type": "textarea",
+        "id": "bot_content",
+        "label": "Content",
+        "info":"Use [lang2] to separate multiple language"
+      }
+    ]
+  }
+{% endschema %}

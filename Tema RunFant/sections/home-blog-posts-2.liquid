@@ -1,0 +1,172 @@
+{% case section.settings.blog_results_per_row %}  
+  {% when '2' %}
+  	{%- assign column_size = 'col-12 col-md-6 two-blocks item' -%}
+  {% when '3' %}
+  	{%- assign column_size = 'col-12 col-md-6 col-lg-4 three-blocks item' -%}		
+{% endcase %}
+
+
+{% if section.settings.blog_posts != blank %}
+<div class="home-blog-posts home-blog-style2" id="home-blog-{{ section.id }}">
+    <div class="{% if section.settings.layout == 'default' %}container{% else %}container-fluid{% endif %}">
+        <div class="content-blog">
+            <div class="row list-blogs blog-grid">
+                {%- assign blog = blogs[section.settings.blog_posts] -%}
+
+                {% for article in blog.articles limit: section.settings.blog_results_per_row %}
+                <div class="{{ column_size }}">
+                    {% if article.image %}
+                    {% assign image_alt = article.title | escape %}
+                    {{ article | img_url: 'original' | img_tag: image_alt, 'article__image' | link_to: article.url | replace: '<a', '<a class="article-img"' }}
+                    {% endif %}
+
+                    <div class="blog-item">
+                        <div class="article-inner">
+                            {% if section.settings.blog_show_author or section.settings.blog_show_date %}
+                            <div class="blog_author">               
+                                {% if section.settings.blog_show_author %}
+                                <span class="article__author">By {{article.author}}</span>
+                                {% endif %}
+                                
+                                {% if section.settings.blog_show_date %}
+                                <span class="article__date">
+                                on {{ article.published_at | time_tag: format: 'month_day_year' }}
+                                </span>
+                                {% endif %}                
+                            </div>
+                            {% endif %} 
+
+                            <h3 class="article-title">
+                                <a href="{{ article.url }}">
+                                    {% include 'multilang' with article.title %}
+                                </a>
+                            </h3>  
+
+                            <div class="article-des">
+                                {% if settings.enable_multilang and article.excerpt_or_content contains '[lang2]' %}
+                                <div class="lang1">
+                                    {{ article.excerpt_or_content | strip_html | truncatewords: 21 | split:"[lang2]" | first | split:"|" | first}}
+                                </div>
+                                <div class="lang2">
+                                    {{ article.excerpt_or_content | strip_html | truncatewords: 21 | split:"[lang2]" | last | split:"|" | last }}
+                                </div>
+                                {% else %}
+                                    {{ article.excerpt_or_content | strip_html | truncatewords: 21  | split:"[lang2]" | first | split:"|" | first}}
+                                {% endif %}
+                            </div>
+
+                            <a href="{{ article.url }}" class="btn btn-read-more" {% if settings.enable_multilang %}data-translate="blogs.article.read_more"{% endif %}>
+                                {{ 'blogs.article.read_more' | t }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>        
+    </div>
+</div>
+{% endif %}
+
+<style>
+    {% assign margin_bottom =  section.settings.margin_bottom %}
+
+    @media (max-width: 1199px) {
+        #home-blog-{{ section.id }} {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }	
+    
+    @media (min-width: 1200px) {
+        #home-blog-{{ section.id }} {
+            margin-bottom: {{ margin_bottom }}px;
+        }
+    }	
+</style>
+
+
+{% schema %}
+    {
+        "name": "Blog posts Style 2",
+        "class": "home-blog-posts2-sections",
+        "settings": [
+            {
+                "type": "select",
+                "id": "layout",
+                "label": "Layout:",
+                "options": [
+                    {
+                        "value": "default",
+                        "label": "Default"
+                    },
+                    {
+                        "value": "full",
+                        "label": "Full Width"
+                    }
+                ],
+                "default": "default"
+            },
+            {
+                "type": "header",
+                "content": "Blog"
+            },
+            {
+                "id": "blog_posts",
+                "type": "blog",
+                "label": "Blog Posts"
+            },
+            {
+                "type": "select",
+                "id": "blog_results_per_row",
+                "label": "Blogs per row",
+                "options": [
+                {
+                    "value": "2",
+                    "label": "2"
+                },
+                {
+                    "value": "3",
+                    "label": "3"
+                }         
+                ],
+                "default": "3"
+            },
+            {
+                "type": "checkbox",
+                "id": "blog_show_author",
+                "label": "Show author",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "blog_show_date",
+                "label": "Show date",
+                "default": true
+            },            
+            {
+                "type": "range",
+                "id": "margin_bottom_mb",
+                "label": "Margin Bottom for Mobile",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "label": "Margin Bottom for Pc",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            }	      
+        ],
+        "presets": [
+            {
+                "name": "Blog posts Style 2",
+                "category": "Blog"
+            }
+        ]
+    }
+{% endschema %}

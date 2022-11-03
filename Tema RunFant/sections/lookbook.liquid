@@ -1,0 +1,529 @@
+{% if section.blocks.size > 0 %}
+
+{% assign- autoplay = section.settings.autoplay -%}
+{% assign- autoplaySpeed = section.settings.speed -%}
+{% assign- fade = section.settings.transition -%}
+
+<section class="lookbook-content" id="lookbook-{{ section.id }}">
+  <div class="row">
+    <div class ="col-12">
+      <div class="lookbook-slideshow"{% if section.blocks.size > 1 %} data-init-slideshow{% endif %} data-dots="false" data-autoplay="{{ autoplay }}" data-autoplay-speed="{{ autoplaySpeed }}" data-fade="{{ fade }}">
+        {% for block in section.blocks %}
+
+        {% if block.settings.dpl_slide_img %}
+        <div class="item">
+          <div class="images-contain">
+            {% if block.settings.image_slide != blank %}
+
+            {%- assign img_url = block.settings.image_slide | img_url: 'master' -%}
+
+            <a {% if block.settings.lb_product_1 != blank or block.settings.lb_product_2 != blank or block.settings.lb_product_3 != blank %}href="javascript:void(0)"{% else %}href="{{ block.settings.link }}"{% endif %} class="slide-image">
+              <img data-src="{{ img_url }}"
+                   src="{{ img_url }}" alt="{{ block.settings.image_slide.alt | default: shop.name }}"
+                   class="lazyautosizes lazyloaded" data-sizes="auto">
+            </a>
+
+            {% else %}
+
+            <div class="not_img">
+              1170 x 670px
+            </div>   
+            {% endif %}
+
+            {% if block.settings.lb_product_1 != blank %}
+            <div class="select-icon lb-icon-1-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_1 }}" style="top:{{ block.settings.top_position_1 }}%; left:{{ block.settings.left_position_1 }}%;">
+              <span class="glyphicon"></span>
+            </div>
+            {% endif %}
+
+            {% if block.settings.lb_product_2 != blank %}
+            <div class="select-icon lb-icon-2-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_2 }}" style="top:{{ block.settings.top_position_2 }}%; left:{{ block.settings.left_position_2 }}%;">
+              <span class="glyphicon"></span>
+            </div>
+            {% endif %}
+
+            {% if block.settings.lb_product_3 != blank %}
+            <div class="select-icon lb-icon-3-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_3 }}" style="top:{{ block.settings.top_position_3 }}%; left:{{ block.settings.left_position_3 }}%;">
+              <span class="glyphicon"></span>
+            </div>
+            {% endif %}
+
+            <style type="text/css">
+              #lookbook-{{section.id}} .lb-icon-1-{{ block.id }} .glyphicon {
+                background-color: {{ block.settings.dots_bg_color_1 }};
+              }
+
+              #lookbook-{{section.id}} .lb-icon-1-{{ block.id }} .glyphicon:before,
+              #lookbook-{{section.id}} .lb-icon-1-{{ block.id }} .glyphicon:after {
+                background-color: {{ block.settings.dots_color_1 }};
+              }
+
+              #lookbook-{{section.id}} .lb-icon-1-{{ block.id }}:before{
+                color: {{ block.settings.dots_shadow_color_1 | color_modify: 'alpha', 0.3 }};
+              } 
+
+              #lookbook-{{section.id}} .lb-icon-2-{{ block.id }} .glyphicon {
+                background-color: {{ block.settings.dots_bg_color_2 }};
+              }
+
+              #lookbook-{{section.id}} .lb-icon-2-{{ block.id }} .glyphicon:before,
+              #lookbook-{{section.id}} .lb-icon-2-{{ block.id }} .glyphicon:after {
+                background-color: {{ block.settings.dots_color_2 }};
+              }
+
+              #lookbook-{{section.id}} .lb-icon-2-{{ block.id }}:before{
+                color: {{ block.settings.dots_shadow_color_2 | color_modify: 'alpha', 0.3 }};
+              } 
+
+              #lookbook-{{section.id}} .lb-icon-3-{{ block.id }} .glyphicon {
+                background-color: {{ block.settings.dots_bg_color_3 }};
+              }
+
+              #lookbook-{{section.id}} .lb-icon-3-{{ block.id }} .glyphicon:before,
+              #lookbook-{{section.id}} .lb-icon-3-{{ block.id }} .glyphicon:after {
+                background-color: {{ block.settings.dots_color_3 }};
+              }
+
+              #lookbook-{{section.id}} .lb-icon-3-{{ block.id }}:before{
+                color: {{ block.settings.dots_shadow_color_3 | color_modify: 'alpha', 0.3 }};
+              } 
+            </style> 
+          </div>
+
+          {% if block.settings.heading != blank or block.settings.slide-des != blank or block.settings.button_slide != blank %}
+          <div class="slide-content {% if block.settings.alignment == 'left' %}abs_left{% elsif block.settings.alignment == 'right' %}abs_right{% else %}abs_center{% endif %}">
+            {% if block.settings.heading != blank %}
+            <h2 class="slide-heading"
+                style="{% if block.settings.font_size_heading != blank %}
+                       font-size: {{ block.settings.font_size_heading }};
+                       {% endif %}
+                       {% if block.settings.color_heading != blank %}
+                       color:{{ block.settings.color_heading }};
+                       {% endif %}">
+              <span class="line" style="background-color: {{ block.settings.color_heading }};"></span>
+              {% include 'multilang' with block.settings.heading  %}
+            </h2>
+            {% endif %}
+
+            {% if block.settings.slide-des != blank %}
+            <p class="slide-text"
+               style="{% if block.settings.font_size_des != blank %}
+                      font-size: {{ block.settings.font_size_des }};
+                      {% endif %}
+                      {% if block.settings.color_des != blank %}
+                      color: {{ block.settings.color_des }};
+                      {% endif %}">
+              {% include 'multilang' with block.settings.slide-des  %}
+            </p>
+            {% endif %}
+
+            {% if block.settings.button_slide != blank %}
+            <a href="{{ block.settings.link }}" class="slide-button btn{% if block.settings.slide-des == blank %} no-des{% endif %}"
+               style="{% if block.settings.bg_button != blank %}
+                      background-color:{{ block.settings.bg_button }};
+                      {% endif %}
+                      {% if block.settings.border_button != blank %}
+                      border-color:{{ block.settings.border_button }};
+                      {% endif %}
+                      {% if block.settings.color_button != blank %}
+                      color:{{ block.settings.color_button }};
+                      {% endif %}">
+              {% include 'multilang' with block.settings.button_slide  %}
+            </a>
+            {% endif %}
+          </div>
+          {% endif %}                    
+        </div>
+        {% endif %}
+
+        {% endfor %}
+      </div>
+    </div>
+  </div>  
+</section>
+
+{% if section.settings.display_product_detail_share %}
+<div class="share_toolbox justify-content-end">  
+  {% include 'multilang' with section.settings.share_text %}
+  <!----- www.addthis.com/dashboard ----->
+  <div class="addthis_inline_share_toolbox"></div>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-595b0ea2fb9c5869"></script>
+</div>
+{% endif %}
+
+{% if section.settings.button != blank %}
+<div class="bottom text-center">
+  <a href="{{ section.settings.link }}" class="btn">
+    {% include 'multilang' with section.settings.button %}
+  </a>
+</div>
+{% endif %}
+
+<style>
+  {% assign arrow_color =  section.settings.arrow_color %}
+  {% assign arrow_border_color =  section.settings.arrow_border_color %}
+  {% assign position_slick_arrow =  section.settings.position_slick_arrow %}  
+  {% assign arrow_bg_color =  section.settings.arrow_bg_color %}
+  
+  {% if section.blocks.size > 1 %}
+  #lookbook-{{section.id}} .slick-arrow {
+    color: {{ arrow_color }};
+    border-color: {{ arrow_border_color }};
+    background-color: {{ arrow_bg_color }};
+  }  
+  
+  #lookbook-{{section.id}} .slick-arrow.slick-prev {
+    left: {{ position_slick_arrow }};
+  }
+  
+  #lookbook-{{section.id}} .slick-arrow.slick-next {
+    right: {{ position_slick_arrow }};
+  }
+  {% endif %}
+</style>
+{% endif %}
+
+
+{% schema %}
+  {
+    "name": "Lookbook",
+    "max_blocks": 10,
+    "settings": [ 
+      {
+        "type": "checkbox",
+        "id": "display_product_detail_share",
+        "label": "Display Product Share?",
+        "default": true
+      },
+	  {
+        "type": "text",
+        "id": "share_text",
+        "label": "Share Text",
+        "default": "Share"
+      },
+      {
+        "type": "text",
+        "id": "button",
+        "label": "Lookbook Button"
+      },
+      {
+        "type": "url",
+        "id": "link",
+        "label": "Lookbook link"
+      },
+      {
+        "type": "header",
+        "content": "Settings for Lookbook SlideShow"
+      },
+      {
+        "type": "checkbox",
+        "id": "autoplay",
+        "label": "Lookbook Auto Play",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "speed",
+        "label": "Change slides every",
+
+        "options": [
+          { "value": "5000", "label": "5 seconds" },
+          { "value": "6000", "label": "6 seconds" },
+          { "value": "7000", "label": "7 seconds" },
+          { "value": "8000", "label": "8 seconds" },
+          { "value": "9000", "label": "9 seconds" },
+          { "value": "10000", "label": "10 seconds" }
+        ],
+        "default": "5000"
+      },
+      {
+        "type": "select",
+        "id": "transition",
+        "label": "Lookbook transition effect",
+        "options": [
+          {
+          "value": "false",
+          "label": "Slide"
+          },
+          {
+          "value": "true",
+          "label": "Fade"
+          }
+        ],
+        "default": "true"
+      },		      
+      {
+        "type": "color",
+        "id": "arrow_color",
+        "label": "Arrow color",
+        "default": "#666d6d",
+        "info": "Default Value: #666d6d"
+      },
+	  {
+        "type": "color",
+        "id": "arrow_border_color",
+        "label": "Arrow Border color",
+        "default": "#666d6d",
+        "info": "Default Value: #666d6d"
+      },
+	  {
+        "type": "color",
+        "id": "arrow_bg_color",
+        "label": "Arrow background color",
+        "default": "#fff",
+        "info": "Default Value: #fff"
+      },
+	  {
+        "type" : "text", 
+        "id" : "position_slick_arrow",
+        "label" : "Position Arrow - Unit % or px",
+        "default" : "10%"
+      }      
+    ],
+
+    "blocks" : [
+      {
+        "type": "image",
+        "name": "Image Lookbook",
+
+        "settings":[
+          {
+            "type": "checkbox",
+            "id": "dpl_slide_img",
+            "label" : "Enable",
+            "default" : true
+          },
+          {
+            "type": "image_picker",
+            "id": "image_slide",
+            "label" : "Select Image",
+            "info": "Recommended Image: Width x Height (1170 x 670)px"
+          },
+          {
+            "type": "select",
+            "id": "alignment",
+            "label": "Text alignment",
+            "default": "left",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+	      {
+			"type": "header",
+			"content": "Lookbook Content",
+			"info" : "======================="
+		  },
+          {
+            "type" : "text",
+            "id" : "heading",
+            "label" : "Heading",
+            "default" : "Cosmopolis"
+          },
+          {
+            "type" : "text",
+            "id" : "font_size_heading",
+            "label" : "Heading Font Size ",
+            "default" : "40px"
+          },
+          {
+            "type" : "color",
+            "id" : "color_heading",
+            "label" : "Heading Color",
+            "default" : "#232323"
+          },
+          {
+            "type" : "textarea",
+            "id" : "slide-des",
+            "label" : "Slide Description",
+			"default": "Quisquemos sodales suscipit tortor ditaemcos condimentum de cosmo lacus meleifend menean diverra loremous."
+          },
+          {
+            "type" : "text",
+            "id" : "font_size_des",
+            "label" : "Description Font Size",
+            "default" : "12px"
+          },
+          {
+            "type" : "color",
+            "id" : "color_des",
+            "label" : "Description Color",
+            "default" : "#232323"
+          },
+          {
+            "type" : "text",
+            "id" : "button_slide",
+            "label" : "Button Slideshow",
+            "default" : "Shop The Collection"
+          },
+          {
+            "type" : "url",
+            "id" : "link",
+            "label" : "Slide link"
+          },
+          {
+            "type" : "color",
+            "id" : "bg_button",
+            "label" : "Background Button",
+            "default" : "#232323"
+          },
+          {
+            "type" : "color",
+            "id" : "border_button",
+            "label" : "Border Button",
+            "default" : "#232323"
+          },
+          {
+            "type" : "color",
+            "id" : "color_button",
+            "label" : "Button Color",
+            "default" : "#fff"
+          },
+		  {
+			"type": "header",
+			"content": "Lookbook Product",
+			"info" : "======================="
+		  },
+	      {
+			"type" : "header",
+			"content" : "Product 1"
+		  },
+		  {
+			"type" : "product",
+			"id" : "lb_product_1",
+			"label" : "Select Product"
+		  },
+		  {
+			"type" : "text",
+			"id" : "top_position_1",
+			"label" : "Top Position",
+			"default" : "10",
+			"info" : "Unit %" 
+		  },
+		  {
+			"type" : "text",
+			"id" : "left_position_1",
+			"label" : "Left Position",
+			"default" : "10",
+			"info" : "Unit %" 
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_color_1",
+			"label" : "Select Icon Color",
+			"default" : "#fff"
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_bg_color_1",
+			"label" : "Select Icon Background color",
+			"default" : "#323232"			
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_shadow_color_1",
+			"label" : "Select Icon Shadow Color with opacity 30%",
+			"default" : "#fff",
+		    "info" : "======================="
+		  },
+
+		  {
+			"type" : "header",
+			"content" : "Product 2"
+		  },
+		  {
+			"type" : "product",
+			"id" : "lb_product_2",
+			"label" : "Select Product"
+		  },
+		  {
+			"type" : "text",
+			"id" : "top_position_2",
+			"label" : "Top Position",
+			"default" : "10",
+			"info" : "Unit %" 
+		  },
+		  {
+			"type" : "text",
+			"id" : "left_position_2",
+			"label" : "Left Position",
+			"default" : "10",
+			"info" : "Unit %" 
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_color_2",
+			"label" : "Select Icon Color",
+			"default" : "#fff"
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_bg_color_2",
+			"label" : "Select Icon Background color",
+			"default" : "#323232"			
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_shadow_color_2",
+			"label" : "Select Icon Shadow Color with opacity 30%",
+			"default" : "#fff",
+		    "info" : "======================="
+		  },
+
+		  {
+			"type" : "header",
+			"content" : "Product 3"
+		  },
+		  {
+			"type" : "product",
+			"id" : "lb_product_3",
+			"label" : "Select Product"
+		  },
+		  {
+			"type" : "text",
+			"id" : "top_position_3",
+			"label" : "Top Position",
+			"default" : "10",
+			"info" : "Unit %" 
+		  },
+		  {
+			"type" : "text",
+			"id" : "left_position_3",
+			"label" : "Left Position",
+			"default" : "10",
+			"info" : "Unit %" 
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_color_3",
+			"label" : "Select Icon Color",
+			"default" : "#fff"
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_bg_color_3",
+			"label" : "Select Icon Background color",
+			"default" : "#323232"			
+		  },
+		  {
+			"type" : "color",
+			"id" : "dots_shadow_color_3",
+			"label" : "Select Icon Shadow Color with opacity 30%",
+			"default" : "#fff",
+		    "info" : "======================="
+		  }
+        ]
+      }
+    ]
+  }
+{% endschema %}

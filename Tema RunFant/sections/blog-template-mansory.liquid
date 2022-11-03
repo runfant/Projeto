@@ -1,0 +1,75 @@
+{% if section.settings.blog_post != blank %}
+  {% assign limit = section.settings.blog_post %}
+{% else %}
+  {% assign limit = 3 %}
+{% endif %}
+
+{% paginate blog.articles by limit %}
+
+<div class="content-blog blog-mansory">
+  <ul class="list-blog">    
+    {% for article in blog.articles %}
+    {% include 'blog-item-2' %}
+    {% endfor %}
+  </ul>
+
+  {% if paginate.pages > 1 %}
+  {% include 'pagination' %}
+  {% endif %}
+</div>
+{% endpaginate %}
+
+
+<style>
+  .halo-blog-content .blog-item-2 .article-inner {
+    text-align: {{ section.settings.blog_text_align }};
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Blog Mansory",
+	"class": "col-12 col-xl-9 col-main",
+    "settings": [      
+      {
+        "type": "text",
+        "id": "blog_post",
+        "label": "Blog post per page",
+        "default": "3"
+      },
+      {
+        "type": "select",
+        "id": "blog_text_align",
+        "label": "Blog Text Align",
+        "options": [
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ],
+        "default": "left",
+        "info": "Default Value: Left"
+      },
+      {
+        "type": "checkbox",
+        "id": "blog_show_author",
+        "label": "Show author",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "blog_show_date",
+        "label": "Show date",
+        "default": true
+      }
+    ]
+  }
+{% endschema %}

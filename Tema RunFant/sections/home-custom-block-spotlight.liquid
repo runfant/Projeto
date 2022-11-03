@@ -1,0 +1,245 @@
+{% if section.blocks.size > 0 %}
+<div class="home-spotlight-block" id="home-spotlight-{{section.id}}">
+  <div class="{% if section.settings.layout == 'default' %}container{% else %}container-fluid{% endif %}">
+    {% if section.settings.spotlight_block_title != blank %}
+    <div class="widget-title{% if section.settings.title_style == 'style_2' %} not-before{% endif %}{% unless section.settings.spotlight_block_des != blank %} no-des{% endunless %}">   
+      <h3 class="box-title">
+        <span class="title"> 
+          {% include 'multilang' with section.settings.spotlight_block_title %}
+        </span>
+      </h3>
+      {% if section.settings.spotlight_block_des != blank %}
+      <p>
+        {% include 'multilang' with section.settings.spotlight_block_des %}
+      </p>        
+      {% endif %}
+    </div>
+    {% endif %}
+    
+    <div class="row spotlight-{{ section.blocks.size }}-blocks">
+      {% for block in section.blocks %}
+      
+      {% case section.blocks.size %}
+        {% when 1 %}
+          {%- assign column_size = 'col-12' -%}
+        {% when 2 %}
+          {%- assign column_size = 'col-12 col-md-6' -%}
+        {% when 3 %}
+            {%- assign column_size = 'col-12 col-md-6 col-lg-4' -%}        
+      {% endcase %}
+         
+      <div class="{{ column_size }}">
+        <div class="spotlight-item">
+          <div class="img-box">
+            <a href="{{ block.settings.link }}" class="animate-scale">
+              {% if block.settings.image != blank %}
+            
+              {%- assign img_url = block.settings.image | img_url: '800', crop: 'center' -%}
+
+              <img data-src="{{ img_url }}"
+                   src="https:{{ img_url }}" alt="{{ block.settings.image.alt | default: shop.name }}" itemprop="logo"
+                   class="lazyautosizes lazyloaded" data-sizes="auto">
+
+              {% else %}
+
+              <div class="not_img">
+                370 x 440px
+              </div>   
+              {% endif %}
+            </a>
+          </div>
+
+          {% if block.settings.title != blank or block.settings.des != blank or block.settings.button != blank %}
+          <div class="content spotlight-inner">
+            {% if block.settings.title != blank %}
+            <h3 class="title">
+              {% include 'multilang' with block.settings.title %}               
+            </h3>
+            {% endif %}
+            
+            {% if block.settings.des != blank %}
+            <p class="des">
+              {% include 'multilang' with block.settings.des %}  
+            </p>
+            {% endif %}
+            
+            {% if block.settings.button != blank %}
+            <a href="{{ block.settings.link }}" class="spotlight-button btn">
+              {% include 'multilang' with block.settings.button %}
+            </a>
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+    {% assign margin_bottom =  section.settings.margin_bottom %}
+
+    @media (max-width: 767px) {
+        #home-spotlight-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+        #home-spotlight-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_tab }}px;
+        }
+    }
+  
+    @media (min-width: 1200px) {
+        #home-spotlight-{{section.id}} {
+        margin-bottom: {{ margin_bottom }}px;
+        }
+    }	
+</style>
+{% endif %}
+
+
+{% schema %}
+    {
+        "name": "Custom Block: Spotlight",
+        "class": "home-custom-block-spotlight-sections",
+        "max_blocks": 3,
+        "settings": [      
+            {
+                "type": "select",
+                "id": "layout",
+                "label": "Spotlight Layout:",
+                "options": [
+                    {
+                        "value": "default",
+                        "label": "Default"
+                    },
+                    {
+                        "value": "full",
+                        "label": "Full Width"
+                    }
+                ],
+                "default": "default"
+            },
+
+            {
+                "type": "header",
+                "content": "Margin Bottom:"
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_mb",
+                "label": "Mobile",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 25
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_tab",
+                "label": "Tablet",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 35
+            },             
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "label": "Margin Bottom",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 35
+            },	
+            {
+                "type": "header",
+                "content": "Header"
+            },
+            {
+                "type": "text",
+                "id": "spotlight_block_title",
+                "label": "Title",
+                "default": "#Featured On Ella"
+            },
+            {
+                "type" : "textarea",
+                "id" : "spotlight_block_des",
+                "label" : "Description"
+            },
+            {
+                "type": "select",
+                "id": "title_style",
+                "label": "Title Style:",
+                "options": [
+                    {
+                        "value": "style_1",
+                        "label": "Style 1" 
+                    },
+                    { 
+                        "value": "style_2",
+                        "label": "Style 2" 
+                    }          
+                ],
+                "default": "style_1"
+            }	  
+        ],
+        "blocks": [
+            {
+                "type": "image",
+                "name": "Image",
+                "settings": [		  	
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type" : "text",
+                    "id" : "title",
+                    "label" : "Title",
+                    "default" : "Lorem De Dorus"
+                },
+                {
+                    "type" : "textarea",
+                    "id" : "des",
+                    "label" : "Descriptions",
+                    "default" : "Nullam aliquet vestibulum augue non varius. Cras cosmo congue an melitos. Duis tristique del ante le maliquam. Praesent murna de tellus laoreet cosmopolis."
+                },
+                {
+                    "type" : "text",
+                    "id" : "button",
+                    "label" : "Button",
+                    "default" : "Shop Now"
+                },
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "Link",
+                    "info": "Optional"
+                }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Custom Block: Spotlight",
+                "category": "Advanced layout",
+                "blocks": [
+                {
+                    "type": "image"
+                },
+                {
+                    "type": "image"
+                },
+                {
+                    "type": "image"
+                }
+                ]
+            }
+        ]
+    }
+{% endschema %}

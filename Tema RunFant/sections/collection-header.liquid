@@ -1,0 +1,167 @@
+<header class="collection-header collection-header-sections">
+    {% if section.settings.display_collection_image %}
+    
+    {% if collection.description contains 'img' %}
+    {%- assign img_url = collection.description | split: '<img' | last | split: '>' | first -%}
+
+    {% elsif section.settings.collection_image != blank %}
+    {%- assign img_url = section.settings.collection_image | img_url: 'master' -%}
+
+    {% elsif collection.image %}
+    {%- assign img_url = collection.image | img_url: 'master' -%}
+    {% endif %}
+    
+    <div class="collection-image">
+        {% if collection.description contains 'img' or section.settings.collection_image != blank or collection.image %}
+        
+        {% if collection.description contains 'img' %}
+        <img {{ img_url }} alt="{{ collection_title }}" class="lazyautosizes lazyloaded" data-sizes="auto"/>
+        {% else %}
+        <img data-src="{{ img_url }}"
+            src="{{ img_url }}" class="lazyautosizes lazyloaded" data-sizes="auto">
+        {% endif %}
+        
+        {% else %}
+
+        <div class="not_img">
+        1880 x 240px
+        </div>
+        {% endif %}     
+        
+        <div class="page-header tab-abs">
+        <h1>
+            {% include 'multilang' with collection.title %}
+        </h1>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="collection-wrapper page-header">
+        <div class="{% if settings.category_layout == "full_with" or template.suffix == 'fullwidth' %}container-padd60{% else %}container{% endif %}">
+        <h1>
+            {% include 'multilang' with collection.title %}
+        </h1>
+
+        {% if collection.description != '' and section.settings.display_collection_des %}
+        <div class="collection-des">
+            {% if settings.enable_multilang and collection.description contains '[lang2]' %}      
+            <div class="rte lang1">
+            {{ collection.description | split: '[lang2]' | first | split: '<img' | first }}
+            </div>
+            <div class="rte lang2">
+            {{ collection.description | split: '[lang2]' | last | split: '<img' | first }}
+            </div>
+            {% else %}
+            <div class="rte">
+            {{ collection.description | split: '[lang2]' | first | split: '<img' | first }}
+            </div>
+            {% endif %}
+        </div>      
+        {% endif %}
+        </div>    
+    </div>
+</header>
+
+<style>  
+  .collection-header-sections img {
+    max-height: {{ section.settings.height_img }};
+  }
+  
+  {% if section.settings.display_collection_image %} 
+  @media (min-width: 768px) {
+    .collection-header-sections .page-header h1 {
+      color: {{ section.settings.color_wrapper }};
+    }
+  }
+  {% endif %}
+  
+  @media (min-width: 1200px) {
+    {% if section.settings.display_collection_image %} 
+    .collection-header-sections .collection-des {
+      color: {{ section.settings.color_wrapper }};
+    }
+        
+    .collection-header.collection-header-sections {
+      position: relative;
+    }
+    
+    .collection-header.collection-header-sections .collection-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -moz-transform: translate(-50%, -50%);
+      -o-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
+      margin: 0;
+    }
+    
+    .collection-header.collection-header-sections .collection-image {
+      margin-bottom: 1px;
+    }
+    
+    {% else %}
+    .collection-template .reverse-mb {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-flex-direction: column-reverse;
+      -moz-flex-direction: column-reverse;
+      -ms-flex-direction: column-reverse;
+      flex-direction: column-reverse;
+    }    
+    {% endif %}
+  }
+  
+  @media (min-width: 768px) and (max-width: 1199px) {
+    {% if section.settings.display_collection_image %}
+    .collection-header.collection-header-sections .collection-wrapper h1 {
+      display: none !important;
+    }
+    {% endif %}
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Collection Header",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "display_collection_image",
+        "label": "Show collection image?",
+        "default": true
+      },
+      {
+        "type": "image_picker",
+        "id": "collection_image",
+        "label": "Image Category",
+	    "info": "This image will show up when you don't add image in Collections Description"
+      },
+	  {
+        "type": "checkbox",
+        "id": "display_collection_des",
+        "label": "Display Collections Description?",
+        "default": true
+      },
+	  {
+		"type" : "color",
+		"id" : "color_wrapper",
+		"label" : "Color Wrapper",
+		"default" : "#fff"
+	  },
+	  {
+		"type" : "text",
+		"id" : "height_img",
+		"label" : "Image height",
+		"default" : "240px"
+      }
+	]
+  }
+{% endschema %}

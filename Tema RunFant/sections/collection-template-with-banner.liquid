@@ -1,0 +1,305 @@
+{% if cart.attributes.pagination != blank and cart.attributes.pagination %}
+{% assign product_per_page = cart.attributes.pagination %}
+{% else %}
+{% assign product_per_page = section.settings.collection_results_per_page %}
+{% endif %}
+
+{% paginate collection.products by product_per_page %}
+ 
+{% case section.settings.collection_results_per_row %}
+{% when '1' %}
+    {%- assign grid_item_width = 'col-12' -%}
+	{%- assign rows = 'products-list' -%}
+
+  {% when '2' %}
+    {%- assign grid_item_width = 'col-6' -%}
+	{%- assign rows = 'products-grid' -%}
+
+  {% when '3' %}
+    {%- assign grid_item_width = 'col-6 col-md-4' -%}
+	{%- assign rows = 'products-grid' -%}
+
+  {% when '4' %}
+    {%- assign grid_item_width = 'col-6 col-md-4 col-lg-3' -%}
+	{%- assign rows = 'products-grid' -%}
+
+  {% when '5' %}
+    {%- assign grid_item_width = 'col-6 col-md-4 col-lg-3 col5' -%}
+	{%- assign rows = 'products-grid' -%}
+{% endcase %}
+
+<div data-section-id="{{ section.id }}" data-section-type="collection-template">   
+  
+  {% include 'toolbar' %}
+    
+  <div class="product-collection {{ rows }} row">
+    {% if collection.products_count > 0 %}  
+    {% for product in collection.products %}
+    
+    {% if forloop.index <= 6 %}
+    <div class="grid-item {{ grid_item_width }} {% if settings.product_image_border%}grid-item-border {% endif %}">   
+      {% include 'product-grid-item' %}
+    </div> 
+    {% endif %}
+    
+    {% if forloop.index == 6 and section.settings.show_banner_1 %}
+    <div data-gridItem class="grid-item banner-img {{ grid_item_width }}">
+      <a class="animate-scale" href="{{section.settings.link_banner_1}}">
+        {% if section.settings.img_banner1 != blank %}
+        <img data-src="{{ section.settings.img_banner1 | img_url: '800x' }}"
+             src="{{ section.settings.img_banner1 | img_url: '300x' }}" alt="{{ section.settings.img_banner1.alt }}"
+             class="lazyautosizes lazyloaded" data-sizes="auto">
+        {% else %}
+        <div class="not_img">
+          210 x 360px
+        </div>        
+        {% endif %}
+      </a>
+    </div>
+    {% endif %}
+    
+    {% if forloop.index > 6 and forloop.index <= 11 %}
+	<div data-gridItem class="grid-item {{ grid_item_width }} {% if settings.product_image_border%}grid-item-border {% endif %}">   
+      {% include 'product-grid-item' %}
+    </div>     
+    {% endif %}
+    
+    {% if forloop.index == 11 and section.settings.show_banner_2 %}
+    <div data-gridItem class="grid-item banner-img {{ grid_item_width }}">
+      <a class="animate-scale" href="{{section.settings.link_banner_2 }}">
+        {% if section.settings.img_banner2 != blank %}
+        <img data-src="{{ section.settings.img_banner21 | img_url: '800x' }}"
+             src="{{ section.settings.img_banner2 | img_url: '300x' }}" alt="{{ section.settings.img_banner2.alt }}"
+             class="lazyautosizes lazyloaded" data-sizes="auto">
+        {% else %}
+        <div class="not_img">
+          210 x 360px
+        </div>        
+        {% endif %}
+      </a>
+    </div>
+    {% endif %}
+    
+    {% if forloop.index > 11 and forloop.index <= 17 %}
+	<div data-gridItem class="grid-item {{ grid_item_width }} {% if settings.product_image_border%}grid-item-border {% endif %}">   
+      {% include 'product-grid-item' %}
+    </div>     
+    {% endif %}
+    
+    {% if forloop.index == 17 and section.settings.show_banner_3 %}
+    <div data-gridItem class="grid-item banner-img {{ grid_item_width }}">
+      <a class="animate-scale" href="{{section.settings.link_banner_3 }}">
+        {% if section.settings.img_banner3 != blank %}
+        <img data-src="{{ section.settings.img_banner3 | img_url: '800x' }}"
+             src="{{ section.settings.img_banner3 | img_url: '300x' }}" alt="{{ section.settings.img_banner3.alt }}"
+             class="lazyautosizes lazyloaded" data-sizes="auto">
+        {% else %}
+        <div class="not_img">
+          210 x 360px
+        </div>        
+        {% endif %}
+      </a>
+    </div>
+    {% endif %}
+    
+    {% if forloop.index > 17 and  forloop.index <= 22 %}
+	<div data-gridItem class="grid-item {{ grid_item_width }} {% if settings.product_image_border%}grid-item-border {% endif %}">   
+      {% include 'product-grid-item' %}
+    </div>     
+    {% endif %}
+    
+    {% if forloop.index == 22 and section.settings.show_banner_4 %}
+    <div data-gridItem class="grid-item banner-img {{ grid_item_width }}">
+      <a class="animate-scale" href="{{section.settings.link_banner_4 }}">
+        {% if section.settings.img_banner4 != blank %}
+        <img data-src="{{ section.settings.img_banner4 | img_url: '800x' }}"
+             src="{{ section.settings.img_banner4 | img_url: '300x' }}" alt="{{ section.settings.img_banner4.alt }}"
+             class="lazyautosizes lazyloaded" data-sizes="auto">
+        {% else %}
+        <div class="not_img">
+          210 x 360px
+        </div>        
+        {% endif %}
+      </a>
+    </div>
+    {% endif %}
+    
+    {% if forloop.index > 22 %}
+	<div data-gridItem class="grid-item {{ grid_item_width }} {% if settings.product_image_border%}grid-item-border {% endif %}">   
+      {% include 'product-grid-item' %}
+    </div>     
+    {% endif %}
+    
+    {% endfor %}
+    {% else %}
+    <p class="col-12 text-center" {% if settings.enable_multilang %}data-translate="collections.general.no_matches"{% endif %}>
+      {{ 'collections.general.no_matches' | t }}
+    </p>
+    {% endif %}
+  </div>
+
+
+  {% if paginate.pages > 1 %}
+  <div class="padding">
+    {% include 'pagination-page' %}
+  </div>
+  {% endif %}
+</div>
+{% endpaginate %}   
+
+
+{% schema %}
+  {
+    "name": "Collection with Banner",
+	"class": "col-12 col-xl-9 col-main",
+    "settings": [  
+	  {
+        "type": "checkbox",
+        "id": "limited_view",
+        "label": "Enable Limited View",
+        "default": true
+      },
+	  {
+        "type": "checkbox",
+        "id": "view_as_enable",
+        "label": "Enable View As",
+        "default": true
+      },
+	  {
+        "type": "checkbox",
+        "id": "sort_enable",
+        "label": "Enable sorting",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "collection_results_per_row",
+        "label": "Products per row (grid only)",
+        "default": "4",
+        "options": [
+		  {
+            "value": "1",
+            "label": "List"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          }
+        ]
+      },
+	  {
+        "type": "select",
+        "id": "collection_results_per_page",
+        "label": "Products per page",
+        "default": "20",
+        "options": [
+		  {
+            "value": "12",
+            "label": "12"
+          },
+          {
+            "value": "16",
+            "label": "16"
+          },
+          {
+            "value": "20",
+            "label": "20"
+          },
+          {
+            "value": "24",
+            "label": "24"
+          },
+          {
+            "value": "30",
+            "label": "30"
+          },
+	      {
+            "value": "50",
+            "label": "50"
+          }
+        ]
+      },
+	
+	  {
+        "type": "header",
+        "content": "Product Banner In Collection"
+      },
+      {
+        "type" : "checkbox",
+        "id" : "show_banner_1",
+        "label" : "Enable Banner #1",
+        "default" : true
+      },	  
+      {
+        "type" : "image_picker",
+        "id" : "img_banner1",
+        "label" : "Image 1"
+      },
+	  {
+        "type": "url",
+        "id": "link_banner_1",
+        "label": "Link image 1"
+      },
+	  {
+        "type" : "checkbox",
+        "id" : "show_banner_2",
+        "label" : "Enable Banner #2",
+        "default" : true
+      },	  
+      {
+        "type" : "image_picker",
+        "id" : "img_banner2",
+        "label" : "Image 2"
+      },
+	  {
+        "type": "url",
+        "id": "link_banner_2",
+        "label": "Link image 2"
+      },
+	  {
+        "type" : "checkbox",
+        "id" : "show_banner_3",
+        "label" : "Enable Banner #3",
+        "default" : true
+      },	  
+      {
+        "type" : "image_picker",
+        "id" : "img_banner3",
+        "label" : "Image 3"
+      },
+	  {
+        "type": "url",
+        "id": "link_banner_3",
+        "label": "Link image 3"
+      },
+	  {
+        "type" : "checkbox",
+        "id" : "show_banner_4",
+        "label" : "Enable Banner #4",
+        "default" : true
+      },	  
+      {
+        "type" : "image_picker",
+        "id" : "img_banner4",
+        "label" : "Image 4"
+      },
+	  {
+        "type": "url",
+        "id": "link_banner_4",
+        "label": "Link image "
+      }
+    ]
+  }
+{% endschema %}

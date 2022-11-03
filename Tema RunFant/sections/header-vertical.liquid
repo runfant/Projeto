@@ -1,0 +1,626 @@
+{% include 'style-header-vertical' %}
+
+<header class="site-header header-verticle" role="banner">
+    <a href="#" class="icon-nav close-menu-mb" title="Menu Mobile Icon" data-menu-mb-toogle>
+        <span class="icon-line"></span>
+    </a>
+
+    <div class="header-bottom" data-sticky-mb>
+        <div class="container-padd60">
+            {% include 'header-mobile' %} 
+        </div>
+    </div>
+
+    <div class="wrapper-header-bt" data-sticky-pc>
+        <div class="container-padd60">       
+            <div class="header-panel-bt">
+                <div class="left-header header-items">
+                    <a href="#" class="icon-nav" title="Menu Mobile Icon" data-menu-mb-toogle>                       
+                        <span class="icon-line"></span>
+                    </a>
+
+                    <div class="header-logo" itemscope itemtype="http://schema.org/Organization">
+                      <meta itemprop="url" content="{{ shop.url }}">
+                        {% if section.settings.brand_type == 'image' and section.settings.logo_pc != bank %}
+                        <a class="logo-img" href="/" title="Logo">
+                            <img itemprop="logo" data-src="{{ section.settings.logo_pc | img_url: 'master' }}"
+                                src="{{ section.settings.logo_pc | img_url: 'master' }}"
+                                alt="{{ section.settings.logo_pc.alt | default: shop.name }}" itemprop="logo" class="lazyautosizes lazyloaded" data-sizes="auto">
+                        </a>
+
+                        {% elsif section.settings.brand_text != '' %}
+                        <a class="logo-title" href="/">
+                            {{ section.settings.brand_text }}
+                        </a>
+
+                        {% else %}
+                        <a class="logo-title" href="/">
+                            {{ shop.name }}
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="right-header header-items">
+                    <div class="nav-search">                    
+                        {% include 'search-bar' %}
+                    </div>
+                    {% if shop.customer_accounts_enabled %}
+                    <div class="acc-mb svg-mb">
+                        <a href="#" title="User Icon" class="icon-user" data-user-mobile-toggle>
+                            {% include 'icon-user' %}
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% if settings.enable_wishlist %}
+                    <div class="svg-mb wishlist-icon">
+                        <a class="wishlist" href="/pages/wish-list" title='{% if settings.enable_multilang %}data-translate="wishlist.general.my_wishlist"{% endif %}'>
+                            <svg aria-hidden="true" data-prefix="fal" data-icon="heart" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-heart fa-w-16 fa-2x"><path fill="currentColor" d="M462.3 62.7c-54.5-46.4-136-38.7-186.6 13.5L256 96.6l-19.7-20.3C195.5 34.1 113.2 8.7 49.7 62.7c-62.8 53.6-66.1 149.8-9.9 207.8l193.5 199.8c6.2 6.4 14.4 9.7 22.6 9.7 8.2 0 16.4-3.2 22.6-9.7L472 270.5c56.4-58 53.1-154.2-9.7-207.8zm-13.1 185.6L256.4 448.1 62.8 248.3c-38.4-39.6-46.4-115.1 7.7-161.2 54.8-46.8 119.2-12.9 142.8 11.5l42.7 44.1 42.7-44.1c23.2-24 88.2-58 142.8-11.5 54 46 46.1 121.5 7.7 161.2z" class=""></path></svg>
+                        </a>                   
+                    </div>
+                    {% endif %}
+
+                    <div class="cart-icon svg-mb" data-cart-header-parallax>
+                        <a href="#" title="Cart Icon" data-cart-toggle>       
+                            {% include 'icon-cart' %}
+
+                            <span class="cartCount" data-cart-count>
+                            {{ cart.item_count }}
+                            </span>
+                        </a>                    
+                    </div>
+                    {% if settings.enable_multilang or settings.enable_multiple_currencies %}
+                    <div class="hamburger-icon svg-mb">
+                        <a href="#" class="icon-nav" title="Menu Mobile Icon" data-show-options>
+                            <span class="icon-line"></span>
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="header-pc" data-header-pc>
+                <div class="header-links">
+                    {% if settings.enable_wishlist %}
+                    <a class="wishlist" href="/pages/wish-list" title='{% if settings.enable_multilang %}data-translate="wishlist.general.my_wishlist"{% endif %}'>
+                        <span class="wishlist-text text-hover"{% if settings.enable_multilang %} data-translate="wishlist.general.my_wishlist"{% endif %}>
+                            {{ 'wishlist.general.my_wishlist' | t }}
+                        </span>                  
+                    </a>
+                    {% endif %}
+                    {% if shop.customer_accounts_enabled %}
+                    <div class="customer-links">
+                        {% if customer %}
+                        <a class="acc-links acc-logout" id="customer_logout_link" href="/account/logout" {% if settings.enable_multilang %}data-translate="layout.customer.log_out"{% endif %}>
+                            {{ 'layout.customer.log_out' | t }}
+                        </a>
+                        <a class="acc-links acc-title" href="/account"{% if settings.enable_multilang %} data-translate="customer.account.title"{% endif %}>
+                            {{ 'customer.account.title' | t }}
+                        </a>                                            
+                        {% else %}  
+                        
+                        <a class="acc-links acc-sign-in" id="customer_login_link" href="/account/login" {% if settings.enable_multilang %}data-translate="customer.login.sign_in"{% endif %}>
+                            {{ 'customer.login.sign_in' | t }}
+                        </a>
+                        <a class="acc-links acc-regis" id="customer_register_link" href="/account/register"{% if settings.enable_multilang %} data-translate="layout.customer.create_account"{% endif %}>
+                            {{ 'layout.customer.create_account' | t }}
+                        </a>
+                        {% endif %}                                   
+                    </div>
+                    {% endif %}
+                    {% if settings.enable_multilang or settings.enable_multiple_currencies %}
+                    <div class="lang-currency-groups">
+                        <div class="option-title">
+                            <a href="javascript:void(0)" title="{{ 'cart.general.close_cart' | t }}" class="close-option close">
+                                {% include 'icon-close' %}
+                                <span {% if settings.enable_multilang %}data-translate="cart.general.close_cart"{% endif %}>
+                                    {{ 'cart.general.close_cart' | t }}
+                                </span>
+                            </a>
+                        </div>
+
+                        {% include 'new-language-picker' %}
+
+                        {% include 'new-currency-picker' %}
+                    </div>
+                    {% endif %}
+                </div> 
+            </div> 
+        </div>
+    </div>    
+</header>
+
+<script> 
+    window.fixtop_menu = {{ section.settings.display_fixtop_menu }};
+
+    var appendPrependMenuMobile = function() {
+        var translateHeaderBlock = $('[data-translate-header]'),
+            headerPc = $('[data-header-pc]'),
+            areaMb = $('.wrapper-navigation .mb-area');
+
+        if (window.innerWidth < 1200) {
+            headerPc.appendTo(areaMb);
+        } else {
+            headerPc.appendTo(translateHeaderBlock);
+        };
+    };
+
+    $(document).ready(function() {
+        appendPrependMenuMobile();        
+    });
+
+    var winWidth = $(window).innerWidth();
+
+    $(window).on('resize', function () {
+        var resizeTimerId;
+
+        clearTimeout(resizeTimerId);
+
+        resizeTimerId = setTimeout(function() {
+            var curWinWidth = $(window).innerWidth();
+
+            if ((curWinWidth < 1200 && winWidth >= 1200) || (curWinWidth >= 1200 && winWidth < 1200)) {
+                appendPrependMenuMobile();
+            };
+            winWidth = curWinWidth;
+        }, 0);
+    });
+
+    {% if settings.enable_multilang %}
+    translator.doTranslate('.site-header');
+    {% endif %}
+</script>
+
+{% schema %}
+    {
+        "name": "Header Vertical",
+        "settings": [    
+            {
+                "type" : "header",
+                "content" : "Settings Header"
+            },
+            {
+                "type" : "color",
+                "id" : "bg_header",
+                "label" : "Background Color",
+                "default" : "#fff"
+            }, 
+            {
+                "type" : "color",
+                "id" : "color_header",
+                "label" : "Text and Icons Color",
+                "default" : "#282828"
+            },       
+            {
+                "type": "header",
+                "content": "Logo"
+            },
+            {
+                "type": "radio",
+                "id": "brand_type",
+                "label": "Use image or text for logo?",
+                "options": [
+                    {
+                        "value": "text",
+                        "label": "Text"
+                    },
+                    {
+                        "value": "image",
+                        "label": "Image"
+                    }
+                ],
+                "default": "text"
+            },
+            {
+                "type": "text",
+                "id": "brand_text",
+                "label": "Logo text"
+            },
+            {
+              "type": "color",
+              "id": "logo_text_color",
+              "label": "Logo Text Color",
+              "default": "#000"
+            },
+            {
+                "type": "image_picker",
+                "id": "logo",
+                "label": "Logo image for Mobile",
+                "info": "95px x 44px recommended"
+            },
+            {
+                "type": "text",
+                "id": "max_height_logo_mb",
+                "label": "Max Height of Logo Mobile",
+                "default": "26px" 
+            },
+            {
+                "type": "image_picker",
+                "id": "logo_pc",
+                "label": "Logo image for PC",
+                "info": "95px x 44px recommended"
+            },
+            {
+                "type": "text",
+                "id": "max_height_logo_pc",
+                "label": "Max Height of Logo PC",
+                "default": "33px" 
+            },
+            {
+                "type": "header",
+                "content": "Search"
+            },
+            {
+                "type": "color",
+                "id": "bg_search_color",
+                "label": "Background Color",
+                "default": "#fff"
+            },      
+            {
+                "type": "color",
+                "id": "search_color",
+                "label": "Search Color",
+                "default": "#969696"
+            },    
+            {
+                "type": "color",
+                "id": "search_color_border",
+                "label": "Search Border Color",
+                "default": "#c1c1c1"
+            },           
+            {
+                "type": "header",
+                "content": "Cart Header"
+            },
+            {
+                "type": "color",
+                "id": "bg_cart_color",
+                "label": "Background Color Items Cart",
+                "default": "#e95144"
+            },
+            {
+                "type": "color",
+                "id": "cart_color",
+                "label": "Color Items Cart",
+                "default": "#fff",
+                "info": "======================="
+            },
+            {
+                "type": "header",
+                "content": "Navigation"
+            },
+            {
+                "type": "checkbox",
+                "id": "display_fixtop_menu",
+                "label": "Display Fix Top Menu?",
+                "default": true
+            },                       
+            {
+                "type" : "header",
+                "content" : "Settings Navigation"
+            },
+            {
+                "type" : "color",
+                "id" : "bg_menu",
+                "label" : "Background Main Menu",
+                "default" : "#fff"
+            },		  
+            {
+                "type" : "color",
+                "id" : "bg_dropdown_menu",
+                "label" : "Background Dropdown Menu",
+                "default" : "#fff",
+                "info" : "======================="
+            },
+            {
+                "type" : "color",
+                "id" : "color_menu_lv1",
+                "label" : "Level 1 Menu Color",
+                "default" : "#232323"
+            },
+            {
+                "type" : "color",
+                "id" : "hover_color_mnu_lv1",
+                "label" : "Level 1 Menu color when hover",
+                "default" : "#232323"
+            },
+            {
+                "type" : "text",
+                "id" : "font_size_mnu_lv1",
+                "label" : "Font size Menu level 1",
+                "default" : "13px",
+                "info" : "======================="
+            },
+            {
+                "type" : "color",
+                "id" : "color_menu_lv2",
+                "label" : "Level 2 Menu Color",
+                "default" : "#232323"
+            },
+            {
+                "type" : "color",
+                "id" : "hover_color_mnu_lv2",
+                "label" : "Level 2 Menu color when hover",
+                "default" : "#232323"
+            },
+            {
+                "type" : "text",
+                "id" : "font_size_mnu_lv2",
+                "label" : "Font size Menu level 2",
+                "default" : "12px",
+                "info" : "======================="
+            },
+            {
+                "type" : "color",
+                "id" : "color_menu_lv3",
+                "label" : "Level 3 Menu Color",
+                "default" : "#3c3c3c"
+            },
+            {
+                "type" : "color",
+                "id" : "hover_color_mnu_lv3",
+                "label" : "Level 3 Menu color when hover",
+                "default" : "#0688e2"
+            },
+            {
+                "type" : "text",
+                "id" : "font_size_mnu_lv3",
+                "label" : "Font size Menu level 3",
+                "default" : "12px",
+                "info" : "======================="
+            },
+            {
+                "type" : "header",
+                "content" : "Label"
+            },
+            {
+                "type" : "checkbox",
+                "id" : "enable_sale",
+                "label" : "Display Label Sale",
+                "default" : true
+            },
+            {
+                "type" : "text",
+                "id" : "lb_sale",
+                "label" : "Label sale",
+                "default" : "Sale"
+            },
+            {
+                "type" : "textarea",
+                "id" : "sale_item",
+                "label" : "Label Sale Items"
+            },
+            {
+                "type" : "color",
+                "id" : "bg_lb_sale",
+                "label" : "Background color label sale",
+                "default" : "#ef6454"
+            },
+            {
+                "type" : "color",
+                "id" : "color_lb_sale",
+                "label" : "Text Color label sale",
+                "default" : "#fff"
+            },
+            {
+                "type" : "checkbox",
+                "id" : "enable_new",
+                "label" : "Display Label New",
+                "default" : true
+            },
+            {
+                "type" : "text",
+                "id" : "lb_new",
+                "label" : "Label New",
+                "default" : "New"
+            },
+            {
+                "type" : "textarea",
+                "id" : "new_item",
+                "label" : "Label New Items"
+            },
+            {
+                "type" : "color",
+                "id" : "bg_lb_new",
+                "label" : "Background color label New",
+                "default" : "#06bfe2"
+            },
+            {
+                "type" : "color",
+                "id" : "color_lb_new",
+                "label" : "Text Color label New",
+                "default" : "#fff"
+            },
+            {
+                "type" : "checkbox",
+                "id" : "enable_hot",
+                "label" : "Display Label Hot",
+                "default" : true
+            },
+            {
+                "type" : "text",
+                "id" : "lb_hot",
+                "label" : "Label Hot",
+                "default" : "Hot"
+            },
+            {
+                "type" : "textarea",
+                "id" : "hot_item",
+                "label" : "Label Hot Items"
+            },
+            {
+                "type" : "color",
+                "id" : "bg_lb_hot",
+                "label" : "Background color label Hot",
+                "default" : "#ffbb49"
+            },
+            {
+                "type" : "color",
+                "id" : "color_lb_hot",
+                "label" : "Text Color label Hot",
+                "default" : "#fff"
+            },
+            {
+                "type": "header",
+                "content": "Mega Menu"
+            },
+            {
+                "type": "checkbox",
+                "id": "display_megamenu",
+                "label": "Display Mega Menu?",
+                "default": true
+            }
+        ],
+
+        "blocks": [
+            {
+                "type": "style_1",
+                "name": "Style 1",
+                "settings": [
+                    {
+                        "type" : "header",
+                        "content" : "Column Menu"
+                    },
+                    {
+                        "type": "text",
+                        "id": "megamenu_items_1",
+                        "label": "Mega Menu Items for Style 1",
+                        "default": "Catalog",
+                        "info": "Use \"|\" when use language , For ex: Collections | Sammlungen "
+                    },		  		  
+                    {
+                        "type" : "header",
+                        "content" : "Product"
+                    },
+                    {
+                        "type": "text",
+                        "id": "title_featured_product",
+                        "label": "Title Product",
+                        "default" : "Featured Products"
+                    },
+                    {
+                        "type": "product",
+                        "id": "featured_product",
+                        "label": "Product"
+                    },
+                    {
+                        "type" : "header",
+                        "content" : "Banner"
+                    },	  
+                    {
+                        "type": "image_picker",
+                        "id": "banner_first_style_1",
+                        "label": "Upload a new image",
+                        "info": "210px x 337px recommended"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_banner_first_style_1",
+                        "label": "Link image "
+                    }
+                ]
+            },	  
+            {
+                "type": "style_2",
+                "name": "Style 2",
+                "settings": [
+                    {
+                        "type" : "header",
+                        "content" : "Column Menu"
+                    },
+                    {
+                        "type": "text",
+                        "id": "megamenu_items_2",
+                        "label": "Mega Menu Items for Style 2",
+                        "default": "Catalog",
+                        "info": "Use \"|\" when use language , For ex: Collections | Sammlungen "
+                    },
+                    {
+                        "type" : "header",
+                        "content" : "Banner"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "banner_first_style_2",
+                        "label": "Upload a new image 1",
+                        "info": "210px x 165px recommended"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_banner_first_style_2",
+                        "label": "Link image 1 ",
+                        "info": "=============="
+                    },	  
+                    {
+                        "type": "image_picker",
+                        "id": "banner_second_style_2",
+                        "label": "Upload a new image 2",
+                        "info": "210px x 165px recommended"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_banner_second_style_2",
+                        "label": "Link image 2 ",
+                        "info": "=============="
+                    },		  
+                    {
+                        "type": "image_picker",
+                        "id": "banner_third_style_2",
+                        "label": "Upload a new image 3",
+                        "info": "210px x 337px recommended"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_banner_third_style_2",
+                        "label": "Link image 3"
+                    }
+                ]
+            },	  
+            {
+                "type": "style_3",
+                "name": "Style 3",
+                "settings": [		  
+                    {
+                        "type": "text",
+                        "id": "megamenu_items_3",
+                        "label": "Mega Menu Items for Style 3",
+                        "default": "Catalog",
+                        "info": "Use \"|\" when use language , For ex: Collections | Sammlungen "
+                    }
+                ]
+            },	
+            {
+                "type": "style_4",
+                "name": "Style 4",
+                "settings": [
+                    {
+                        "type" : "header",
+                        "content" : "Column Menu"
+                    },
+                    {
+                        "type": "text",
+                        "id": "megamenu_items_4",
+                        "label": "Mega Menu Items for Style 4",
+                        "default": "Catalog",
+                        "info": "Use \"|\" when use language , For ex: Collections | Sammlungen "
+                    },		  		  		  
+                    {
+                        "type" : "header",
+                        "content" : "Banner"
+                    },	  
+                    {
+                        "type": "image_picker",
+                        "id": "banner_first_style_4",
+                        "label": "Upload a new image",
+                        "info": "210px x 320px recommended"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_banner_first_style_4",
+                        "label": "Link image"
+                    }
+                ]
+            }	   
+        ]    
+    }
+{% endschema %}

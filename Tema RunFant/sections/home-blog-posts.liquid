@@ -1,0 +1,252 @@
+{% case section.settings.blog_results_per_row %}  
+  {% when '2' %}
+  	{%- assign column_size = 'col-12 col-md-6 two-blocks item' -%}
+  {% when '3' %}
+  	{%- assign column_size = 'col-12 col-lg-4 three-blocks item' -%}		
+{% endcase %}
+
+
+{% if section.settings.blog_posts != blank %}
+
+    {% assign post_limit = section.settings.post_limit | plus: 0 %}
+    {% assign blog_results_per_row = section.settings.blog_results_per_row  | plus: 0 %}
+
+    {% if post_limit > blog_results_per_row %}
+        {%- assign data = 'data-blogs-slider' -%}	
+        {%- assign class = 'blog-slider' -%}	
+    {% endif %}
+
+<div class="home-blog-posts {{ class }}" id="home-blog-{{ section.id }}">
+  <div class="{% if section.settings.layout == 'default' %}container{% else %}container-fluid{% endif %}">
+    {% if section.settings.blog_post_title != blank %}
+    <div class="widget-title{% if section.settings.title_style == 'style_2' %} not-before{% endif %}">   
+      <h3 class="box-title">
+        <span class="title"> 
+          {% include 'multilang' with section.settings.blog_post_title %}
+        </span>
+      </h3>
+      {% if section.settings.blog_post_des != blank %}
+      <p>
+        {% include 'multilang' with section.settings.blog_post_des %}
+      </p>        
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="content-blog">
+      <div class="row list-blogs blog-grid" {{ data }} data-rows={{ section.settings.blog_results_per_row }}>
+        {%- assign blog = blogs[section.settings.blog_posts] -%}
+
+        {% for article in blog.articles limit: section.settings.post_limit %}
+        <div class="{{ column_size }}">
+          <div class="blog-item">
+            {% if article.image %}
+        	{% assign image_alt = article.title | escape %}
+            <div class="article-img">
+              {{ article | img_url: 'x370' | img_tag: image_alt, 'article__image' | link_to: article.url | replace: '<a', '<a class="animate-scale"' }}
+            </div>
+            {% endif %}
+            
+            <div class="article-inner">
+              <h3 class="article-title">
+                <a href="{{ article.url }}">
+                  {% include 'multilang' with article.title %}
+                </a>
+              </h3>
+              
+              <div class="blog_author">               
+                {% if section.settings.blog_show_author %}
+                <span class="article__author">By {{article.author}}</span>
+                {% endif %}
+                
+                {% if section.settings.blog_show_date %}
+                <span class="article__date">
+                  on {{ article.published_at | time_tag: format: 'month_day_year' }}
+                </span>
+                {% endif %}                
+              </div>
+              
+              <div class="article-des">
+                {% if settings.enable_multilang and article.excerpt_or_content contains '[lang2]' %}
+                <div class="lang1">
+                  {{ article.excerpt_or_content | strip_html | truncatewords: 33 | split:"[lang2]" | first | split:"|" | first}}
+                </div>
+                <div class="lang2">
+                  {{ article.excerpt_or_content | strip_html | truncatewords: 33 | split:"[lang2]" | last | split:"|" | last }}
+                </div>
+                {% else %}
+                {{ article.excerpt_or_content | strip_html | truncatewords: 33  | split:"[lang2]" | first | split:"|" | first}}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>        
+  </div>
+</div>
+{% endif %}
+
+<style>
+    {% assign margin_bottom =  section.settings.margin_bottom %}
+
+    @media (max-width: 767px) {
+         #home-blog-{{ section.id }} {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+         #home-blog-{{ section.id }} {
+            margin-bottom: {{ section.settings.margin_bottom_tab }}px;
+        }
+    }
+    
+    @media (min-width: 1200px) {
+        #home-blog-{{ section.id }} {
+            margin-bottom: {{ margin_bottom }}px;
+        }
+    }	
+</style>
+
+
+{% schema %}
+  {
+    "name": "Blog posts",
+	"class": "home-blog-posts-sections",
+    "settings": [
+	  {
+        "type": "select",
+        "id": "layout",
+        "label": "Layout:",
+        "options": [
+          {
+          "value": "default",
+          "label": "Default"
+          },
+          {
+          "value": "full",
+          "label": "Full Width"
+          }
+        ],
+        "default": "default"
+      },
+	  {
+		"type": "header",
+		"content": "Blog"
+	  },
+	  {
+        "id": "blog_posts",
+        "type": "blog",
+        "label": "Blog Posts"
+      },
+	  {
+        "type": "select",
+        "id": "blog_results_per_row",
+        "label": "Blogs per row",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          }         
+        ],
+        "default": "2"
+      },
+	  {
+        "type": "range",
+        "id": "post_limit",
+        "label": "Posts Limit",
+        "min": 2,
+        "max": 9,
+        "step": 1,
+        "default": 2
+      },
+	  {
+        "type": "checkbox",
+        "id": "blog_show_author",
+        "label": "Show author",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "blog_show_date",
+        "label": "Show date",
+        "default": true
+      },
+	  {
+		"type": "header",
+		"content": "Widget Title"
+	  },
+	  {
+        "type": "text",
+        "id": "blog_post_title",
+        "label": "Title",
+        "default": "Latest Posts"
+      },
+  	  {
+  		"type" : "textarea",
+  	    "id" : "blog_post_des",
+  		"label" : "Description"
+  	  },
+	  {
+        "type": "select",
+        "id": "title_style",
+        "label": "Title Style:",
+
+        "options": [
+          {
+            "value": "style_1",
+            "label": "Style 1" 
+          },
+		  { 
+            "value": "style_2",
+            "label": "Style 2" 
+          }          
+        ],
+        "default": "style_1"
+      },
+        {
+            "type": "header",
+            "content": "Margin Bottom:"
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom_mb",
+            "label": "Mobile",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 20
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom_tab",
+            "label": "Tablet",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 20
+        }, 
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Desktop",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 35
+        }	      
+    ],
+    "presets": [
+      {
+        "name": "Blog posts",
+        "category": "Blog"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,92 @@
+<section class="shop-instagram">
+    <div class="container">
+        <div class="row">
+            {% if section.settings.title != blank %}
+            <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">                
+                <div class="widget-title not-before">   
+                    <h3 class="box-title">
+                        <span class="title"> 
+                            {% include 'multilang' with section.settings.title %}
+                        </span>
+                    </h3>
+                    {% if section.settings.des != blank %}
+                    <p>
+                        {% include 'multilang' with section.settings.des %}
+                    </p>        
+                    {% endif %}
+                </div>                
+            </div>
+            {% endif %}
+
+            <div class="col-12">
+                <div class="caption-instagram">
+                    {{ section.settings.embed_code }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .widget-hotspot {
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        border: none;
+        font-size: 11px;
+        background-color: #fff;
+        color: #323232;
+    }
+
+    .hotspot-modal .modal-dialog .chevron {
+        top: 50%;
+        -moz-transform-origin: translateY(-50%);
+        -o-transform-origin: translateY(-50%);
+        -ms-transform-origin: translateY(-50%);
+        -webkit-transform-origin: translateY(-50%);
+        transform: translateY(-50%);
+    }
+
+    .no-touch .snpt-pict-item:hover .widget-hotspot,
+    .no-touch .snptwdgt__item:hover .widget-hotspot {
+        border-color: transparent;
+        background-color: #fff;
+        color: #323232;
+    }
+
+    @media (max-width: 1199px) {
+        .snapppt-widget + .snpt_widget--grid {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+    }
+</style>
+
+{% schema %}
+  {
+    "name": "Shop Instagram",
+    "settings": [		
+		{
+            "type" : "text",
+            "id" : "title",
+            "label" : "Header",
+            "default" : "Shop Instagram"
+        },
+        {
+          "type" : "textarea",
+          "id" : "des",
+          "label" : "Description"
+        },        		
+		{
+          "type" : "header",
+          "content" : "Embed code"
+     	},
+		{
+		  "type" : "textarea",
+		  "id" : "embed_code",
+		  "label" : "Embed javascript Code"
+		}
+
+	]
+  }
+{% endschema %}

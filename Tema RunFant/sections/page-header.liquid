@@ -1,0 +1,184 @@
+<div class="page-header">
+  <div class="container">
+    {% include 'breadcrumb' %}
+    <h2>
+      {% include 'multilang' with page.title %}
+    </h2>
+  </div>
+</div>  
+<div class="page-navigation">
+  <div class="container">
+    <ul class="page-nav">
+      {% for link in linklists[section.settings.menu].links %}
+      <li class="item {% if link.active%}active{%endif%}">
+        <a href="{{link.url}}">{% include 'multilang' with link.title %}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<style>
+    
+  .page-header{
+    {% if section.settings.background != blank %}
+    background-image:url({{section.settings.background | img_url:'master'}});
+    background-size: cover;
+    background-position: center center;
+    {% else %}
+    background-color:rgba(35,35,35,0.2);
+    {% endif %}
+    color:{{section.settings.text_color}};
+    text-align: center;
+    padding-top: 50px;
+    padding-bottom:67px;
+  }
+  .page-header .breadcrumb{
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    -ns-justify-content: center;
+    justify-content: center;
+    padding-bottom:5px;
+  }
+  .page-header h2{
+    font-size: 30px;
+    letter-spacing: 0.05em;
+    margin-bottom: 0;
+  }
+  .breadcrumb *,.page-header h2{
+    color:{{section.settings.text_color}};
+  }
+  .page-navigation{
+    background-color: {{section.settings.menu_bar_background}};
+    border-bottom: 1px solid {{section.settings.menu_bar_border}};
+  }
+  .page-navigation ul{
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -moz-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    -ms-justify-content: center;
+    justify-content: center;
+    margin-bottom:0px;
+  }
+  .page-navigation ul li{
+    display:inline-block;
+    margin-bottom: 0;
+    border-width:0px 1px;
+    border-style: solid;
+    border-color:{{section.settings.menu_bar_border}};
+    margin-right:-1px;
+  }
+  .page-navigation ul li a{
+    display:block;
+    background:{{section.settings.menu_item_background}};
+    color:{{section.settings.menu_item_text_color}};
+    padding:12px  32px 8px;
+    text-transform: uppercase;
+    font-weight: 600;
+    position:relative;
+  }
+  .page-navigation ul li a:hover,
+  .page-navigation ul li.active a{
+    color:{{section.settings.menu_item_text_color_h}};
+    background-color: {{section.settings.menu_item_background_color_h}};
+  }
+  .page-navigation ul li a:before{
+    content:'';
+    display: block;
+    background-color:{{section.settings.menu_item_text_color_h}};
+    height:2px;
+    width:100%;
+    left: 0;
+    bottom: 0;
+    position: absolute;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+    opacity:0; 
+  }
+  .page-navigation ul li a:hover:before,
+  .page-navigation ul li.active a:before{
+    opacity:1;
+  }
+@media (max-width:992px) {
+  .page-header h2{
+    font-size: 20px;
+  }
+}
+@media (max-width:767px) {
+  .page-header h2{
+    font-size: 18px;
+  }
+  .page-navigation ul{
+        white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Page Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background",
+      "label": "Background Image"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color"
+    },
+    {
+      "type": "header",
+      "content": "Pages Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Choose Menu"
+    },
+    {
+      "type": "color",
+      "id": "menu_bar_background",
+      "label": "Menu Bar Background Color"
+    },
+    {
+      "type": "color",
+      "id": "menu_bar_border",
+      "label": "Menu Bar Border Color"
+    },
+    {
+      "type": "color",
+      "id": "menu_item_background",
+      "label": "Menu Item Background Color"
+    },
+    {
+      "type": "color",
+      "id": "menu_item_text_color",
+      "label": "Menu Item Text Color"
+    },
+    {
+      "type": "color",
+      "id": "menu_item_background_color_h",
+      "label": "Menu Item Background Color Hover"
+    },
+    {
+      "type": "color",
+      "id": "menu_item_text_color_h",
+      "label": "Menu Item Text Color Hover"
+    }
+  ]
+}
+{% endschema %}

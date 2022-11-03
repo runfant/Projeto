@@ -1,0 +1,200 @@
+{% if section.blocks.size > 0 %}
+<div class="home-spotlight-block home-spotlight-2" id="home-spotlight-2-{{section.id}}">
+  <div class="{% if section.settings.layout == 'default' %}container{% else %}container-fluid{% endif %}">
+    {% if section.settings.spotlight_block_title != blank %}
+    <div class="widget-title{% if section.settings.title_style == 'style_2' %} not-before{% endif %}{% unless section.settings.spotlight_block_des != blank %} no-des{% endunless %}">   
+      <h3 class="box-title">
+        <span class="title"> 
+          {% include 'multilang' with section.settings.spotlight_block_title %}
+        </span>
+      </h3>
+      {% if section.settings.spotlight_block_des != blank %}
+      <p>
+        {% include 'multilang' with section.settings.spotlight_block_des %}
+      </p>        
+      {% endif %}
+    </div>
+    {% endif %}
+    
+    <div class="row spotlight-{{ section.blocks.size }}-blocks">
+      {% for block in section.blocks %}
+      
+      {% case section.blocks.size %}
+        {% when 1 %}
+          {%- assign column_size = 'col-12' -%}
+        {% when 2 %}
+          {%- assign column_size = 'col-12 col-md-6' -%}
+        {% when 3 %}
+            {%- assign column_size = 'col-12 col-md-6 col-lg-4' -%}        
+      {% endcase %}
+         
+      <div class="{{ column_size }}">
+        <div class="spotlight-item">
+          <div class="img-box">
+            <a href="{{ block.settings.link }}" class="animate-scale">
+              {% if block.settings.image != blank %}
+            
+              {%- assign img_url = block.settings.image | img_url: 'original', crop: 'center' -%}
+
+              <img data-src="{{ img_url }}"
+                   src="https:{{ img_url }}" alt="{{ block.settings.image.alt | default: shop.name }}" itemprop="logo"
+                   class="lazyautosizes lazyloaded" data-sizes="auto">
+
+              {% else %}
+
+              <div class="not_img">
+                370 x 440px
+              </div>   
+              {% endif %}
+            </a>
+            
+            {% if block.settings.sub_title != blank  %}
+            <h5 class="sub-title">
+              {% include 'multilang' with block.settings.sub_title %}       
+            </h5>
+            {% endif %}
+          </div>
+
+          {% if block.settings.title != blank  %}
+          <div class="content spotlight-inner">            
+            <h3 class="title">
+              {% include 'multilang' with block.settings.title %} 
+              <span class="border-bt-hover"></span>
+            </h3>            
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  {% assign margin_bottom =  section.settings.margin_bottom %}
+  
+  @media (min-width: 1200px) {
+    #home-spotlight-2-{{section.id}} {
+      margin-bottom: {{ margin_bottom }}px;
+    }
+  }	
+</style>
+{% endif %}
+
+
+{% schema %}
+  {
+    "name": "Custom Block: Spotlight 2",
+	"class": "home-custom-block-spotlight-2-sections",
+    "max_blocks": 3,
+    "settings": [      
+        {
+            "type": "select",
+            "id": "layout",
+            "label": "Spotlight 2 Layout:",
+            "options": [
+                {
+                    "value": "default",
+                    "label": "Default"
+                },
+                {
+                    "value": "full",
+                    "label": "Full Width"
+                }
+            ],
+            "default": "default"
+        },
+        {
+            "type": "checkbox",
+            "id": "display_padding",
+            "label": "Display Padding?",
+            "default": false
+        },
+        {
+            "type": "text",
+            "id": "spotlight_block_title",
+            "label": "Title",
+            "default": "#Featured On Ella"
+        },
+        {
+            "type" : "textarea",
+            "id" : "spotlight_block_des",
+            "label" : "Description"
+        },
+        {
+            "type": "select",
+            "id": "title_style",
+            "label": "Title Style:",
+
+            "options": [
+                {
+                    "value": "style_1",
+                    "label": "Style 1" 
+                },
+                { 
+                    "value": "style_2",
+                    "label": "Style 2" 
+                }          
+            ],
+            "default": "style_1"
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin Bottom",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 0
+        }	
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Image",
+        "settings": [		  	
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type" : "text",
+            "id" : "title",
+            "label" : "Title",
+            "default" : "Lorem De Dorus"
+          },
+		  {
+            "type" : "text",
+            "id" : "sub_title",
+            "label" : "Sub Title",
+            "default" : "NULLAM DAPIBUS LIBEROS "
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link",
+            "info": "Optional"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Custom Block: Spotlight 2",
+        "category": "Advanced layout",
+        "blocks": [
+          {
+            "type": "image"
+          },
+          {
+            "type": "image"
+          },
+	      {
+            "type": "image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

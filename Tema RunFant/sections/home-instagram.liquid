@@ -1,0 +1,384 @@
+{% if section.settings.show_instagram %}
+
+{{ 'instafeed.min.js' | asset_url | script_tag }}
+
+<section class="home-instagram" id="new-instagram-{{section.id}}">
+    <div class="container">
+        {% if section.settings.instagram_title != blank %}
+        <div class="widget-title{% if section.settings.title_style == 'style_2' %} not-before{% endif %}">   
+            <h3 class="box-title">
+                <span class="title"> 
+                <i class="fa fa-instagram fa-lg" aria-hidden="true"></i>
+                {% include 'multilang' with section.settings.instagram_title %}
+                </span>
+            </h3>
+            {% if section.settings.instagram_des != blank %}
+            <p>
+                {% include 'multilang' with section.settings.instagram_des %}
+            </p>        
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="{% if section.settings.layout == 'default' %}container{% else %}container-fluid{% endif %}">
+        <div id="instafeed" class="row" data-instagram-feed data-accessToken="{{ section.settings.accessToken }}" data-limit="{{ section.settings.limit }}" data-resolution-images="{{ section.settings.resolution_images }}" data-rows="{{ section.settings.images_per_row }}"></div>  
+        
+        {% if section.settings.display_instagram_button and section.settings.instagram_button_text != blank %}
+        <a href="{{ section.settings.instagram_button_link }}" title="{{ section.settings.instagram_button_text | split: '|' | first }}" class="btn">
+            {% include 'multilang' with section.settings.instagram_button_text %}
+        </a>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+    {% assign instagram_bg =  section.settings.instagram_bg %}
+
+    {% unless section.settings.display_arrow %}
+    #new-instagram-{{section.id}} .item {
+        padding: 0 2.5px;
+    }
+    {% endunless %}
+
+    {% if section.settings.display_border_top %}   
+    #new-instagram-{{section.id}} {
+        border-top: 1px solid #ebebeb;
+    }
+    {% endif %}
+
+    {% unless section.settings.display_instagram_button and section.settings.instagram_button_text != blank %}
+    #new-instagram-{{section.id}} {
+        padding-bottom: 5px;
+    }
+    {% endunless %}
+    
+    #new-instagram-{{section.id}},
+    #new-instagram-{{section.id}} .widget-title .box-title .title {
+        background-color: {{ instagram_bg }};
+    }   
+
+    {% if section.settings.title_style == 'style_1' %}
+    #new-instagram-{{section.id}} {
+        padding-top: 0;
+    }
+    {% endif %}
+    {% if section.settings.slide_rows == '2' %}
+    #instafeed .item{
+        padding-bottom: 5px;
+    }
+    {%endif%}
+</style>
+
+<script>
+    $(document).ready(function() {
+        var instagramBlock = $('[data-instagram-feed]');
+
+        instagramBlock.each(function() {
+            var self = $(this),
+                dataResolutionImages = self.data('resolution-images'),
+                dataRows = self.data('rows'),
+                dataLimit = self.data('limit');
+                
+            var feed = new Instafeed({
+                get: "user",   
+                {% if section.settings.accessToken != blank %}
+                userId: {{ section.settings.accessToken | split: '.' | first  }},
+                accessToken: '{{ section.settings.accessToken }}', 
+                {% else %}
+                accessToken: '8944927192.1677ed0.c5296f1b30f347d6965da2ab64321b89',
+                userId: 8944927192,
+                {% endif %}
+                resolution: dataResolutionImages,
+                clientId: "c6e4c736e82345a3898a0e299daa00fb",
+                get limit() {
+                    return limit = dataLimit.toString();          
+                },          
+                template: '<a class="item col-12 animate-hvr" href="{% raw %}{{link}}{%endraw%}" target="_blank"><img data-src="{%raw%}{{image}}{%endraw%}" class="lazyload" data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]" data-sizes="auto"/></a>',
+                after: function() {
+                    self.find('a').attr({
+                        target: "_blank",
+                        class: "item col-12 animate-hvr"
+                    });   
+              {% if section.settings.slide_rows == '2' %}
+                    var x =  self.children();
+
+                    for (i = 0; i < x.length ; i += 2) {
+                      x.slice(i,i+2).wrapAll('<div class="'+ i +'"></div>');
+                    }
+              {% endif %}
+
+                    self.slick({
+                        infinite: true,
+                        speed: 1000,                       
+                        {% if section.settings.slide_ins == 'centermode' %}
+                        centerMode: true,
+                        centerPadding: '11.36%',
+                        {% endif %}
+                        {% if section.settings.display_arrow %}
+                        nextArrow: '<button type="button" class="slick-next"><i class="fa fa-angle-right"></i></button>',
+                        prevArrow: '<button type="button" class="slick-prev"><i class="fa fa-angle-left"></i></button>',
+                        {% else %}
+                        arrows: false,
+                        autoplay: true,
+                        {% endif %}
+                        slidesToShow: dataRows,
+                        slidesToScroll: dataRows,
+                        responsive: [
+                            {
+                                breakpoint: 1200,
+                                settings: {
+                                    {% if section.settings.slide_rows == '2' %}
+                                    slidesPerRow: 1,   
+                                    slidesToShow: 4,
+                                    rows: 2,
+                                    {% else %}
+                                    slidesToShow: 4,
+                                    slidesToScroll: 4,
+                                    {% endif %}
+                                }
+                            },
+                            {
+                                breakpoint: 992,
+                                settings: {
+                                    {% if section.settings.slide_rows == '2' %}
+                                    slidesPerRow: 1,   
+                                    slidesToShow: 3,
+                                    rows: 2,
+                                    {% else %}
+                                    slidesToShow: 3,
+                                    slidesToScroll: 3,
+                                    {% endif %}            
+                                }
+                            },
+                            {
+                                breakpoint: 768,
+                                settings: {
+                                    {% if section.settings.slide_rows == '2' %}
+                                    slidesPerRow: 1,   
+                                    slidesToShow: 2,
+                                    rows: 2,                                  
+                                    {% else %}
+                                    slidesToShow: 2,
+                                    slidesToScroll: 2,
+                                    {% endif %}      
+                                }
+                            }                                          
+                        ]
+                    });
+                }
+            });
+
+            feed.run();
+        });
+    });
+</script>
+
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Instagram",
+    "class": "home-instagram-sections",
+    "settings": [   
+        {
+            "type": "checkbox",
+            "id": "show_instagram",
+            "label": "Enable",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "layout",
+            "label": "Layout:",
+            "options": [
+                {
+                    "value": "default",
+                    "label": "Default"
+                },
+                {
+                    "value": "full",
+                    "label": "Full Width"
+                }
+            ],
+            "default": "default"
+        },
+        {
+            "type": "checkbox",
+            "id": "display_border_top",
+            "label": "Display Border?",
+            "default": false
+        },
+        {
+            "type" : "color",
+            "id" : "instagram_bg",
+            "label" : "Background Color",
+            "default" : "#fafafa"
+        },
+        {
+            "type": "textarea",
+            "id": "instagram_title",
+            "label": "Title",
+            "default": "#Ella On Instagram"
+        },
+        {
+            "type": "textarea",
+            "id": "instagram_des",
+            "label": "Instagram Description",
+            "default": "Phasellus lorem malesuada ligula pulvinar commodo maecenas"
+        },
+        {
+            "type": "select",
+            "id": "title_style",
+            "label": "Title Style:",
+
+            "options": [
+                {
+                    "value": "style_1",
+                    "label": "Style 1" 
+                },
+                { 
+                    "value": "style_2",
+                    "label": "Style 2" 
+                }          
+            ],
+            "default": "style_1"
+        },
+        {
+            "type": "checkbox",
+            "id": "display_instagram_button",
+            "label": "Display Button Instagram?",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "instagram_button_text",
+            "label": "Button Instagram Text",
+            "default": "View Gallery"
+        },
+        {
+            "type": "text",
+            "id": "instagram_button_link",
+            "label": "Button Instagram Link"
+        },
+        {
+            "type": "text",
+            "id": "accessToken",
+            "label": "Access Token",
+            "default": "8944927192.1677ed0.c5296f1b30f347d6965da2ab64321b89",
+            "info": "Required to use when Get Image from: 'User'.[Where do I find Access Token?](http:\/\/instagram.pixelunion.net/)"
+        },
+        {
+            "type": "text",
+            "id": "limit",
+            "label": "Limit the number of images to show",
+            "default": "10"
+        },
+        {
+            "type": "select",
+            "id": "images_per_row",
+            "label": "Images per row",
+            "options": [
+                {
+                    "value": "3",
+                    "label": "3"
+                },
+                {
+                    "value": "4",
+                    "label": "4"
+                },
+                {
+                    "value": "5",
+                    "label": "5"
+                },
+                {
+                    "value": "6",
+                    "label": "6"
+                },
+                {
+                    "value": "7",
+                    "label": "7"
+                },
+                {
+                    "value": "8",
+                    "label": "8"
+                },
+                {
+                    "value": "9",
+                    "label": "9"
+                },
+                {
+                    "value": "10",
+                    "label": "10"
+                }
+            ],
+            "default": "5"
+        },
+        {
+            "type" : "radio",
+            "id" : "slide_ins",
+            "label" : "Slider Instagram",       
+            "options": [
+                {
+                    "value": "centermode",
+                    "label": "Center Mode"
+                },
+                {
+                    "value": "default_ins",
+                    "label": "Default"
+                }
+            ],
+            "default": "default_ins",
+            "info": "================="
+        },
+        {
+            "type": "checkbox",
+            "id": "display_arrow",
+            "label": "Display Arrow?",
+            "default": true,
+            "info": "================="
+        },
+        {
+            "type": "select",
+            "id": "slide_rows",
+            "label": "Slide Rows:",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "1" 
+                },
+                { 
+                    "value": "2",
+                    "label": "2" 
+                }          
+            ],
+            "default": "1"
+        },
+        {
+            "type": "select",
+            "id": "resolution_images",
+            "label": "Resolution of images",
+            "options": [
+            {
+                "value": "thumbnail",
+                "label": "Thumbnail"
+            },
+            {
+                "value": "low_resolution",
+                "label": "Low Resolution"
+            },
+            {
+                "value": "standard_resolution",
+                "label": "Standard Resolution"
+            }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Instagram",
+            "category": "Instagram"
+        }
+    ]
+  }
+{% endschema %}

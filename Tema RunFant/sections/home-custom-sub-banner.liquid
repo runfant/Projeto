@@ -1,0 +1,748 @@
+{% if section.blocks.size > 0 %}
+<div class="home-custom-sub-banner" id="custom-sub-banner-{{section.id}}">
+    <div class="container">
+        <div class="row">
+            {% for block in section.blocks %}
+            
+            {% case section.blocks.size %}
+                {% when 1 %}
+                {%- assign column_size = 'col-12 one-block' -%}
+                {% when 2 %}
+                {%- assign column_size = 'col-12 col-md-6 two-blocks' -%}
+                {% when 3 %}
+                    {%- assign column_size = 'col-12 col-md-6 col-lg-4 three-blocks' -%}      
+            {% endcase %}
+            
+            {% if block.type == 'oneImage' %}
+            <div class="{{ column_size }} oneImage" {% if block.settings.image_2 != blank %}data-init-slideshow{% endif %} data-dots="true" data-autoplay="true" data-autoplaySpeed="10000" data-fade="true">
+                <div class="item">
+                    <div class="sub-banner banner-item">
+                        <div class="img-box">
+                            <a href="{{ block.settings.link }}" class="animate-scale">
+                                {% if block.settings.image != blank %}
+
+                                {%- assign img_url = block.settings.image | img_url: '600x', crop: 'center' -%}
+
+                                <img data-src="{{ img_url }}"
+                                    src="{{ img_url }}" alt="{{ block.settings.image.alt | default: shop.name }}" itemprop="logo"
+                                    class="lazyautosizes lazyloaded" data-sizes="auto">
+
+                                {% else %}
+
+                                <div class="not_img">
+                                    370 x 510px
+                                </div>   
+                                {% endif %}
+                            </a>
+                        </div>
+
+                        {% if block.settings.title != blank or block.settings.des != blank or block.settings.countdown!= blank %}
+                        <div class="content-box" style="{% if block.settings.color != blank %}color: {{ block.settings.color }};{% endif %}">
+                            {% if block.settings.title != blank %}
+                            <h3 class="banner-title">
+                                {% include 'multilang' with block.settings.title %} 
+
+                                <span class="border-bt-hover" style="{% if block.settings.color != blank %}background-color: {{ block.settings.color }};{% endif %}"></span>
+                            </h3>
+                            {% endif %}
+                            
+                            {% if block.settings.des != blank %}
+                            <p class="des">
+                                {% include 'multilang' with block.settings.des %} 
+                            </p>
+                            {% endif %}
+                            
+                            {% if block.settings.countdown != blank %}
+                            <div class="sub-banner-countdown countdown-{{ block.id }}" data-countdown data-countdown-value="{{ block.settings.countdown }}"></div>
+                            {% endif %}
+                        </div>
+                        
+                        <style>
+                            .countdown-{{ block.id }} .clock-item {
+                                border-color: {{ block.settings.color | color_modify: 'alpha', 0.8 }};
+                            }
+                        </style>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if block.settings.image_2 != blank %}
+                <div class="item">
+                    <div class="sub-banner banner-item">
+                        <div class="img-box">
+                            <a href="{{ block.settings.link_2 }}" class="animate-scale">
+                                {%- assign img_url = block.settings.image_2 | img_url: '600x', crop: 'center' -%}
+
+                                <img data-src="{{ img_url }}"
+                                    src="{{ img_url }}" alt="{{ block.settings.image_2.alt | default: shop.name }}" itemprop="logo"
+                                    class="lazyautosizes lazyloaded" data-sizes="auto">
+                            </a>
+                        </div>
+
+                        {% if block.settings.title_2 != blank or block.settings.des_2 != blank or block.settings.countdown_2 != blank %}
+                        <div class="content-box" style="{% if block.settings.color_2 != blank %}color: {{ block.settings.color_2 }};{% endif %}">
+                            {% if block.settings.title_2 != blank %}
+                            <h3 class="banner-title">
+                                {% include 'multilang' with block.settings.title_2 %} 
+
+                                <span class="border-bt-hover" style="{% if block.settings.color_2 != blank %}background-color: {{ block.settings.color_2 }};{% endif %}"></span>
+                            </h3>
+                            {% endif %}
+                            
+                            {% if block.settings.des_2 != blank %}
+                            <p class="des">
+                                {% include 'multilang' with block.settings.des_2 %} 
+                            </p>
+                            {% endif %}
+                            
+                            {% if block.settings.countdown_2 != blank %}
+                            <div class="sub-banner-countdown countdown-{{ block.id }}" data-countdown data-countdown-value="{{ block.settings.countdown_2 }}"></div>
+                            {% endif %}
+                        </div>
+                        
+                        <style>
+                            .countdown-{{ block.id }} .clock-item {
+                                border-color: {{ block.settings.color | color_modify: 'alpha', 0.8 }};
+                            }
+                        </style>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+            
+            {% elsif block.type == 'twoImage' %}
+            <div class="{{ column_size }} twoImage">
+                <div class="row">
+                    <div class="item col-6 col-md-12">
+                        <div class="sub-banner banner-item">
+                            <div class="img-box">
+                                <a href="{{ block.settings.link_1 }}" class="animate-scale">
+                                {% if block.settings.image_1 != blank %}
+
+                                {%- assign img_url = block.settings.image_1 | img_url: '600x', crop: 'center' -%}
+
+                                <img data-src="{{ img_url }}"
+                                    src="{{ img_url }}" alt="{{ block.settings.image_1.alt | default: shop.name }}" itemprop="logo"
+                                    class="lazyautosizes lazyloaded" data-sizes="auto">
+
+                                {% else %}
+
+                                <div class="not_img">
+                                    370 x 240px
+                                </div>   
+                                {% endif %}
+                                </a>
+                            </div>
+
+                            {% if block.settings.title_1 != blank %}
+                            <div class="content-box" style="{% if block.settings.color_1 != blank %}color: {{ block.settings.color_1 }};{% endif %}">
+                                <h3 class="banner-title">
+                                {% include 'multilang' with block.settings.title_1 %} 
+
+                                <span class="border-bt-hover" style="{% if block.settings.color_1 != blank %}background-color: {{ block.settings.color_1 }};{% endif %}"></span>
+                                </h3>
+                            </div>
+                            {% endif %}
+
+                            {% if block.settings.button_1 != blank %}
+                            <div class="action-link">
+                                <a href="{{ block.settings.link_1 }}" class="btn btn-img-block"
+                                    style="{% if block.settings.bg_button_1 != blank %}
+                                            background-color:{{ block.settings.bg_button_1 }};
+                                            {% endif %}
+                                            {% if block.settings.border_button_1 != blank %}
+                                            border-color:{{ block.settings.border_button_1 }};
+                                            {% endif %}
+                                            {% if block.settings.color_button_1 != blank %}
+                                            color:{{ block.settings.color_button_1 }};
+                                            {% endif %}">
+                                    {% include 'multilang' with block.settings.button_1 %}
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>	
+                                
+                    <div class="item col-6 col-md-12">
+                        <div class="sub-banner banner-item">
+                            <div class="img-box">
+                                <a href="{{ block.settings.link_2 }}" class="animate-scale">
+                                {% if block.settings.image_2 != blank %}
+
+                                {%- assign img_url = block.settings.image_2 | img_url: '600x', crop: 'center' -%}
+
+                                <img data-src="{{ img_url }}"
+                                    src="{{ img_url }}" alt="{{ block.settings.image_2.alt | default: shop.name }}" itemprop="logo"
+                                    class="lazyautosizes lazyloaded" data-sizes="auto">
+
+                                {% else %}
+
+                                <div class="not_img">
+                                    370 x 240px
+                                </div>   
+                                {% endif %}
+                                </a>
+                            </div>
+
+                            {% if block.settings.title_2 != blank %}
+                            <div class="content-box" style="{% if block.settings.color_2 != blank %}color: {{ block.settings.color_2 }};{% endif %}">
+                                <h3 class="banner-title">
+                                {% include 'multilang' with block.settings.title_2 %} 
+
+                                <span class="border-bt-hover" style="{% if block.settings.color_2 != blank %}background-color: {{ block.settings.color_2 }};{% endif %}"></span>
+                                </h3>
+                            </div>
+                            {% endif %}
+
+                            {% if block.settings.button_2 != blank %}
+                            <div class="action-link">
+                                <a href="{{ block.settings.link_2 }}" class="btn btn-img-block"
+                                    style="{% if block.settings.bg_button_2 != blank %}
+                                            background-color:{{ block.settings.bg_button_2 }};
+                                            {% endif %}
+                                            {% if block.settings.border_button_2 != blank %}
+                                            border-color:{{ block.settings.border_button_2 }};
+                                            {% endif %}
+                                            {% if block.settings.color_button_2 != blank %}
+                                            color:{{ block.settings.color_button_2 }};
+                                            {% endif %}">
+                                    {% include 'multilang' with block.settings.button_2 %}
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+            
+            {% elsif block.type == 'fourImage' %}
+            <div class="{{ column_size }} fourImage">
+                <div class="row">
+                    <div class="item col-6">
+                        <div class="sub-banner banner-item">
+                        <div class="img-box">
+                            <a href="{{ block.settings.link_1 }}" class="animate-scale">
+                            {% if block.settings.image_1 != blank %}
+
+                            {%- assign img_url = block.settings.image_1 | img_url: '600x', crop: 'center' -%}
+
+                            <img data-src="{{ img_url }}"
+                                src="{{ img_url }}" alt="{{ block.settings.image_1.alt | default: shop.name }}" itemprop="logo"
+                                class="lazyautosizes lazyloaded" data-sizes="auto">
+
+                            {% else %}
+
+                            <div class="not_img">
+                                270 x 270px
+                            </div>   
+                            {% endif %}
+                            </a>
+                        </div>
+
+                        {% if block.settings.title_1 != blank %}
+                        <div class="content-box" style="{% if block.settings.color_1 != blank %}color: {{ block.settings.color_1 }};{% endif %}">
+                            <h3 class="banner-title">
+                            {% include 'multilang' with block.settings.title_1 %} 
+
+                            <span class="border-bt-hover" style="{% if block.settings.color_1 != blank %}background-color: {{ block.settings.color_1 }};{% endif %}"></span>
+                            </h3>
+                        </div>
+                        {% endif %}
+                        </div>
+                    </div>	
+                                
+                    <div class="item col-6">
+                        <div class="sub-banner banner-item">
+                        <div class="img-box">
+                            <a href="{{ block.settings.link_2 }}" class="animate-scale">
+                            {% if block.settings.image_2 != blank %}
+
+                            {%- assign img_url = block.settings.image_2 | img_url: '600x', crop: 'center' -%}
+
+                            <img data-src="{{ img_url }}"
+                                src="{{ img_url }}" alt="{{ block.settings.image_2.alt | default: shop.name }}" itemprop="logo"
+                                class="lazyautosizes lazyloaded" data-sizes="auto">
+
+                            {% else %}
+
+                            <div class="not_img">
+                                270 x 270px
+                            </div>   
+                            {% endif %}
+                            </a>
+                        </div>
+
+                        {% if block.settings.title_2 != blank %}
+                        <div class="content-box" style="{% if block.settings.color_2 != blank %}color: {{ block.settings.color_2 }};{% endif %}">
+                            <h3 class="banner-title">
+                            {% include 'multilang' with block.settings.title_2 %} 
+
+                            <span class="border-bt-hover" style="{% if block.settings.color_2 != blank %}background-color: {{ block.settings.color_2 }};{% endif %}"></span>
+                            </h3>
+                        </div>
+                        {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="item col-6">
+                        <div class="sub-banner banner-item">
+                        <div class="img-box">
+                            <a href="{{ block.settings.link_3 }}" class="animate-scale">
+                            {% if block.settings.image_3 != blank %}
+
+                            {%- assign img_url = block.settings.image_3 | img_url: '600x', crop: 'center' -%}
+
+                            <img data-src="{{ img_url }}"
+                                src="{{ img_url }}" alt="{{ block.settings.image_3.alt | default: shop.name }}" itemprop="logo"
+                                class="lazyautosizes lazyloaded" data-sizes="auto">
+
+                            {% else %}
+
+                            <div class="not_img">
+                                270 x 270px
+                            </div>   
+                            {% endif %}
+                            </a>
+                        </div>
+
+                        {% if block.settings.title_3 != blank %}
+                        <div class="content-box" style="{% if block.settings.color_3 != blank %}color: {{ block.settings.color_3 }};{% endif %}">
+                            <h3 class="banner-title">
+                            {% include 'multilang' with block.settings.title_3 %} 
+
+                            <span class="border-bt-hover" style="{% if block.settings.color_3 != blank %}background-color: {{ block.settings.color_3 }};{% endif %}"></span>
+                            </h3>
+                        </div>
+                        {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="item col-6">
+                        <div class="sub-banner banner-item">
+                        <div class="img-box">
+                            <a href="{{ block.settings.link_4 }}" class="animate-scale">
+                            {% if block.settings.image_4 != blank %}
+
+                            {%- assign img_url = block.settings.image_4 | img_url: '600x', crop: 'center' -%}
+
+                            <img data-src="{{ img_url }}"
+                                src="{{ img_url }}" alt="{{ block.settings.image_4.alt | default: shop.name }}" itemprop="logo"
+                                class="lazyautosizes lazyloaded" data-sizes="auto">
+
+                            {% else %}
+
+                            <div class="not_img">
+                                270 x 270px
+                            </div>   
+                            {% endif %}
+                            </a>
+                        </div>
+
+                        {% if block.settings.title_4 != blank %}
+                        <div class="content-box" style="{% if block.settings.color_4 != blank %}color: {{ block.settings.color_4 }};{% endif %}">
+                            <h3 class="banner-title">
+                            {% include 'multilang' with block.settings.title_4 %} 
+
+                            <span class="border-bt-hover" style="{% if block.settings.color_4 != blank %}background-color: {{ block.settings.color_4 }};{% endif %}"></span>
+                            </h3>
+                        </div>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+            {% endif %}
+
+            {% endfor %}
+        </div>
+        
+        {% if section.settings.block_des != blank %}
+        <div class="row">
+            <div class="col-12">
+                <p class="des">
+                {% include 'multilang' with section.settings.block_des %} 
+                </p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    {% assign font_size_title =  section.settings.font_size_title %}
+    {% assign margin_bottom =  section.settings.margin_bottom %}
+
+    @media (max-width: 767px) {
+        #custom-sub-banner-{{section.id}}  {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+        #custom-sub-banner-{{section.id}}  {
+            margin-bottom: {{ section.settings.margin_bottom_tab }}px;
+        }
+    }
+   
+    @media (min-width: 1200px) {
+        #custom-sub-banner-{{section.id}} .banner-title {
+            font-size: {{ font_size_title }};
+        }
+        
+        #custom-sub-banner-{{section.id}} {
+            margin-bottom: {{ margin_bottom }}px;
+        }
+    }	
+</style>
+{% endif %}
+
+
+{% schema %}
+    {
+        "name": "Custom: Sub Banner 1",
+        "class": "home-custom-sub-banner-sections",
+        "max_blocks": 3,
+        "settings": [
+            {
+                "type" : "text",
+                "id" : "font_size_title",
+                "label" : "Title Font Size ",
+                "default" : "20px"
+            },
+            {
+                "type" : "textarea",
+                "id" : "block_des",
+                "label" : "Block Description"
+            },
+            {
+                "type": "header",
+                "content": "Margin Bottom:"
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_mb",
+                "label": "Mobile",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_tab",
+                "label": "Tablet",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "label": "Margin Bottom",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 30
+            }	
+        ],
+
+        "blocks": [
+            {
+                "type": "oneImage",
+                "name": "One Image",
+                "settings": [		  	
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Image"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "title",
+                        "label" : "Title",
+                        "default" : "Special Offers"
+                    },
+                    {
+                        "type" : "textarea",
+                        "id" : "des",
+                        "label" : "Description",
+                        "default" : "Sale up to 60% off on selected items. End ins:"
+                    },
+                    {
+                        "type" : "textarea",
+                        "id" : "countdown",
+                        "label" : "Countdown",
+                        "default" : "2020/01/7 0:0:00"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "color",
+                        "label" : "Color",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link",
+                        "label": "Link",
+                        "info": "Optional"
+                    },
+
+                    {
+                        "type": "image_picker",
+                        "id": "image_2",
+                        "label": "Image 2"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "title_2",
+                        "label" : "Title 2",
+                        "default" : "Special Offers"
+                    },
+                    {
+                        "type" : "textarea",
+                        "id" : "des_2",
+                        "label" : "Description 2",
+                        "default" : "Sale up to 60% off on selected items. End ins:"
+                    },
+                    {
+                        "type" : "textarea",
+                        "id" : "countdown_2",
+                        "label" : "Countdown 2",
+                        "default" : "2020/01/7 0:0:00"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "color_2",
+                        "label" : "Color 2",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_2",
+                        "label": "Link 2",
+                        "info": "Optional"
+                    }
+                ]
+            },
+
+            {
+                "type": "twoImage",
+                "name": "Two Image",
+                "settings": [		  	
+                    {
+                        "type": "image_picker",
+                        "id": "image_1",
+                        "label": "Image 1"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "title_1",
+                        "label" : "Title 1",
+                        "default" : "Loremous"
+                    },	      
+                    {
+                        "type" : "color",
+                        "id" : "color_1",
+                        "label" : "Color 1",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "button_1",
+                        "label" : "Button 1"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_1",
+                        "label": "Link 1",
+                        "info": "Optional"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "bg_button_1",
+                        "label" : "Background Button 1",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "border_button_1",
+                        "label" : "Border Button 1",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "color_button_1",
+                        "label" : "Button Color 1",
+                        "default" : "#232323"
+                    },                 
+                    {
+                        "type": "image_picker",
+                        "id": "image_2",
+                        "label": "Image 2"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "title_2",
+                        "label" : "Title 2",
+                        "default" : "Cosmopolis"
+                    },	      
+                    {
+                        "type" : "color",
+                        "id" : "color_2",
+                        "label" : "Color 2",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "button_2",
+                        "label" : "Button 2"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_2",
+                        "label": "Link 2",
+                        "info": "Optional"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "bg_button_2",
+                        "label" : "Background Button 2",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "border_button_2",
+                        "label" : "Border Button 2",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "color_button_2",
+                        "label" : "Button Color 2",
+                        "default" : "#232323"
+                    }
+                ]
+            },
+
+            {
+                "type": "fourImage",
+                "name": "Four Image",
+                "settings": [		  	
+                    {
+                        "type": "image_picker",
+                        "id": "image_1",
+                        "label": "Image 1"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "title_1",
+                        "label" : "Title 1",
+                        "default" : "Loremous"
+                    },	      
+                    {
+                        "type" : "color",
+                        "id" : "color_1",
+                        "label" : "Color 1",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_1",
+                        "label": "Link 1",
+                        "info": "Optional"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "image_2",
+                        "label": "Image 2"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "title_2",
+                        "label" : "Title 2",
+                        "default" : "Cosmopolis"
+                    },	      
+                    {
+                        "type" : "color",
+                        "id" : "color_2",
+                        "label" : "Color 2",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_2",
+                        "label": "Link 2",
+                        "info": "Optional"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "image_3",
+                        "label": "Image 3"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "title_3",
+                        "label" : "Title 3",
+                        "default" : "Loremous"
+                    },	      
+                    {
+                        "type" : "color",
+                        "id" : "color_3",
+                        "label" : "Color 3",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_3",
+                        "label": "Link 3",
+                        "info": "Optional"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "image_4",
+                        "label": "Image 4"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "title_4",
+                        "label" : "Title 4",
+                        "default" : "Cosmopolis"
+                    },	      
+                    {
+                        "type" : "color",
+                        "id" : "color_4",
+                        "label" : "Color 4",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type": "url",
+                        "id": "link_4",
+                        "label": "Link 4",
+                        "info": "Optional"
+                    }
+                ]
+            }
+        ],
+
+        "presets": [
+            {
+                "name": "Custom: Sub Banner 1",
+                "category": "Block Images",
+                "blocks": [
+                    {
+                        "type": "twoImage"
+                    },
+                    {
+                        "type": "oneImage"
+                    },        
+                    {
+                        "type": "twoImage"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

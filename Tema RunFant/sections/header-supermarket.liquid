@@ -1,0 +1,545 @@
+{% include 'style-header-supermarket' %}
+
+<header class="site-header header-supermarket" role="banner">
+    {% if section.settings.display_header_top %}
+    <div class="header-top">
+        {% if section.settings.top_message_text != blank or section.settings.countdown != blank %}
+        <div class="container">
+            {% if section.settings.top_message_text != blank %}
+            <div class="top-message">
+                <p>
+                    {% include 'multilang' with section.settings.top_message_text %}
+                </p>
+                <a href="#" title="close" class="close" data-close-header-top>
+                    {% include 'icon-close' %}
+                </a>
+            </div>
+            {% endif %}  
+
+            {% if section.settings.countdown != blank %}
+            <div class="header-top-countdown" data-countdown data-countdown-value="{{ section.settings.countdown }}"></div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+  
+    <a href="#" class="icon-nav close-menu-mb" title="Menu Mobile Icon" data-menu-mb-toogle>
+        <span class="icon-line"></span>
+    </a>
+
+    <div class="header-bottom" data-sticky-mb>
+        <div class="wrapper-header-bt">
+            <div class="container">
+                {% include 'header-mobile' %}
+            </div>
+        
+            <div class="header-pc">
+                {% if section.settings.info_text_1 != blank or section.settings.info_text_2 != blank or section.settings.free_shipping_text != blank or section.settings.header-link_1_text != blank or section.settings.header-link_2_text != blank or settings.enable_multilang or settings.enable_multiple_currencie %}
+                <div class="header-panel-top">
+                    <div class="container">
+                        <div class="row">
+                            {% if section.settings.info_text_1 != blank or section.settings.info_text_2 != blank %}
+                            <div class="wrapper-left col-12{% if section.settings.display_free_shipping and section.settings.free_shipping_text != blank %} col-xl-4{% else %} col-xl-8{% endif %}">
+                                <ul class="info-store">
+                                    {% if section.settings.info_text_1 != blank %}
+                                    <li class="text">
+                                        {% if section.settings.info_icon_1 != blank %}
+                                        <span class="info-icon">
+                                            {{ section.settings.info_icon_1 }}
+                                        </span>
+                                        {% endif %}
+
+                                        <div class="info-text">
+                                            {% include 'multilang' with section.settings.info_text_1 %}
+                                        </div>
+                                    </li>
+                                    {% endif %}
+                                    
+                                    {% if section.settings.info_text_2 != blank %}
+                                    <li class="text">
+                                        {% if section.settings.info_icon_2 != blank %}
+                                        <span class="info-icon">
+                                            {{ section.settings.info_icon_2 }}
+                                        </span>
+                                        {% endif %}
+
+                                        <div class="info-text">
+                                            {% include 'multilang' with section.settings.info_text_2 %}
+                                        </div>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            {% endif %}
+
+
+                            {% if section.settings.display_free_shipping and section.settings.free_shipping_text != blank %}
+                            <div class="wrapper-center col-12{% if section.settings.info_text_1 != blank or section.settings.info_text_2 != blank %} col-xl-4{% else %} col-xl-8{% endif %}">                            
+                                <div class="free-shipping-text">
+                                    {% include 'multilang' with section.settings.free_shipping_text %}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if section.settings.header-link_1_text != blank or section.settings.header-link_2_text != blank or settings.enable_multilang or settings.enable_multiple_currencies %}
+                            <div class="wrapper-right col-12{% if section.settings.info_text_1 != blank or section.settings.info_text_2 != blank or section.settings.free_shipping_text != blank %} col-xl-4{% endif %}">
+                                {% if section.settings.header-link_1_text != blank or section.settings.header-link_2_text != blank %}
+                                <ul class="header-links">
+                                    {% if section.settings.header-link_1_text != blank %}
+                                    <li class="link">
+                                        <a href="{{ section.settings.header-link_1 }}">
+                                            {% include 'multilang' with section.settings.header-link_1_text %}
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                
+                                    {% if section.settings.header-link_2_text != blank %}
+                                    <li class="link">
+                                        <a href="{{ section.settings.header-link_2 }}">
+                                            {% include 'multilang' with section.settings.header-link_2_text %}
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                                {% endif %}
+
+                                {% if settings.enable_multilang or settings.enable_multiple_currencies %}
+                                <div class="lang-currency-groups">
+                                    {% include 'new-language-picker' %}
+
+                                    {% include 'new-currency-picker' %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="header-panel-bt">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 col-xl-3 wrapper-left header-items">
+                                <div class="header-logo" itemscope itemtype="http://schema.org/Organization">
+                                  <meta itemprop="url" content="{{ shop.url }}">
+                                    {% if section.settings.brand_type == 'image' and section.settings.logo_pc != bank %}
+                                    <a class="logo-img" href="/" title="Logo">
+                                    <img itemprop="logo" data-src="{{ section.settings.logo_pc | img_url: 'master' }}"
+                                        src="{{ section.settings.logo_pc | img_url: 'master' }}"
+                                        alt="{{ section.settings.logo_pc.alt | default: shop.name }}" itemprop="logo" class="lazyautosizes lazyloaded" data-sizes="auto">
+                                    </a>
+                                    {% elsif section.settings.brand_text != '' %}
+                                    <a class="logo-title" href="/">
+                                    {{ section.settings.brand_text }}
+                                    </a>
+                                    {% else %}
+                                    <a class="logo-title" href="/">
+                                    {{ shop.name }}
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-xl-5 wrapper-center header-items">
+                                <div class="nav-search">                    
+                                    {% include 'search-bar' %}
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-xl-4 wrapper-right header-items">
+                                <div class="header-cart" data-cart-header-supermarket>
+                                    <a href="#" title="Cart" data-cart-toggle>
+                                        <span class="cart-icon">
+                                            {% include 'icon-cart' %}
+                                        </span>
+
+                                        <span class="groups-cart-text">  
+                                            <span class="cartCount" data-cart-count>
+                                                {{ cart.item_count }}
+                                            </span>
+
+                                            <span class="cart-text"{% if settings.enable_multilang %} data-translate="cart.general.cart_supermarket"{% endif %}>
+                                                {{ 'cart.general.cart_supermarket' | t }}
+                                            </span>
+                                        </span>
+                                    </a>                    
+                                </div>
+
+                                <div class="append-mb" data-links-menu-mobile>                               
+                                    {% if settings.enable_wishlist %}
+                                    <div class="header-wishlist">
+                                        <a class="wishlist" href="/pages/wish-list" title='{% if settings.enable_multilang %}data-translate="wishlist.general.my_wishlist"{% endif %}'>
+                                            <svg aria-hidden="true" data-prefix="fal" data-icon="heart" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-heart fa-w-16 fa-2x"><path fill="currentColor" d="M462.3 62.7c-54.5-46.4-136-38.7-186.6 13.5L256 96.6l-19.7-20.3C195.5 34.1 113.2 8.7 49.7 62.7c-62.8 53.6-66.1 149.8-9.9 207.8l193.5 199.8c6.2 6.4 14.4 9.7 22.6 9.7 8.2 0 16.4-3.2 22.6-9.7L472 270.5c56.4-58 53.1-154.2-9.7-207.8zm-13.1 185.6L256.4 448.1 62.8 248.3c-38.4-39.6-46.4-115.1 7.7-161.2 54.8-46.8 119.2-12.9 142.8 11.5l42.7 44.1 42.7-44.1c23.2-24 88.2-58 142.8-11.5 54 46 46.1 121.5 7.7 161.2z" class=""></path></svg>
+                                            <span class="wishlist-text text-hover"{% if settings.enable_multilang %} data-translate="wishlist.general.wishlist"{% endif %}>
+                                                {{ 'wishlist.general.wishlist' | t }}
+                                            </span>                  
+                                        </a>                              
+                                    </div>
+                                    {% endif %}
+                                    {% if shop.customer_accounts_enabled %}
+                                    <div class="customer-links">
+                                        <a href="#" title="User Icon" class="icon-user" data-user-mobile-toggle>
+                                            {% include 'icon-user' %}
+                                        </a>
+
+                                        <div class="user-text">
+                                            {% if customer %}
+                                            <div class="text-top">
+                                                <a class="acc-links acc-logout" id="customer_logout_link" href="/account/logout" {% if settings.enable_multilang %}data-translate="layout.customer.log_out"{% endif %}>
+                                                    {{ 'layout.customer.log_out' | t }}
+                                                </a>
+                                                <a class="acc-links acc-title" href="/account"{% if settings.enable_multilang %} data-translate="customer.account.title"{% endif %}>
+                                                    {{ 'customer.account.title' | t }}
+                                                </a>                                        
+                                            </div>
+                                            
+                                            {% else %}  
+                                            <div class="text-top">
+                                                <a data-dropdown-user class="acc-links acc-sign-in" id="customer_login_link" href="/account/login" {% if settings.enable_multilang %}data-translate="customer.login.login"{% endif %}>
+                                                    {{ 'customer.login.login' | t }}
+                                                </a>
+                                                <span class="or-text"{% if settings.enable_multilang %} data-translate="wishlist.general.or"{% endif %}>
+                                                    {{ 'wishlist.general.or' | t }}
+                                                </span>
+                                                <a class="acc-links acc-regis" id="customer_register_link" href="/account/register"{% if settings.enable_multilang %} data-translate="customer.register.register"{% endif %}>
+                                                    {{ 'customer.register.register' | t }}
+                                                </a>                                        
+                                            </div>
+
+                                            <div class="text-bottom">
+                                                <a class="acc-links acc-title" href="/account"{% if settings.enable_multilang %} data-translate="customer.account.title"{% endif %}>
+                                                    {{ 'customer.account.title' | t }}
+                                                </a>
+                                            </div>
+                                            {% endif %} 
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    var appendPrependMenuMobile = function() {
+        var headerPC =  $('.wrapper-header .header-pc'),
+            customerLinks = headerPC.find('[data-links-menu-mobile]'),
+            headerPanelTop = headerPC.find('.header-panel-top'),
+            wrapperNav = $('.wrapper-navigation'),
+            areaMb = wrapperNav.find('.mb-area');
+
+        if (window.innerWidth < 1200) {
+            if(customerLinks.length) {
+                customerLinks.appendTo(areaMb);
+            };
+
+            if(headerPanelTop.length) {
+                headerPanelTop.appendTo(areaMb);
+            };
+        } else {           
+            if(customerLinks.length) {
+                customerLinks.insertAfter(headerPC.find('[data-cart-header-supermarket]'));
+            };
+
+            if(headerPanelTop.length) {
+                headerPC.prepend(headerPanelTop);
+            };
+        };
+    };
+
+    $(document).ready(function() {
+        appendPrependMenuMobile();
+    });
+
+    var winWidth = $(window).innerWidth();
+
+    $(window).on('resize', function () {
+        var resizeTimerId;
+
+        clearTimeout(resizeTimerId);
+
+        resizeTimerId = setTimeout(function() {
+            var curWinWidth = $(window).innerWidth();
+
+            if ((curWinWidth < 1200 && winWidth >= 1200) || (curWinWidth >= 1200 && winWidth < 1200)) {
+                appendPrependMenuMobile();
+            };
+            winWidth = curWinWidth;
+        }, 0);
+    });
+    
+    {% if settings.enable_multilang %}
+    translator.doTranslate('.site-header');
+    {% endif %}
+</script>
+
+{% schema %}
+    {
+        "name": "Header Supermarket",
+        "settings": [
+            {
+                "type": "header",
+                "content": "Header Top"
+            },
+            {
+                "type": "checkbox",
+                "id": "display_header_top",
+                "label": "Display Header Top?",
+                "default": true
+            },
+            {
+                "type": "image_picker",
+                "id": "header_top_image",
+                "label": "Image"
+            },
+            {
+                "type": "textarea",
+                "id": "top_message_text",
+                "label": "Top Message Text",
+                "default": "Mid-Season Sale up to 70% Off. End Ins:"
+            },
+            {
+                "type" : "textarea",
+                "id" : "countdown",
+                "label" : "Countdown",
+                "default" : "2020/01/7 0:0:00",
+                "info": "================="
+            },
+            {
+                "type": "color",
+                "id": "bg_header_top",
+                "label": "Background Color",
+                "default": "#e95144"
+            },
+            {
+                "type": "color",
+                "id": "text_header_top_color",
+                "label": "Text Color",
+                "default": "#fff"
+            },
+            {
+                "type": "header",
+                "content": "Logo"
+            },
+            {
+                "type": "radio",
+                "id": "brand_type",
+                "label": "Use image or text for logo?",
+                "options": [
+                    {
+                        "value": "text",
+                        "label": "Text"
+                    },
+                    {
+                        "value": "image",
+                        "label": "Image"
+                    }
+                ],
+                "default": "text"
+            },
+            {
+                "type": "text",
+                "id": "brand_text",
+                "label": "Logo text"
+            },
+            {
+              "type": "color",
+              "id": "logo_text_color",
+              "label": "Logo Text Color",
+              "default": "#000"
+            },
+            {
+                "type": "image_picker",
+                "id": "logo",
+                "label": "Logo image for Mobile",
+                "info": "95px x 44px recommended"
+            },
+            {
+                "type": "text",
+                "id": "max_height_logo_mb",
+                "label": "Max Height of Logo Mobile",
+                "default": "26px" 
+            },
+            {
+                "type": "image_picker",
+                "id": "logo_pc",
+                "label": "Logo image for PC",
+                "info": "95px x 44px recommended"
+            },
+            {
+                "type": "text",
+                "id": "max_height_logo_pc",
+                "label": "Max Height of Logo PC",
+                "default": "33px" 
+            },
+            {
+                "type": "header",
+                "content": "Header Middel"
+            },
+            {
+                "type": "color",
+                "id": "bg_header_middel",
+                "label": "Background Color",
+                "default": "#f8f8f8"
+            },
+            {
+                "type": "color",
+                "id": "header_middel_text_color",
+                "label": "Text and Link Color",
+                "default": "#5a5a5a"
+            },
+            {
+                "type": "color",
+                "id": "header_middel_icon_color",
+                "label": "Icon Color",
+                "default": "#c3c3c3",
+                "info": "================="
+            },            
+            {
+                "type": "header",
+                "content": "Info Store"
+            },
+            {
+                "type" : "text",
+                "id": "info_icon_1",
+                "label" : "Icon 1",
+                "info": "[Find your Icon](https://fontawesome.com/v4.7.0/icons/)."
+            },
+            {
+                "type" : "textarea",
+                "id" : "info_text_1",
+                "label" : "Text 1"
+            },
+            {
+                "type" : "text",
+                "id": "info_icon_2",
+                "label" : "Icon 2",
+                "info": "[Find your Icon](https://fontawesome.com/v4.7.0/icons/)."
+            },
+            {
+                "type" : "textarea",
+                "id" : "info_text_2",
+                "label" : "Text 2",
+                "info": "================="
+            },            
+            {
+                "type": "header",
+                "content": "Free Shipping"
+            },
+            {
+                "type": "checkbox",
+                "id": "display_free_shipping",
+                "label": "Display Free Shipping?",
+                "default": true
+            },
+            {
+                "type": "textarea",
+                "id": "free_shipping_text",
+                "label": "Free Shipping Text",
+                "default": "FREE DELIVERY WORLDWIDE"
+            },
+            {
+                "type": "color",
+                "id": "free_shipping_color",
+                "label": "Free Shipping Color",
+                "default": "#d64123",
+                "info": "================="
+            },
+            {
+                "type": "header",
+                "content": "Header Link"
+            },
+            {
+                "type": "textarea",
+                "id": "header-link_1_text",
+                "label": "Header Text 1",
+                "default": "Theme FAQs "
+            },
+            {
+                "type": "url",
+                "id": "header-link_1",
+                "label": "Header Link 1"
+            },
+            {
+                "type": "text",
+                "id": "header-link_2_text",
+                "label": "Header Text 2",
+                "default": "Need Help? "
+            },
+            {
+                "type": "url",
+                "id": "header-link_2",
+                "label": "Header Link 2"
+            },
+            {
+                "type": "header",
+                "content": "Header Bottom"
+            },
+            {
+                "type": "color",
+                "id": "bg_header_bottom_color",
+                "label": "Background Color",
+                "default": "#fff"
+            },
+            {
+                "type": "color",
+                "id": "header_bottom_link_color",
+                "label": "Header Bottom Text Color",
+                "default": "#232323"
+            },
+            {
+                "type": "color",
+                "id": "header_bottom_icon_color",
+                "label": "Header Bottom Icon Color",
+                "default": "#323232",
+                "info": "======================="
+            },
+            {
+                "type": "header",
+                "content": "Search"
+            },
+            {
+                "type": "color",
+                "id": "bg_search_color",
+                "label": "Background Color",
+                "default": "#fff"
+            },      
+            {
+                "type": "color",
+                "id": "search_color",
+                "label": "Search Color with opacity 70%",
+                "default": "#323232"
+            },
+            {
+                "type": "color",
+                "id": "search_border_color",
+                "label": "Search Border Color",
+                "default": "#dcdcdc"
+            },
+            {
+                "type": "header",
+                "content": "Cart Header"
+            },
+            {
+                "type": "color",
+                "id": "bg_cart_color",
+                "label": "Background Color Items Cart",
+                "default": "#e95144"
+            },
+            {
+                "type": "color",
+                "id": "cart_color",
+                "label": "Color Items Cart",
+                "default": "#fff",
+                "info": "======================="
+            }                                
+        ]
+    }
+{% endschema %}

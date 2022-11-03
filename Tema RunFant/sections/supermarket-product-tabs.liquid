@@ -1,0 +1,486 @@
+{% case section.settings.collection_results_per_row %}
+  {% when '2' %}
+	{%- assign row = 'two-items' -%}
+  {% when '3' %}
+	{%- assign row = 'three-items' -%}
+  {% when '4' %}
+	{%- assign row = 'four-items' -%}
+  {% when '5' %}
+	{%- assign row = 'five-items' -%}
+{% endcase %}
+
+<div class="suppermarket-product-tabs home-product-tabs{% if section.settings.display_banner %} has-banner{% endif %}" id="product-tabs-{{section.id}}" data-home-product-tabs>
+    <div class="container">
+        {% if section.settings.featured_products_title != blank %}
+        <div class="widget-title not-before style-3">   
+            <h3 class="box-title">
+                <span class="title"> 
+                    {% include 'multilang' with section.settings.featured_products_title %}
+                </span>
+            </h3>
+
+            <ul class="list-product-tabs">
+                {% for block in section.blocks %}
+                <li>
+                    <a href="#" data-target="#product-tab-{{ block.id }}" data-product-tabTop data-href="/collections/{{ block.settings.collection }}?view=json-suppermarket" class="tab-links{% if forloop.first %} active{% endif %}">
+                        {% include 'multilang' with block.settings.title %}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="row{% if section.settings.display_banner %} flex-md-row-reverse{% endif %}">
+            <div class="col-12{% if section.settings.display_banner %} col-md-7 column-product{% else %} col-md-12{% endif %}">
+                <div class="widget-product suppermarket-widget-product">                   
+                    <div class="product-tabs-content">
+                        {% for block in section.blocks %}
+                        <div class="tab-content{% if forloop.first %} active{% endif %}{% if section.settings.display_banner %} sections-has-banner{% endif %}" data-product-TabContent id="product-tab-{{ block.id }}">
+                            <div class="products-grid row {{ row }}" data-row="{{ section.settings.collection_results_per_row }}">
+                                <div class="loading col-12"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            {% if section.settings.display_banner %}
+            <div class="col-12 col-md-5 column-banner"{% if section.settings.image_2 != blank or section.settings.image_3 != blank %} data-init-slideshow data-dots="true" data-autoplay="true" data-autoplaySpeed="10000" data-fade="true"{% endif %}>
+                <div class="column-banner-inner">
+                    <div class="img-box">
+                        <a href="{{ section.settings.link_1 }}">
+                            {%- assign img_url = section.settings.image_1 | img_url: '600x' -%}
+                            {% if section.settings.image_1 != blank %}
+                            <img data-src="{{ img_url }}"
+                                src="{{ img_url }}" alt="{{ section.settings.image_1.alt | default: shop.name }}"
+                                class="lazyautosizes lazyloaded" data-sizes="auto">
+
+                            {% else %}
+                            
+                            <div class="not_img">
+                                450 x 470px
+                            </div>   
+                            {% endif %}
+                        </a>
+                    </div>
+
+                    {% if section.settings.banner_heading_1 != blank or section.settings.banner_des_1 != blank or section.settings.banner_button_1 != blank %}
+                    <div class="custom-block-imgs">
+                        {% if section.settings.banner_heading_1 != blank %}
+                        <h3 class="banner-heading"
+                            style="{% if section.settings.color_banner_1 != blank %}
+                                color:{{ section.settings.color_banner_1 }};
+                                {% endif %}">
+                            {% include 'multilang' with section.settings.banner_heading_1  %}
+                        </h3>
+                        {% endif %}
+
+                        {% if section.settings.banner_des_1 != blank %}
+                        <p class="banner-des"
+                            style="{% if section.settings.color_banner_1 != blank %}
+                                color:{{ section.settings.color_banner_1 }};
+                                {% endif %}">
+                            {% include 'multilang' with section.settings.banner_des_1  %}
+                        </p>
+                        {% endif %}
+
+                        {% if section.settings.banner_button_1 != blank %}
+                        <a href="{{ section.settings.link_1 }}" class="banner-button btn">
+                            {% include 'multilang' with section.settings.banner_button_1 %}
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if section.settings.image_2 != blank %}
+                <div class="column-banner-inner">
+                    <div class="img-box">
+                        <a href="{{ section.settings.link_2 }}">
+                            {%- assign img_url = section.settings.image_2 | img_url: '600x' -%}
+                            <img data-src="{{ img_url }}"
+                                src="{{ img_url }}" alt="{{ section.settings.image_2.alt | default: shop.name }}"
+                                class="lazyautosizes lazyloaded" data-sizes="auto">
+                        </a>
+                    </div>
+
+                    {% if section.settings.banner_heading_2 != blank or section.settings.banner_des_2 != blank or section.settings.banner_button_2 != blank %}
+                    <div class="custom-block-imgs">
+                        {% if section.settings.banner_heading_2 != blank %}
+                        <h3 class="banner-heading"
+                            style="{% if section.settings.color_banner_2 != blank %}
+                                color:{{ section.settings.color_banner_2 }};
+                                {% endif %}">
+                            {% include 'multilang' with section.settings.banner_heading_2  %}
+                        </h3>
+                        {% endif %}
+
+                        {% if section.settings.banner_des_2 != blank %}
+                        <p class="banner-des"
+                            style="{% if section.settings.color_banner_2 != blank %}
+                                color:{{ section.settings.color_banner_2 }};
+                                {% endif %}">
+                            {% include 'multilang' with section.settings.banner_des_2  %}
+                        </p>
+                        {% endif %}
+
+                        {% if section.settings.banner_button_2 != blank %}
+                        <a href="{{ section.settings.link_2 }}" class="banner-button btn">
+                            {% include 'multilang' with section.settings.banner_button_2 %}
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>  
+                {% endif %}
+
+                {% if section.settings.image_3 != blank %}
+                <div class="column-banner-inner">
+                    <div class="img-box">
+                        <a href="{{ section.settings.link_3 }}">
+                            {%- assign img_url = section.settings.image_3 | img_url: '600x' -%}                           
+                            <img data-src="{{ img_url }}"
+                                src="{{ img_url }}" alt="{{ section.settings.image_3.alt | default: shop.name }}"
+                                class="lazyautosizes lazyloaded" data-sizes="auto">
+                        </a>
+                    </div>
+
+                    {% if section.settings.banner_heading_3 != blank or section.settings.banner_des_3 != blank or section.settings.banner_button_3 != blank %}
+                    <div class="custom-block-imgs">
+                        {% if section.settings.banner_heading_3 != blank %}
+                        <h3 class="banner-heading"
+                            style="{% if section.settings.color_banner_3 != blank %}
+                                color:{{ section.settings.color_banner_3 }};
+                                {% endif %}">
+                            {% include 'multilang' with section.settings.banner_heading_3  %}
+                        </h3>
+                        {% endif %}
+
+                        {% if section.settings.banner_des_3 != blank %}
+                        <p class="banner-des"
+                            style="{% if section.settings.color_banner_3 != blank %}
+                                color:{{ section.settings.color_banner_3 }};
+                                {% endif %}">
+                            {% include 'multilang' with section.settings.banner_des_3  %}
+                        </p>
+                        {% endif %}
+
+                        {% if section.settings.banner_button_3 != blank %}
+                        <a href="{{ section.settings.link_3 }}" class="banner-button btn">
+                            {% include 'multilang' with section.settings.banner_button_3 %}
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div> 
+                {% endif %} 
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    {% assign margin_bottom =  section.settings.margin_bottom %} 
+
+    {% if section.settings.display_banner %}
+    #product-tabs-{{section.id}} .column-banner-inner .banner-button {
+        background-color:{{ section.settings.bg_banner_button }};
+        border-color:{{ section.settings.border_banner_button }};
+        color:{{ section.settings.color_banner_button }};
+    }
+
+    #product-tabs-{{section.id}} .column-banner-inner .banner-heading {
+        font-size: {{ section.settings.font_size_banner_heading }};
+    }
+
+    #product-tabs-{{section.id}} .column-banner-inner .banner-des {
+        font-size: {{ section.settings.font_size_banner_des }};
+    }
+    {% endif %}
+
+    @media (max-width: 767px) {
+        #product-tabs-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+        #product-tabs-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_tab }}px;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        #product-tabs-{{section.id}} {
+            margin-bottom: {{ margin_bottom }}px;
+        }
+    }	
+</style>
+
+{% schema %}
+  {
+    "name": "Product Tabs",
+	"class": "suppermarket-product-tabs-sections",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Widget Title"
+        },
+        {
+            "type": "text",
+            "id": "featured_products_title",
+            "label": "Title",
+            "default": "New In",
+            "info": "================"
+        },        
+        {
+            "type": "header",
+            "content": "Banner Image"
+        },
+        {
+            "type" : "checkbox",
+            "id" : "display_banner",
+            "label" : "Display Banner",
+            "default" : true,
+            "info": "================"
+        },
+        {
+            "type": "header",
+            "content": "Settings for Banner"
+        },
+        {
+            "type" : "text",
+            "id" : "font_size_banner_heading",
+            "label" : "Heading Font Size ",
+            "default" : "30px"
+        },
+        {
+            "type" : "text",
+            "id" : "font_size_banner_des",
+            "label" : "Description Font Size",
+            "default" : "12px"
+        },
+        {
+            "type" : "color",
+            "id" : "bg_banner_button",
+            "label" : "Background Button",
+            "default" : "#fff"
+        },
+        {
+            "type" : "color",
+            "id" : "border_banner_button",
+            "label" : "Border Button",
+            "default" : "#fff"
+        },
+        {
+            "type" : "color",
+            "id" : "color_banner_button",
+            "label" : "Button Color",
+            "default" : "#232323"
+        },
+        {
+            "type": "header",
+            "content": "Image 1"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_1",
+            "label" : "Select Image"
+        },
+        {
+            "type" : "text",
+            "id" : "banner_heading_1",
+            "label" : "Banner Heading",
+            "default" : "Milancelos"
+        },
+        {
+            "type" : "textarea",
+            "id" : "banner_des_1",
+            "label" : "Banner Description",
+            "default": "Phasellus lorem pulvinar maecenas cosmopolis"
+        },
+        {
+            "type" : "text",
+            "id" : "banner_button_1",
+            "label" : "Button Banner",
+            "default" : "Shop Now"
+        },
+        {
+            "type" : "url",
+            "id" : "link_1",
+            "label" : "Banner Link"
+        },
+        {
+            "type" : "color",
+            "id" : "color_banner_1",
+            "label" : "Heading and Descriptions Color",
+            "default" : "#fff"
+        },
+        {
+            "type": "header",
+            "content": "Image 2"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_2",
+            "label" : "Select Image"
+        },
+        {
+            "type" : "text",
+            "id" : "banner_heading_2",
+            "label" : "Banner Heading",
+            "default" : "Milancelos"
+        },
+        {
+            "type" : "textarea",
+            "id" : "banner_des_2",
+            "label" : "Banner Description",
+            "default": "Phasellus lorem pulvinar maecenas cosmopolis"
+        },
+        {
+            "type" : "text",
+            "id" : "banner_button_2",
+            "label" : "Button Banner",
+            "default" : "Shop Now"
+        },
+        {
+            "type" : "url",
+            "id" : "link_2",
+            "label" : "Banner Link"
+        },
+        {
+            "type" : "color",
+            "id" : "color_banner_2",
+            "label" : "Heading and Descriptions Color",
+            "default" : "#fff"
+        },
+        {
+            "type": "header",
+            "content": "Image 3"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_3",
+            "label" : "Select Image"
+        },
+        {
+            "type" : "text",
+            "id" : "banner_heading_3",
+            "label" : "Banner Heading",
+            "default" : "Milancelos"
+        },
+        {
+            "type" : "textarea",
+            "id" : "banner_des_3",
+            "label" : "Banner Description",
+            "default": "Phasellus lorem pulvinar maecenas cosmopolis"
+        },
+        {
+            "type" : "text",
+            "id" : "banner_button_3",
+            "label" : "Button Banner",
+            "default" : "Shop Now"
+        },
+        {
+            "type" : "url",
+            "id" : "link_3",
+            "label" : "Banner Link"
+        },
+        {
+            "type" : "color",
+            "id" : "color_banner_3",
+            "label" : "Heading and Descriptions Color",
+            "default" : "#fff"
+        },
+        {
+            "type": "header",
+            "content": "Widget Products"
+        }, 
+        {
+            "type": "select",
+            "id": "collection_results_per_row",
+            "label": "Products per row",
+            "options": [
+                {
+                    "value": "2",
+                    "label": "2"
+                },
+                {
+                    "value": "3",
+                    "label": "3"
+                },
+                {
+                    "value": "4",
+                    "label": "4"
+                },
+                {
+                    "value": "5",
+                    "label": "5"
+                }
+            ],
+            "default": "3"
+        },        
+        {
+            "type": "header",
+            "content": "Margin Bottom:"
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom_mb",
+            "label": "Mobile",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 20
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom_tab",
+            "label": "Tablet",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 40
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin Bottom",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 13
+        } 	  
+	],
+    "blocks" : [
+        {
+            "type" : "ProductTabs",
+            "name" : "Product Tabs",
+            "settings":[
+            {
+                "type" : "text",
+                "id" : "title",
+                "label" : "Title Tabs",
+                "default" : "Womens"
+            },
+            {
+                "type" : "collection",
+                "id" : "collection",
+                "label" : "Collection to use"
+            }          
+            ]
+        }
+    ],
+	"presets": [
+        {
+            "name": "Product Tabs",
+            "category": "Supermarket"     
+        }
+    ]
+  }
+{% endschema %}
+
+

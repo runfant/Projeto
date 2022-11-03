@@ -1,0 +1,199 @@
+{% if section.settings.display_someone-purchased and section.blocks.size > 0 %}
+<section class="product-notification" data-time="{{ section.settings.someone_speed }}">
+    <a href="javascript:void(0)" title="Close" class="close close-notifi">
+        {% include 'icon-close' %}
+    </a>
+
+    <div class="product-suggest">
+        <a class="product-image" href="">
+            <img src="" alt="">
+        </a>
+        <div class="column-right">
+            <label>
+                {% include 'multilang' with section.settings.text %}
+            </label>
+            <a class="product-name" href=""></a>
+            <div class="info-ago">
+                <span class="time-text">{%include 'multilang' with section.settings.time_location_text %}</span>
+            </div>
+        </div>
+    </div>
+    <div class="hide">
+        {% for block in section.blocks %}    
+        {%- assign product = all_products[block.settings.product] -%}
+        <div class="data-product" data-id="{{block.id}}" data-image="{{product.featured_image.src | product_img_url: 'compact' }}" data-url="{{ product.url | within: collection }}" data-title="{{ product.title | truncatewords: 5}}" data-alt="{{ product.title }}" data-local="{{block.settings.from_ago}}" data-time="{{block.settings.time_ago}}"></div>            
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<style>
+@media (min-width: 1200px) {
+    .product-notification{
+        {% if section.settings.show_someone-purchased == 'right' %}
+        right: 15px;
+        {% else %}
+        left: 15px;
+        {% endif %}
+    }
+} 
+</style>
+
+
+{% schema %}
+{
+    "name": "Someone Purchased",
+    "max_blocks": 10,
+    "settings": [		
+        {
+            "type" : "checkbox",
+            "id" : "display_someone-purchased",
+            "label" : "Display Someone Purchased",
+            "default" : true
+        },
+        {
+            "type" : "checkbox",
+            "id" : "display_someone-purchased_mb",
+            "label" : "Display Someone Purchased Popup on mobile",
+            "default" : true,
+            "info": "============="
+        },
+        {
+            "type": "radio",
+            "id": "show_someone-purchased",
+            "label": "Someone Purchased Modal on the",
+            "options": [
+                {
+                    "value": "left",
+                    "label": "Left"
+                },
+                {
+                    "value": "right",
+                    "label": "Right"
+                }
+            ],
+            "default": "right",
+            "info": "Only Desktop"
+        },
+        {
+            "type": "select",
+            "id": "someone_speed",
+            "label": "Change slides every",
+            "options": [
+                { "value": "5000", "label": "5 seconds" },
+                { "value": "6000", "label": "6 seconds" },
+                { "value": "7000", "label": "7 seconds" },
+                { "value": "8000", "label": "8 seconds" },
+                { "value": "9000", "label": "9 seconds" },
+                { "value": "10000", "label": "10 seconds" },
+                { "value": "60000", "label": "1 minutes" },
+                { "value": "180000", "label": "3 minutes" }
+            ],
+            "default": "7000"
+        },
+        {
+            "type" : "textarea",
+            "id" : "text",
+            "label" : "Text Someone recently bought", 
+            "default" : "Someone recently bought a"
+        },
+        {
+          "type" : "textarea",
+          "id" : "time_location_text",
+          "default" : "[time] minutes ago, from [location]",
+          "label" : "Time and Location Text",
+          "info":"Use [time] to show time, [location] to show location. Use \"|\" to separate multiple language"
+        } 
+    ],
+    "blocks" : [
+        {
+            "type" : "image",
+            "name" : "Product",
+            "settings":[
+            	{
+            		"type" : "product",
+            		"id" : "product",
+            		"label" :"Select Product"
+            	},
+				{
+                  "type" : "text",
+                  "id" : "from_ago",
+				  "default" : "from Blackburn, UK",
+                  "label" : "Purchase Location"
+                },
+                {
+                  "type" : "text",
+                  "id" : "time_ago",
+				  "default" : "20 minutes ago",
+                  "label" : "Purchase Time"
+                }				
+            ]
+        }
+    ]
+}
+{% endschema %}
+
+
+{% if section.settings.display_someone-purchased and section.blocks.size > 0 %}
+<script type="text/javascript">
+    function SomeonePurchased() {
+        {% unless section.settings.display_someone-purchased_mb %}
+        if(window.innerWidth > 767 ){
+        {% endunless %}
+            if ($.cookie('pr_notification') == 'closed') {
+                $('.product-notification').remove();
+            }
+
+            $('.close-notifi').bind('click',function(){
+                $('.product-notification').remove();
+                $.cookie('pr_notification', 'closed', {expires:1, path:'/'});
+            });  
+            var timeText = $('.product-notification .time-text span:visible').text();
+            function toggleSomething() {
+                if($('.product-notification').hasClass('active')){
+                    $('.product-notification').removeClass('active')
+                }else {     
+                    var number=$('.data-product').length,
+                        i = Math.floor(Math.random() * number),         
+                        images = $('.product-notification .data-product:eq('+i+')').data('image'),
+                        title = $('.product-notification .data-product:eq('+i+')').data('title'),
+                        url = $('.product-notification .data-product:eq('+i+')').data('url'),
+                        local =  $('.product-notification .data-product:eq('+i+')').data('local'),
+                        times =$('.product-notification .data-product:eq('+i+')').data('time');
+
+                    $('.product-notification').addClass('active');
+                    $('.product-notification .product-image').find('img').attr('src', images );
+                    $('.product-notification .product-name').attr('href', url );
+                    $('.product-notification .product-name').text(title);
+                    $('.product-notification .product-image').attr('href', url );
+                    
+                    replacedTimeText = timeText.replace('[time]',times).replace('[location]',local);
+                    $('.product-notification .time-text').text(replacedTimeText);
+                    
+                }
+            }
+
+            var time = $('.product-notification').data('time');
+            var timer = setInterval(toggleSomething, time);
+
+        {% unless section.settings.display_someone-purchased_mb %}
+        }
+        {% endunless %}
+    }
+
+    SomeonePurchased();
+    $(document)
+        .on( 'shopify:section:load', SomeonePurchased )
+        .on( 'shopify:section:unload', SomeonePurchased)
+</script>
+{% endif %}
+
+{% unless section.settings.display_someone-purchased_mb %}
+<style>
+    @media (max-width: 767px) {
+        .product-notification {
+            display:none;
+        }
+    }
+</style>
+{% endunless %}

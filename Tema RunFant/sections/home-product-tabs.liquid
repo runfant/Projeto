@@ -1,0 +1,221 @@
+{% case section.settings.collection_results_per_row %}
+  {% when '2' %}
+	{%- assign row = 'two-items' -%}
+  {% when '3' %}
+	{%- assign row = 'three-items' -%}
+  {% when '4' %}
+	{%- assign row = 'four-items' -%}
+  {% when '5' %}
+	{%- assign row = 'five-items' -%}
+{% endcase %}
+
+<div class="home-product-tabs" id="product-tabs-{{section.id}}" data-home-product-tabs>
+    <div class="container">
+        {% if section.settings.product_tabs_title != blank %}
+        <div class="widget-title{% if section.settings.title_style == 'style_2' %} not-before{% endif %}">   
+            <h3 class="box-title">
+                <span class="title"> 
+                {% include 'multilang' with section.settings.product_tabs_title %}
+                </span>
+            </h3>
+            {% if section.settings.product_tabs_des != blank %}
+            <p>
+                {% include 'multilang' with section.settings.product_tabs_des %}
+            </p>        
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <div class="widget-product">
+            <ul class="list-product-tabs{% if section.settings.tabs_style == 'style_2' %} product-tabs-style2{% elsif section.settings.tabs_style == 'style_3' %} product-tabs-style3{% endif %}">
+                {% for block in section.blocks %}
+                <li>
+                <a href="#" data-target="#product-tab-{{ block.id }}" data-product-tabTop data-href="/collections/{{ block.settings.collection }}?view=json" class="tab-links{% if forloop.first %} active{% endif %}">
+                    {% include 'multilang' with block.settings.title %}
+                </a>
+                </li>
+                {% endfor %}
+            </ul>
+            
+            <div class="product-tabs-content">
+                {% for block in section.blocks %}
+                <div class="tab-content{% if forloop.first %} active{% endif %}" data-product-TabContent id="product-tab-{{ block.id }}">
+                    <div class="products-grid row {{ row }}" data-row="{{ section.settings.collection_results_per_row }}">
+                        <div class="loading col-12"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+  {% assign margin_bottom =  section.settings.margin_bottom %} 
+
+    @media (max-width: 767px) {
+        #product-tabs-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+        #product-tabs-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_tab }}px;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        #product-tabs-{{section.id}} {
+            margin-bottom: {{ margin_bottom }}px;
+        }
+    }	
+</style>
+
+{% schema %}
+  {
+    "name": "Product Tabs",
+	"class": "home-product-tabs-sections",
+    "settings": [  
+        {
+            "type": "header",
+            "content": "Header"
+        },	  
+        {
+            "type": "text",
+            "id": "product_tabs_title",
+            "label": "Title",
+            "default": "New Arrivals"
+        },
+        {
+            "type" : "textarea",
+            "id" : "product_tabs_des",
+            "label" : "Description"
+        },
+        {
+            "type": "select",
+            "id": "title_style",
+            "label": "Title Style:",
+
+            "options": [
+                {
+                    "value": "style_1",
+                    "label": "Style 1" 
+                },
+                { 
+                    "value": "style_2",
+                    "label": "Style 2" 
+                }          
+            ],
+            "default": "style_1"
+        },     
+        {
+            "type": "header",
+            "content": "Content"
+        }, 
+        {
+            "type": "select",
+            "id": "collection_results_per_row",
+            "label": "Products per row",
+            "options": [
+            {
+                "value": "2",
+                "label": "2"
+            },
+            {
+                "value": "3",
+                "label": "3"
+            },
+            {
+                "value": "4",
+                "label": "4"
+            },
+            {
+                "value": "5",
+                "label": "5"
+            }
+            ],
+            "default": "5"
+        },
+        {
+            "type": "select",
+            "id": "tabs_style",
+            "label": "Product Tabs Style:",
+
+            "options": [
+                {
+                    "value": "style_1",
+                    "label": "Style 1" 
+                },
+                { 
+                    "value": "style_2",
+                    "label": "Style 2" 
+                },
+                { 
+                    "value": "style_3",
+                    "label": "Style 3" 
+                }           
+            ],
+            "default": "style_1"
+        },
+        {
+            "type": "header",
+            "content": "Margin Bottom:"
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom_mb",
+            "label": "Mobile",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 40
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom_tab",
+            "label": "Tablet",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 40
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin Bottom",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 10
+        } 	  
+	],
+    "blocks" : [
+        {
+            "type" : "ProductTabs",
+            "name" : "Product Tabs",
+            "settings":[
+            {
+                "type" : "text",
+                "id" : "title",
+                "label" : "Title Tabs",
+                "default" : "Womens"
+            },
+            {
+                "type" : "collection",
+                "id" : "collection",
+                "label" : "Collection to use"
+            }          
+            ]
+        }
+    ],
+	"presets": [
+        {
+            "name": "Product Tabs",
+            "category": "Collection"     
+        }
+    ]
+  }
+{% endschema %}
+
+

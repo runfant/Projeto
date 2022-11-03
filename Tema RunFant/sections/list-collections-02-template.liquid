@@ -1,0 +1,116 @@
+<div class="list-categories list-categories-02">
+  <div class="row">
+    {% if section.settings.style_categories == 'style_show_all' %}
+    {% for collection in collections %}
+    {% if collection.handle != 'frontpage' and collection.all_products_count > 0 %}
+    {% include 'list-collection-item-2' %}
+    {% endif %}
+    {% endfor %}
+
+    {% else %}
+
+    {% for block in section.blocks %}
+    {% assign collection = collections[block.settings.collection] %}
+    {% include 'list-collection-item-2' %}
+    {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "List Collections-02-LIST",
+    "settings": [	   	   
+	  {
+		"type": "text",
+		"id": "list_collection_title_size",
+		"label": "Collection Title Font Size",
+		"default": "30"
+	  },
+	  {
+        "type": "radio",
+        "id": "style_categories",
+        "label": "Show all \/ Only a few categories",
+        "options": [
+          {
+            "value": "style_show_all",
+            "label": "Show all"
+          },
+          {
+            "value": "style_little",
+            "label": "Only a few categories"
+          }
+        ]
+      },
+	  {
+        "type" : "color",
+        "id" : "bg_color",
+        "label" : "Background Color",
+        "default" : "#fafafa"
+      }	 	  
+	],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+		  {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "label": "Collection",
+            "id": "collection",
+            "type": "collection"
+          },
+
+		   {
+            "type": "header",
+            "content": "Countdow"
+          },
+          {
+            "type": "checkbox",
+            "id": "display_countdow",
+            "label": "Display Countdown",
+            "default": false
+          },
+          {
+            "type" : "text",
+            "id" : "title",
+            "label" : "Title",
+            "default" : "Special Offers"
+          },
+          {
+            "type" : "textarea",
+            "id" : "des",
+            "label" : "Description",
+            "default" : "Sale up to 60% off on selected items. End ins:"
+          },
+          {
+            "type" : "textarea",
+            "id" : "countdown",
+            "label" : "Countdown",
+            "default" : "2020/01/7 0:0:00"
+          },
+          {
+            "type" : "color",
+            "id" : "color",
+            "label" : "Color",
+            "default" : "#fff"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+<style>
+  .collections-wrapper {
+  	background-color: {{ section.settings.bg_color }};
+  }
+  
+  .collections-wrapper .collection-title {
+    font-size: {{ section.settings.list_collection_title_size }}px;
+  }
+</style>

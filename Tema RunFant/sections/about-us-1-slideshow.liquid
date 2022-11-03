@@ -1,0 +1,343 @@
+<div class="about-us-slideshow">
+  <span class="placeholder_text">1880x970 px</span>
+  <div class="container">
+    <header class="page-header">
+      <h2>
+        {% include 'multilang' with page.title %}
+      </h2>
+    </header>
+    <div class="slideshow">
+      {% for block in section.blocks %} 
+      <div class="slider-item">
+        {% if block.settings.title != blank %}
+        <h2 class="title">{% include 'multilang' with block.settings.title %}</h2>
+        {% endif %}
+        {% if block.settings.content != blank %}
+        <div class="content">
+          {% include 'multilang' with block.settings.content %}
+        </div>
+        {% endif %}
+        <div class="person">
+          <div class="info">
+            {% if block.settings.profile_picture != blank %}
+            <div class="profile-picture">
+              <img src="{{block.settings.profile_picture | img_url:'200x200' }}" alt="{{block.settings.name}}">
+            </div>
+            {% endif %}
+            <div class="text">
+              {% if block.settings.qoute_heading != blank %}
+              <label>{% include 'multilang' with block.settings.qoute_heading %}</label>
+              {% endif %}
+              {% if block.settings.name != blank %}
+              <span class="name">{{block.settings.name}}</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="qoute">
+            {% include 'multilang' with block.settings.qoute_content %}
+          </div>
+        </div>
+        {% if block.settings.button_text != blank %}
+        <a href="{{block.settings.button_link}}" class="btn">{% include 'multilang' with block.settings.button_text %}</a>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<style>
+{% if section.settings.background_image != blank %}
+.about-us-slideshow{
+  background-image: url({{section.settings.background_image | img_url:'2000x2000'}});
+  background-size: cover;
+  color:{{section.settings.text_color}}; 
+}
+.placeholder_text{
+  display: none;
+}
+{% else %}
+.about-us-slideshow{
+  background-color: rgba(35,35,35,0.2);
+  color:{{section.settings.text_color}}; 
+}
+.placeholder_text{
+  position: absolute;
+  top:50%;
+  left:50%;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);
+  font-size: 36px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow:  0 1px 0 #ccc,
+        0 2px 0 #c9c9c9,
+        0 3px 0 #bbb,
+        0 4px 0 #b9b9b9,
+        0 5px 0 #aaa,
+        0 6px 1px rgba(0,0,0,.1),
+        0 0 5px rgba(0,0,0,.1),
+        0 1px 3px rgba(0,0,0,.3),
+        0 3px 5px rgba(0,0,0,.2),
+        0 5px 10px rgba(0,0,0,.25),
+        0 10px 10px rgba(0,0,0,.2),
+        0 20px 20px rgba(0,0,0,.15);
+}
+{% endif %}
+.about-us-slideshow label,.page-header h2{
+  color:{{section.settings.text_color}};
+}
+.about-us-slideshow .btn{
+  background-color: {{section.settings.button_bg_color}};
+  color:{{section.settings.button_text_color}};
+  border:1px solid {{section.settings.button_bd_color}};
+  width:270px;
+}
+
+.about-us-slideshow .btn:hover{
+  background-color: {{section.settings.button_bg_color_h}};
+  color:{{section.settings.button_text_color_h}};
+  border:1px solid {{section.settings.button_bd_color_h}};
+}
+
+.slider-item h2{
+  font-size:{{section.settings.title_size}}px;
+  position:relative;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+}
+.slider-item h2:before{
+  content:'';
+  display:block;
+  height:2px;
+  width:40px;
+  background-color:{{section.settings.text_color}};
+  position: absolute;
+  bottom:-18px;
+  left:0;
+}
+.slideshow .info .text span.name:before{
+  background-color: {{section.settings.text_color}};
+}
+
+.slideshow .slick-dots li button{
+  background-color: {{section.settings.text_color}};
+  border-color: {{section.settings.text_color}};
+}
+.slideshow .slick-dots li.slick-active button{
+  background-color: transparent;
+}
+@media (max-width:767px){
+  .slider-item h2{
+    font-size:24px;
+  }
+  .slideshow .slick-dots{
+    position:absolute;
+    bottom:120px;
+    width:100%;
+  }
+  .slideshow .slick-dots li{
+    margin-right:0;
+    margin:0px 7px;
+  }
+}
+
+@media (min-width:768px){
+  .slideshow{
+    width:85%;
+  }
+  .slideshow .slick-dots{
+    position:absolute;
+    top:50%;
+    right:30px;
+    -webkit-transform:translateY(-50%);
+    -moz-transform:translateY(-50%);
+    -ms-transform:translateY(-50%);
+    transform:translateY(-50%);
+  }
+  .slideshow .slick-dots li{
+    display:block;
+    margin-right:0;
+    margin:15px 0px;
+  }
+}
+@media (min-width:1025px){
+  .slideshow{
+    width:65%;
+  }
+  .slideshow .slick-dots{
+    right:60px;
+  }
+}
+</style>
+
+{% if section.blocks.size > 1 %}
+
+<script>
+  var slideshow = function(){
+    $('.slideshow').slick({
+      autoplay:{{section.settings.autoplay}},
+      autoplaySpeed: {{section.settings.slideshow_speed}},
+      infinite: true,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: false,
+      dots:true,
+      fade:true
+    })
+  }
+
+  $(document).ready(function(){
+    slideshow();
+  })
+
+  $(document)
+  .on('shopify:section:load', slideshow)
+  .on('shopify:section:unload', slideshow)
+</script>
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "Content Slideshow",
+  "class": "about-us-1-slideshow",
+  "settings": [
+    {
+      "type":"checkbox",
+      "id":"autoplay",
+      "label":"Autoplay",
+      "default":true
+    },
+    {
+        "type": "select",
+        "id": "slideshow_speed",
+        "label": "Change slides every",
+
+        "options": [
+            { "value": "5000", "label": "5 seconds" },
+            { "value": "6000", "label": "6 seconds" },
+            { "value": "7000", "label": "7 seconds" },
+            { "value": "8000", "label": "8 seconds" },
+            { "value": "9000", "label": "9 seconds" },
+            { "value": "10000", "label": "10 seconds" }
+        ],
+        "default": "5000"
+    },
+    {
+      "type":"image_picker",
+      "id":"background_image",
+      "label":"Background Image"
+    },
+    {
+      "type":"color",
+      "id":"text_color",
+      "label":"Text Color",
+      "default":"#fff"
+    },
+    {
+      "type": "text",
+      "id": "title_size",
+      "label": "Title Size",
+      "default": "40"
+    },
+    {
+      "type":"color",
+      "id":"button_bg_color",
+      "label":"Button Background Color",
+      "default":"rgba(0,0,0,0)"
+    },
+    {
+      "type":"color",
+      "id":"button_text_color",
+      "label":"Button Text Color",
+      "default":"#fff"
+    },
+    {
+      "type":"color",
+      "id":"button_bd_color",
+      "label":"Button Border Color",
+      "default":"#fff"
+    },
+    {
+      "type":"color",
+      "id":"button_bg_color_h",
+      "label":"Button Background Color Hover",
+      "default":"rgba(0,0,0,0)"
+    },
+    {
+      "type":"color",
+      "id":"button_text_color_h",
+      "label":"Button Text Color Hover",
+      "default":"#fff"
+    },
+    {
+      "type":"color",
+      "id":"button_bd_color_h",
+      "label":"Button Border Color Hover",
+      "default":"#fff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "content",
+      "name": "Content",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Cosmopolis de Milance"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content",
+          "default": "Quisquemos sodales suscipit tortor ditaemcos condimentum de cosmo lacus meleifend menean diverra loremous. Nullam sit amet orci rutrum risus laoreet semper vel non magna. Mauris vel sem a lectus vehicula ultricies. Etiam semper sollicitudin lectus indous scelerisque. Curabitur vel tristique lacus. Nam risus mauris, accumsan et eleifend vitae, dignissim at eros. Vivamus pellentesque dui ex, a interdum orci dignissim vel."
+        },
+        {
+          "type": "checkbox",
+          "id": "dpl_qoute",
+          "label": "Display Quote",
+          "default": true
+        },
+        {
+          "type": "image_picker",
+          "id": "profile_picture",
+          "label": "Profile Picture"
+        },
+        {
+          "type": "text",
+          "id": "qoute_heading",
+          "label": "Quote Heading (Position)",
+          "default": "Managing Director"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Anne.l"
+        },
+        {
+          "type": "textarea",
+          "id": "qoute_content",
+          "label": "Quote Content",
+          "default": "Quisquemos sodales suscipit tortor ditaemcos condimentum de cosmo lacus meleifend menean diverra loremous. Nullam sit amet orci rutrum risus laoreet semper vel non magna. Mauris vel sem a lectus vehicula ultricies..."
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default":"Meet The Team"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,127 @@
+<div class="list-categories list-categories-full">
+  <div class="row">
+    {% if section.settings.style_categories == 'style_show_all' %}
+    {% for collection in collections %}
+    {% if collection.handle != 'frontpage' and collection.all_products_count > 0 %}
+    {% include 'list-collection-item-2' %}
+    {% endif %}
+    {% endfor %}
+
+    {% else %}
+
+    {% for block in section.blocks %}
+    {% assign collection = collections[block.settings.collection] %}
+    {% include 'list-collection-item-2' %}
+    {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "List Collections Full",
+	"class": "col-12 col-xl-9 col-main",
+    "settings": [	
+	  {
+        "type": "select",
+        "id": "list_collection_results_per_row",
+        "label": "Products per row",
+        "default": "3",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          }
+        ]
+      },
+	  {
+		"type": "text",
+		"id": "list_collection_title_size",
+		"label": "Collection Title Font Size",
+		"default": "20"
+	  },
+	  {
+        "type": "radio",
+        "id": "style_categories",
+        "label": "Show all \/ Only a few categories",
+        "options": [
+          {
+            "value": "style_show_all",
+            "label": "Show all"
+          },
+          {
+            "value": "style_little",
+            "label": "Only a few categories"
+          }
+        ]
+      }	  
+	],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+		  {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "label": "Collection",
+            "id": "collection",
+            "type": "collection"
+          },
+
+		   {
+            "type": "header",
+            "content": "Countdow"
+          },
+          {
+            "type": "checkbox",
+            "id": "display_countdow",
+            "label": "Display Countdown",
+            "default": false
+          },
+          {
+            "type" : "text",
+            "id" : "title",
+            "label" : "Title",
+            "default" : "Special Offers"
+          },
+          {
+            "type" : "textarea",
+            "id" : "des",
+            "label" : "Description",
+            "default" : "Sale up to 60% off on selected items. End ins:"
+          },
+          {
+            "type" : "textarea",
+            "id" : "countdown",
+            "label" : "Countdown",
+            "default" : "2020/01/7 0:0:00"
+          },
+          {
+            "type" : "color",
+            "id" : "color",
+            "label" : "Color",
+            "default" : "#fff"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+<style>  
+  .collections-wrapper .collection-title {
+    font-size: {{ section.settings.list_collection_title_size }}px;
+  }
+</style>

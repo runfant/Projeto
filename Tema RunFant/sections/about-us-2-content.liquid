@@ -1,0 +1,605 @@
+<div class="container">
+  {% if section.settings.display_top_content %}
+  <div class="top-content">
+  {% if section.settings.top_heading != '' or section.settings.top_subheading %}
+    <div class="heading">
+      {% if section.settings.top_heading != '' %}
+      <h2>{% include 'multilang' with section.settings.top_heading %}</h2>
+      {% endif %}
+      {% if section.settings.top_subheading != '' %}
+      <p>{% include 'multilang' with section.settings.top_subheading %}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+    {% for block in section.blocks %}
+    {% if block.type == 'top_content' %}
+    <div class="row content-item {% if block.settings.alignment == 'left' %}reserve{% endif %}">
+      {% if block.settings.display_banner %}
+      <div class="col banner">
+        {% if block.settings.banner != blank %}
+        <div class="background" style="background-image: url({{block.settings.banner | img_url:'800x800'}})"></div>
+        {% else %}
+        <div class="not_img">
+          800 x 800px
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+      <div class="col text">
+        {% assign slick = 0 %}
+        {% for i in (1..5) %}
+        {% capture title %}title_{{i}}{% endcapture %}
+        {% capture content %}content_{{i}}{% endcapture %}
+        {%if block.settings[title] != blank and block.settings[content] != blank %}
+        {% assign slick = slick | plus: 1 %}
+        <div class="text-item {%if slick == 2 %}init-slide{%endif%}">
+          <div class="inner">
+             {% if block.settings.block.settings[title] != '' %}
+            <h3 class="title">
+              {% include 'multilang' with block.settings[title] %}
+            </h3>
+            {% endif %}
+            <div class="content">
+              {% include 'multilang-block' with block.settings[content] %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if section.settings.display_bottom_content %}
+  <div class="bottom-content">
+    {% if section.settings.bot_heading != '' and section.settings.bot_heading != '' %}
+    <div class="heading">
+      {% if section.settings.bot_heading != '' %}
+      <h2>{% include 'multilang' with section.settings.bot_heading %}</h2>
+      {% endif %}
+      {% if section.settings.bot_subheading != '' %}
+      <div class="subheading">
+        {% include 'multilang-block' with section.settings.bot_subheading %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="block-content row">
+      {% for block in section.blocks %}
+      {% if block.type == 'bottom_content' %}
+      <div class="col-xs-12 col-sm-4 item">
+        {% if block.settings.image != blank %}
+        <div class="image">
+          <img src="{{block.settings.image | img_url:'800x800'}}" alt="{{block.settings.title}}">
+        </div>
+        {% else %}
+        <div class="image not_img">
+          <span>600x600 px</span>
+        </div>
+        {% endif %}
+        <div class="text">
+          {% if block.settings.title != '' %}
+          <h3 class="title">
+            <a href="{{block.settings.url}}">{% include 'multilang' with block.settings.title %}</a>
+          </h3>
+          {% endif %}
+          {% if block.settings.subtitle != '' %}
+          {% include 'multilang-block' with block.settings.subtitle, class:'subtitle' %}
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+
+
+
+
+<style>
+  .top-content .not_img{
+    height:440px;
+  }
+  .top-content .heading{
+    text-align: center;
+    padding-top:47px;
+    padding-bottom:17px;
+    position:relative;
+    margin-bottom:55px;
+  }
+  .top-content .heading:after{
+    content:'';
+    display:block;
+    height:1px;
+    width:30%;
+    max-width:315px;
+    position:absolute;
+    top:100%;
+    left:50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+    background:{{section.settings.border_color}};
+  }
+  .top-content .heading h2{
+    font-size: 30px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 22px;
+  }
+  .content-item{
+    background-color: {{section.settings.top_content_bgc}};
+    color:{{section.settings.top_content_ttc}};
+    margin-bottom: 30px;
+  }
+  .content-item.reserve{
+    -webkit-flex-direction: row-reverse;
+    -moz-flex-direction: row-reverse;
+    -ms-flex-direction: row-reverse;
+    -o-flex-direction: row-reverse;
+    flex-direction: row-reverse;
+  }
+  
+  .content-item > div{
+    max-width:50%;
+  }
+  .content-item .banner .background{
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    height:100%;
+    -webkit-background-size: cover;
+    background-size: cover;
+    background-position: center center;
+  }
+  .content-item .text .text-item{
+    display: none;
+  }
+  .content-item .text .text-item:first-child,.content-item .text .text-item.slick-slide{
+    display: block;
+  }
+  .content-item .text .text-item .inner{
+    width:76%;
+    margin:0 auto;
+    padding-top:130px;
+    padding-bottom:187px;
+  }
+  .content-item h3.title{
+    text-transform: uppercase;
+    color:{{section.settings.top_content_ttc}};
+    text-align: center;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    font-size: {{section.settings.top_content_tt_size}}px ;
+    margin-bottom: 20px;
+  }
+  .content-item .slick-dots{
+      position:absolute;
+      width:100%;
+      bottom:35px;
+      left:0;
+  }
+  .content-item .slick-dots li{
+      width: 10px;
+      height: 10px;
+      margin: 0px 5px;
+  }
+  .content-item .slick-dots li button{
+      width: 10px;
+      height: 10px;
+      border-color:{{section.settings.dots_color}};
+      background-color:{{section.settings.dots_color}};
+  }
+  .content-item .slick-dots li.slick-active button{
+    border-color:{{section.settings.dots_color}};
+    background-color:transparent;
+  }
+  .content-item .content{
+    line-height:22px;
+  }
+
+  /*bottom content*/
+  .bottom-content{
+    padding-top:45px;
+  }
+  .bottom-content .heading{
+    text-align:center;
+  }
+  .bottom-content .heading h2{
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 40px;  
+    position:relative;
+    font-size: 20px;
+  }
+   .bottom-content .heading h2:after{
+    content:'';
+    display: block;
+    height:2px;
+    width: 40px;
+    background-color: {{settings.body_color}};
+    position:absolute;
+    left:50%;
+    bottom:-20px;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+  }
+  .bottom-content .subheading{
+    line-height: {{settings.body_font_size | plus:12}}px;
+    max-width:900px;
+    width:100%;
+    margin:0 auto;
+  }
+
+  .bottom-content .block-content{
+    padding-top:50px;
+  }
+  .bottom-content .block-content .item{
+    padding-bottom:30px;
+  }
+  .bottom-content .block-content .image{
+    padding-top: 100%;
+    height:0;
+    border-radius: 50%;
+    position:relative;
+    margin-bottom:45px;
+    overflow: hidden;
+  }
+  .bottom-content .block-content .image > *{
+    position: absolute;
+    top:50%;
+    left:50%;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+  }
+  .bottom-content .block-content .text{
+    text-align: center;
+  }
+  .bottom-content .block-content .text h3.title{
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .bottom-content .block-content .text h3.title a{
+    color:{{settings.body_color}};  
+    position:relative;
+    display: inline-block;
+  }
+  .bottom-content .block-content .text h3.title a:before{
+    content:'';
+    display:block;
+    position:absolute;
+    width:100%;
+    height:1px;
+    bottom:2px;
+    background-color:{{settings.body_color | color_modify: 'alpha', 0.7}};
+    display:none;
+  }
+  .bottom-content .block-content .text h3.title a:hover:before{
+    display:block;
+  }
+  .bottom-content .slick-dots{
+    -webkit-transform: translateY(30px);
+    -ms-transform: translateY(30px);
+    -o-transform: translateY(30px);
+    transform: translateY(30px);
+  }
+
+  @media (max-width: 992px){
+    .content-item .text .text-item .inner{
+      padding-top:70px;
+      padding-bottom:90px;
+    }
+    .content-item h3.title{
+      font-size: 22px;
+    }
+    .bottom-content .heading h2,.bottom-content .block-content .text h3.title{
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 767px){
+    .content-item{
+      -webkit-flex-direction: row!important;
+      -moz-flex-direction: row!important;
+      -ms-flex-direction: row!important;
+      -o-flex-direction: row!important;
+      flex-direction: row!important;
+      flex-wrap: wrap;
+    }
+     .content-item > div{
+      max-width:100%;
+      flex-basis: 100%;
+    }
+    .content-item .banner .background{
+      padding-top:100%;
+    }
+
+  } 
+</style>
+
+<script>
+  function topSlider(){
+    var item = $('.init-slide').parent();
+    item.not('.slick-initialized').slick({
+      arrows: false,
+      dots: true
+    })
+  }
+  function bottomSlider(){
+    
+    $('.bottom-content .block-content').not('.slick-initialized').slick({
+      arrows: false,
+      dots: true,
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      responsive: [
+        {
+          breakpoint: 767,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1
+          }
+        }
+      ]
+    })
+  }
+  
+  $(document).ready(function(){    
+    if($('.top-content').length > 0){
+      topSlider();
+    }
+
+    if($('.bottom-content').length > 0){
+      bottomSlider();
+    }
+  })
+</script>
+
+{% schema %}
+{
+  "name": "About Us Content",
+  "class": "about-us-content about-us-2-content",
+  "settings": [
+    {
+      "type":"header",
+      "content":"Top Content"
+    },
+    {
+      "type":"checkbox",
+      "id":"display_top_content",
+      "label":"Enable",
+      "default":true
+    },
+    {
+      "type":"text",
+      "id":"top_heading",
+      "label":"Heading",
+      "default":"Behind the scene"
+    },
+    {
+      "type":"textarea",
+      "id":"top_subheading",
+      "label":"Subheading",
+      "default":"Phasellus lorem malesuada ligula pulvinar commodo maecenas suscipit auctom."
+    },
+    {
+      "type":"color",
+      "id":"border_color",
+      "label":"Line Color",
+      "default":"#a6a6a6"
+    },
+    {
+      "type":"color",
+      "id":"top_content_bgc",
+      "label":"Content Background Color",
+      "default":"#fafafa"
+    },
+    {
+      "type":"text",
+      "id":"top_content_tt_size",
+      "label":"Content Title Size",
+      "default":"30"
+    },
+    {
+      "type":"color",
+      "id":"top_content_ttc",
+      "label":"Content Title Color",
+      "default":"#232323"
+    },
+    {
+      "type":"color",
+      "id":"top_content_txtc",
+      "label":"Content Text Color",
+      "default":"#3c3c3c"
+    },
+    {
+      "type":"color",
+      "id":"dots_color",
+      "label":"Dots Color",
+      "default":"#9c9c9c"
+    },
+    {
+      "type":"header",
+      "content":"Bottom Content"
+    },
+    {
+      "type":"checkbox",
+      "id":"display_bottom_content",
+      "label":"Enable",
+      "default":true
+    },
+    {
+      "type":"text",
+      "id":"bot_heading",
+      "label":"Heading",
+      "default":"Behind the scene"
+    },
+    {
+      "type":"textarea",
+      "id":"bot_subheading",
+      "label":"Subheading",
+      "default":"Phasellus lorem malesuada ligula pulvinar commodo maecenas suscipit auctom."
+    }
+  ],
+  "blocks":[
+    {
+      "name":"Top Content",
+      "type":"top_content",
+      "settings":[
+        {
+          "type":"checkbox",
+          "id":"display_banner",
+          "label":"Display Banner",
+          "default":true
+        },
+        {
+          "type":"image_picker",
+          "id":"banner",
+          "label":"Banner"
+        },
+        {
+          "type":"select",
+          "id":"alignment",
+          "label":"Content Alignment",
+          "default":"right",
+          "options":[
+            {
+              "value":"left",
+              "label":"Left"
+            },
+            {
+              "value":"right",
+              "label":"Right"
+            }
+          ]
+        },
+        {
+          "type":"header",
+          "content":"Content 1"
+        },
+        {
+          "type":"text",
+          "id":"title_1",
+          "label":"Title 1",
+          "default":"Title"
+        },
+        {
+          "type":"textarea",
+          "id":"content_1",
+          "label":"Content 1",
+          "default":"Nullam aliquet vestibulum augue non varius. Cras cosmo congue an melitos. Duis tristique del ante le maliquam praesent murna de tellus laoreet cosmopolis. Quisque hendrerit nibh an purus...",
+          "info":"Use '[lang2]' to separate multi language content."
+        },
+        {
+          "type":"header",
+          "content":"Content 2"
+        },
+        {
+          "type":"text",
+          "id":"title_2",
+          "label":"Title 2",
+          "default":"Title"
+        },
+        {
+          "type":"textarea",
+          "id":"content_2",
+          "label":"Content 2",
+          "default":"Nullam aliquet vestibulum augue non varius. Cras cosmo congue an melitos. Duis tristique del ante le maliquam praesent murna de tellus laoreet cosmopolis. Quisque hendrerit nibh an purus..."
+        },
+        {
+          "type":"header",
+          "content":"Content 3"
+        },
+        {
+          "type":"text",
+          "id":"title_3",
+          "label":"Title 3",
+          "default":"Title"
+        },
+        {
+          "type":"textarea",
+          "id":"content_3",
+          "label":"Content 3",
+          "default":"Nullam aliquet vestibulum augue non varius. Cras cosmo congue an melitos. Duis tristique del ante le maliquam praesent murna de tellus laoreet cosmopolis. Quisque hendrerit nibh an purus..."
+        },
+        {
+          "type":"header",
+          "content":"Content 4"
+        },
+        {
+          "type":"text",
+          "id":"title_4",
+          "label":"Title 4",
+          "default":"Title"
+        },
+        {
+          "type":"textarea",
+          "id":"content_4",
+          "label":"Content 4",
+          "default":"Nullam aliquet vestibulum augue non varius. Cras cosmo congue an melitos. Duis tristique del ante le maliquam praesent murna de tellus laoreet cosmopolis. Quisque hendrerit nibh an purus..."
+        },
+        {
+          "type":"header",
+          "content":"Content 5"
+        },
+        {
+          "type":"text",
+          "id":"title_5",
+          "label":"Title 5",
+          "default":"Title"
+        },
+        {
+          "type":"textarea",
+          "id":"content_5",
+          "label":"Content 5",
+          "default":"Nullam aliquet vestibulum augue non varius. Cras cosmo congue an melitos. Duis tristique del ante le maliquam praesent murna de tellus laoreet cosmopolis. Quisque hendrerit nibh an purus..."
+        }
+      ]
+    },
+    {
+      "name":"Bottom Content",
+      "type":"bottom_content",
+      "settings":[
+        {
+          "type":"image_picker",
+          "id":"image",
+          "label":"Image"
+        },
+        {
+          "type":"text",
+          "id":"title",
+          "label":"title",
+          "default":"Title"
+        },
+        {
+          "type":"textarea",
+          "id":"subtitle",
+          "label":"Subtitle",
+          "default":"Subtitle"
+        },
+        {
+          "type":"url",
+          "id":"url",
+          "label":"Link To",
+          "default":"/collections/all"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

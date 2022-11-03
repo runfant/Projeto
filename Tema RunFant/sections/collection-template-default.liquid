@@ -1,0 +1,171 @@
+{% if cart.attributes.pagination != blank and cart.attributes.pagination %}
+{% assign product_per_page = cart.attributes.pagination %}
+{% else %}
+{% assign product_per_page = section.settings.collection_results_per_page %}
+{% endif %}
+
+{% paginate collection.products by product_per_page %}
+ 
+{% case section.settings.collection_results_per_row %}
+{% when '1' %}
+    {%- assign grid_item_width = 'col-12' -%}
+	{%- assign rows = 'products-list' -%}
+
+  {% when '2' %}
+    {%- assign grid_item_width = 'col-6' -%}
+	{%- assign rows = 'products-grid' -%}
+
+  {% when '3' %}
+    {%- assign grid_item_width = 'col-6 col-md-4' -%}
+	{%- assign rows = 'products-grid' -%}
+
+  {% when '4' %}
+    {%- assign grid_item_width = 'col-6 col-md-4 col-lg-3' -%}
+	{%- assign rows = 'products-grid' -%}
+
+  {% when '5' %}
+    {%- assign grid_item_width = 'col-6 col-md-4 col-lg-3 col5' -%}
+	{%- assign rows = 'products-grid' -%}
+{% endcase %}
+
+<div data-section-id="{{ section.id }}" data-section-type="collection-template">
+  {% include 'collection-header' %}
+  
+  {% include 'toolbar' %}
+  
+  <div class="product-collection {{ rows }} row">
+    {% if collection.products_count > 0 %}  
+    {% for product in collection.products %}
+    <div class="grid-item {{ grid_item_width }} {% if settings.product_image_border%}grid-item-border {% endif %}">   
+      {% include 'product-grid-item' %}
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="col-12 text-center" {% if settings.enable_multilang %}data-translate="collections.general.no_matches"{% endif %}>
+      {{ 'collections.general.no_matches' | t }}
+    </p>
+    {% endif %}
+  </div>
+
+
+  {% if paginate.pages > 1 %}
+  <div class="padding">
+    {% include 'pagination-page' %}
+  </div>
+  {% endif %}
+</div>
+{% endpaginate %}   
+
+
+{% schema %}
+  {
+    "name": "Collection Default",
+	"class": "col-12 col-xl-9 col-main",
+    "settings": [
+	  {
+		"type": "header",
+		"content": "Collection Header"
+	  },
+	  {
+        "type": "checkbox",
+        "id": "display_collection_image",
+        "label": "Show collection image?",
+        "default": true
+      },
+      {
+        "type": "image_picker",
+        "id": "collection_image",
+        "label": "Image Category",
+	    "info": "This image will show up when you don't add image in Collections Description"
+      },
+	  {
+        "type": "checkbox",
+        "id": "display_collection_des",
+        "label": "Display Collections Description?",
+        "default": true
+      },
+	  {
+		"type": "header",
+		"content": "Collection Content"
+	  },
+	  {
+        "type": "checkbox",
+        "id": "limited_view",
+        "label": "Enable Limited View",
+        "default": true
+      },
+	  {
+        "type": "checkbox",
+        "id": "view_as_enable",
+        "label": "Enable View As",
+        "default": true
+      },
+	  {
+        "type": "checkbox",
+        "id": "sort_enable",
+        "label": "Enable sorting",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "collection_results_per_row",
+        "label": "Products per row (grid only)",
+        "default": "4",
+        "options": [
+		  {
+            "value": "1",
+            "label": "List"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          }
+        ]
+      },
+	  {
+        "type": "select",
+        "id": "collection_results_per_page",
+        "label": "Products per page",
+        "default": "24",
+        "options": [
+		  {
+            "value": "12",
+            "label": "12"
+          },
+          {
+            "value": "16",
+            "label": "16"
+          },
+          {
+            "value": "20",
+            "label": "20"
+          },
+          {
+            "value": "24",
+            "label": "24"
+          },
+          {
+            "value": "30",
+            "label": "30"
+          },
+	      {
+            "value": "50",
+            "label": "50"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

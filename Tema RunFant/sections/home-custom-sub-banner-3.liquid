@@ -1,0 +1,294 @@
+{% if section.blocks.size > 0 %}
+<div class="home-sub-banner home-custom-banner-3 sub-banner-3-{{ section.blocks.size }}" id="sub-banner-3-{{section.id}}">
+    <div class="{% if section.settings.layout == 'default' %}container{% else %}container-fluid{% endif %}">
+    
+        {% assign section_size = section.blocks.size | plus: 0 %}
+        {% assign img_results_per_row = section.settings.img_results_per_row  | plus: 0 %}
+
+        {% if section_size > img_results_per_row %}
+            {%- assign data = 'data-blogs-slider' -%}	
+            {%- assign class = 'banner-slider' -%}	
+        {% endif %}
+
+        {% if section.settings.widget_title != blank %}
+        <div class="widget-title{% if section.settings.title_style == 'style_2' %} not-before{% endif %}">   
+            <h3 class="box-title">
+                <span class="title"> 
+                    {% include 'multilang' with section.settings.widget_title %}
+                </span>
+            </h3>
+            {% if section.settings.widget_des != blank %}
+            <p>
+                {% include 'multilang' with section.settings.widget_des %}
+            </p>        
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="content_sub_banner {{ class }}">
+            <div class="row" {{ data }} data-rows={{ section.settings.img_results_per_row }}>
+                {% for block in section.blocks %}
+                
+                {% case section.blocks.size %}
+                    {% when 1 %}
+                        {%- assign column_size = 'col-12 one-block' -%}
+                    {% when 2 %}
+                        {%- assign column_size = 'col-12 col-sm-6 two-blocks' -%}
+                    {% when 3 %}
+                        {%- assign column_size = 'col-6 col-sm-4 three-blocks' -%}    
+                    {% else %}     
+                        {%- assign column_size = 'col-6 col-sm-4 more-blocks' -%}          
+                {% endcase %}
+                    
+                <div class="item {{ column_size }} item-{{ section.settings.img_results_per_row }}">
+                    <div class="sub-banner banner-item">
+                        <div class="img-box">
+                            <a href="{{ block.settings.link }}" class="animate-scale">
+                                {% if block.settings.image != blank %}
+                                
+                                {%- assign img_url = block.settings.image | img_url: 'original', crop: 'center' -%}
+
+                                <img data-src="{{ img_url }}"
+                                    src="{{ img_url }}" alt="{{ block.settings.image.alt | default: shop.name }}" itemprop="logo"
+                                    class="lazyautosizes lazyloaded" data-sizes="auto">
+
+                                {% else %}
+
+                                <div class="not_img">
+                                    370 x 320px
+                                </div>   
+                                {% endif %}
+                            </a>
+                        </div>
+
+                        {% if block.settings.title != blank or block.settings.des != blank %}
+                        <div class="content-box" style="{% if block.settings.color != blank %}color: {{ block.settings.color }};{% endif %}">
+                            {% if block.settings.title != blank %}
+                            <h3 class="banner-title">
+                                {% include 'multilang' with block.settings.title %}                             
+                            </h3>
+                            {% endif %}
+
+                            {% if block.settings.des != blank  %}
+                            <p class="banner-des">
+                                {% include 'multilang' with block.settings.des %}                             
+                            </p>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        {% if block.settings.link_text != blank %}
+                        <div class="action-link">
+                            <a href="{{ block.settings.link }}" class="btn_link" style="{% if block.settings.color != blank %}color: {{ block.settings.color }};{% endif %}">
+                                {% include 'multilang' with block.settings.link_text %}
+                                <span class="border-bt-hover" style="{% if block.settings.color != blank %}background-color: {{ block.settings.color }};{% endif %}"></span>
+                            </a>        
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>       
+        </div>
+    </div>
+</div>
+
+<style>
+    {% assign font_size_title =  section.settings.font_size_title %}
+    {% assign margin_bottom =  section.settings.margin_bottom %}
+
+    @media (max-width: 767px) {
+        #sub-banner-3-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+        #sub-banner-3-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_tab }}px;
+        }
+    }
+    
+    @media (min-width: 1200px) {
+        #sub-banner-3-{{section.id}} .banner-title {
+            font-size: {{ font_size_title }};
+        }
+        
+        #sub-banner-3-{{section.id}} {
+            margin-bottom: {{ margin_bottom }}px;
+        }
+    }	
+</style>
+{% endif %}
+
+
+{% schema %}
+    {
+        "name": "Custom: Sub Banner 3",
+        "class": "home-sub-banner-3-sections",
+        "max_blocks": 6,
+        "settings": [
+            {
+                "type": "select",
+                "id": "layout",
+                "label": "Sub Banner Layout:",
+                "options": [
+                    {
+                        "value": "default",
+                        "label": "Default"
+                    },
+                    {
+                        "value": "full",
+                        "label": "Full Width"
+                    }
+                ],
+                "default": "default"
+            },
+            {
+                "type": "select",
+                "id": "img_results_per_row",
+                "label": "Image per row",
+                "options": [
+                {
+                    "value": "2",
+                    "label": "2"
+                },
+                {
+                    "value": "3",
+                    "label": "3"
+                }         
+                ],
+                "default": "3"
+            },
+            {
+                "type": "header",
+                "content": "Widget Title"
+            },
+            {
+                "type": "text",
+                "id": "widget_title",
+                "label": "Title",
+                "default": "#Featured"
+            },
+            {
+                "type" : "textarea",
+                "id" : "widget_des",
+                "label" : "Description",
+                "default": "Quisquemos sodales suscipit tortor cosmo de ditaemcos"
+            },
+            {
+                "type": "select",
+                "id": "title_style",
+                "label": "Title Style:",
+
+                "options": [
+                    {
+                        "value": "style_1",
+                        "label": "Style 1" 
+                    },
+                    { 
+                        "value": "style_2",
+                        "label": "Style 2" 
+                    }          
+                ],
+                "default": "style_1"
+            },
+            {
+                "type": "header",
+                "content": "Margin Bottom:"
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_mb",
+                "label": "Mobile",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_tab",
+                "label": "Tablet",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "label": "Margin Bottom",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },              
+            {
+                "type" : "text",
+                "id" : "font_size_title",
+                "label" : "Title Font Size ",
+                "default" : "30px"
+            }          	
+        ],
+        "blocks": [
+            {
+                "type": "image",
+                "name": "Image",
+                "settings": [		  	
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type" : "color",
+                    "id" : "color",
+                    "label" : "Color",
+                    "default" : "#fff"
+                },
+                {
+                    "type" : "text",
+                    "id" : "title",
+                    "label" : "Title",
+                    "default" : "Solades"
+                }, 
+                {
+                    "type" : "textarea",
+                    "id" : "des",
+                    "label" : "Description"
+                },  
+                {
+                    "type" : "text",
+                    "id" : "link_text",
+                    "label" : "Link Text",
+                    "default" : "Shop Now"
+                },                
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "Link",
+                    "info": "Optional"
+                }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Custom: Sub Banner 3",
+                "category": "Block Images",
+                "blocks": [
+                    {
+                        "type": "image"
+                    },
+                    {
+                        "type": "image"
+                    },
+                    {
+                        "type": "image"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

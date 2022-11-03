@@ -1,0 +1,294 @@
+{% case section.settings.collection_results_per_row %}
+  {% when '4' %}
+    {%- assign column_size = 'col-6 col-md-4 col-lg-3' -%}
+    {%- assign rows = 'four-items' -%}
+  {% when '5' %}
+    {%- assign column_size = 'col-6 col-md-4 col-lg-3 col5' -%}
+    {%- assign rows = 'five-items' -%}
+  {% when '6' %}
+    {%- assign column_size = 'col-6 col-md-4 col-lg-3 col-xl-2' -%}
+    {%- assign rows = 'six-items' -%}
+{% endcase %}
+
+{% if section.blocks.size > 0 %}
+<div class="home-collections{% if section.settings.title != blank %} has-title{% endif %}" id="home-collections-{{section.id}}">
+  <div class="{% if section.settings.layout == 'default' %}container{% else %}container-fluid{% endif %}">
+    {% if section.settings.title != blank %}
+    <div class="widget-title{% if section.settings.title_style == 'style_2' %} not-before{% endif %}">
+      <h3 class="box-title">
+        <span class="title">
+          {% include 'multilang' with section.settings.title %}
+        </span>
+      </h3>
+    </div>
+    {% endif %}
+
+    <div class="row collections-slider {{ rows }}" data-home-collections-slider data-rows="{{ section.settings.collection_results_per_row }}">
+      {% for block in section.blocks %}
+      <div class="item {{ column_size }}">
+        <div class="collections-banner banner-item">
+          <div class="img-box">
+            <a href="/collections/{{ block.settings.link }}" class="animate-scale">
+              {% if block.settings.image != blank %}
+
+              {%- assign img_url = block.settings.image | img_url: '300x', crop: 'center' -%}
+
+              <img data-src="{{ img_url }}"
+                   src="{{ img_url }}" alt="{{ block.settings.image.alt | default: shop.name }}" itemprop="logo"
+                   class="lazyautosizes lazyloaded" data-sizes="auto">
+
+              {% else %}
+
+              <div class="not_img">
+                210 x 280px
+              </div>
+              {% endif %}
+            </a>
+          </div>
+
+          {% if block.settings.title != blank %}
+          <div class="content-box">
+            <h3 class="banner-title" style="{% if block.settings.color_title != blank %}color: {{ block.settings.color_title }};{% endif %}">
+              {% include 'multilang' with block.settings.title %}
+
+              <span class="border-bt-hover" style="{% if block.settings.color_title != blank %}background-color: {{ block.settings.color_title }};{% endif %}"></span>
+            </h3>
+          </div>
+          {% endif %}
+
+          {% if block.settings.btn_shop_now != blank %}
+          <a href="/collections/{{ block.settings.link }}" class="btn collections-btn">
+            {% include 'multilang' with block.settings.btn_shop_now  %}
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.btn_view_all != blank %}
+    <div class="text-center">
+      <a href="{{ section.settings.link_view_all }}" class="btn btn-view-all">
+        {% include 'multilang' with section.settings.btn_view_all %}
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+    {% assign font_size_title =  section.settings.font_size_title %}
+    {% assign margin_bottom =  section.settings.margin_bottom %}
+
+    #home-collections-{{section.id}} {
+        background-color: {{ section.settings.bg_color }};
+    }
+
+    @media (max-width: 767px) {
+        #home-collections-{{section.id}}  {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+        #home-collections-{{section.id}}  {
+            margin-bottom: {{ section.settings.margin_bottom_tab }}px;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        #home-collections-{{section.id}} .banner-title {
+            font-size: {{ font_size_title }};
+        }
+
+        #home-collections-{{section.id}} {
+            margin-bottom: {{ margin_bottom }}px;
+        }
+    }
+</style>
+{% endif %}
+
+
+{% schema %}
+    {
+        "name": "Collections Banner",
+        "class": "home-collections-sections",
+        "max_blocks": 10,
+        "settings": [
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Title",
+                "default": "Collections"
+            },
+            {
+                "type": "select",
+                "id": "title_style",
+                "label": "Title Style:",
+                "options": [
+                    {
+                        "value": "style_1",
+                        "label": "Style 1"
+                    },
+                    {
+                        "value": "style_2",
+                        "label": "Style 2"
+                    }
+                ],
+                "default": "style_1"
+            },
+            {
+                "type": "select",
+                "id": "layout",
+                "label": "Collections Banner Layout:",
+                "options": [
+                    {
+                        "value": "default",
+                        "label": "Default"
+                    },
+                    {
+                        "value": "full",
+                        "label": "Full Width"
+                    }
+                ],
+                "default": "default"
+            },
+            {
+                "type" : "color",
+                "id" : "bg_color",
+                "label" : "Background Color",
+                "default" : "#fff",
+                "info": "Only use when there is no Title"
+            },
+            {
+                "type" : "text",
+                "id" : "font_size_title",
+                "label" : "Title Font Size ",
+                "default" : "16px"
+            },
+            {
+                "type": "select",
+                "id": "collection_results_per_row",
+                "label": "Collection Banner per row",
+                "options": [
+                    {
+                        "value": "4",
+                        "label": "4"
+                    },
+                    {
+                        "value": "5",
+                        "label": "5"
+                    },
+                    {
+                        "value": "6",
+                        "label": "6"
+                    }
+                ],
+                "default": "5"
+            },
+            {
+                "type" : "text",
+                "id" : "btn_view_all",
+                "label" : "Button View All",
+                "default" : "View All Collections"
+            },
+            {
+                "type": "url",
+                "id": "link_view_all",
+                "label": "Link",
+                "info": "Optional"
+            },
+            {
+                "type": "header",
+                "content": "Margin Bottom:"
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_mb",
+                "label": "Mobile",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_tab",
+                "label": "Tablet",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "label": "Margin Bottom Pc",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            }
+        ],
+        "blocks": [
+            {
+                "type": "image",
+                "name": "Image",
+                "settings": [
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Image"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "title",
+                        "label" : "Title",
+                        "default" : "Cosmopolis"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "color_title",
+                        "label" : "Title Color",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "btn_shop_now",
+                        "label" : "Button",
+                        "default" : "Shop Now"
+                    },
+                    {
+                        "type": "collection",
+                        "id": "link",
+                        "label": "Link",
+                        "info": "Optional"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Collections Banner",
+                "category": "Block Images",
+                "blocks": [
+                    {
+                        "type": "image"
+                    },
+                    {
+                        "type": "image"
+                    },
+                    {
+                        "type": "image"
+                    },
+                    {
+                        "type": "image"
+                    },
+                    {
+                        "type": "image"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

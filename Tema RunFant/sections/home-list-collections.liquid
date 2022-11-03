@@ -1,0 +1,245 @@
+{% if section.blocks.size > 0 %}
+<div class="home-list-collections{% unless section.settings.display_padding %} no-padding{% endunless %}" id="list-coll-{{section.id}}">
+    <div class="container">
+        <div class="row list-collumn-2">
+            {% for block in section.blocks %}
+                {% assign collection = collections[block.settings.collection] %}
+                <div class="grid-item col-12">
+                    {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+                    <div class="collection-item">
+                        <div class="img-box banner-item">
+                            <a href="{{ collection.url }}" title="{{ collection_title }}">
+                                {% if block.settings.image != blank %}
+
+                                {%- assign img_url = block.settings.image | img_url: '600x', crop: 'center' -%}
+                                <img data-src="{{ img_url }}"
+                                    src="{{ img_url }}" alt="{{ block.settings.image.alt | default: shop.name }}" itemprop="logo"
+                                    class="lazyautosizes lazyloaded" data-sizes="auto">
+
+                                {% elsif collection.image %}
+                                {{ collection.image.src | collection_img_url: '600x' | img_tag: collection_title }}
+
+                                {% elsif collection.description contains 'img' %}        
+                                {% assign image = collection.description | split: '<img' | last | split: '>' | first %}
+                                <img {{ image }} alt="{{ collection_title }}"/>
+
+                                {% else %}
+                                {{ collection.products.first.featured_image | product_img_url: '600x' | img_tag: collection_title }}
+                                {% endif %}
+                            </a>
+
+                            <div class="content-box">
+                                <div class="collections-wrapper">
+                                    <h3 class="collection-title">
+                                        <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}" {% if settings.enable_multilang %}data-translate="collections.general.link_title|title:{{collection_title}}" translate-item="title"{% endif %} style="{% if block.settings.color != blank %}color: {{ block.settings.color }};{% endif %}">
+                                            {% include 'multilang' with collection.title %}
+                                        </a>
+                                    </h3>
+
+                                    <span class="count-products" {% if settings.enable_multilang %}data-translate="collections.general.items_with_count|count:{{collection.all_products_count}}"{% endif %} style="{% if block.settings.color != blank %}color: {{ block.settings.color }};{% endif %}">
+                                        {{ 'collections.general.items_with_count' | t: count: collection.all_products_count }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="action-link">
+                                <a href="{{ collection.url }}" class="btn collections-btn" {% if settings.enable_multilang %}data-translate="collections.general.shop_now"{% endif %}
+                                    style="{% if block.settings.bg_button != blank %}
+                                            background-color:{{ block.settings.bg_button }};
+                                            {% endif %}
+                                            {% if block.settings.border_button != blank %}
+                                            border-color:{{ block.settings.border_button }};
+                                            {% endif %}
+                                            {% if block.settings.color_button != blank %}
+                                            color:{{ block.settings.color_button }};
+                                            {% endif %}">
+                                    {{ 'collections.general.shop_now' | t }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if section.settings.block_des != blank %}
+        <div class="row justify-content-center">
+            <div class="col-12">
+                {% if settings.enable_multilang and des contains '[lang2]' %}
+                <div class="des text-center">
+                    <div class="lang1">
+                        {{ section.settings.block_des }}
+                    </div>
+                    <div class="lang2">
+                        {{ section.settings.block_des }}
+                    </div>
+                </div>
+                {% else %}
+                <div class="des text-center">
+                    {{ section.settings.block_des }}
+                </div>
+                {% endif %}               
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    {% assign font_size_title =  section.settings.list_collection_title_size %}
+    {% assign margin_bottom =  section.settings.margin_bottom %}
+
+    @media (max-width: 767px) {
+        #list-coll-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_mb }}px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+        #list-coll-{{section.id}} {
+            margin-bottom: {{ section.settings.margin_bottom_tab }}px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        #list-coll-{{section.id}} .collection-title {
+            font-size: {{ font_size_title }}px;
+        }
+    }
+    
+    @media (min-width: 1200px) { 
+        #list-coll-{{section.id}} {
+            margin-bottom: {{ margin_bottom }}px;
+        }
+
+        {% if section.settings.display_absolute %}
+            #list-coll-{{section.id}} {
+                margin-top: -{{ section.settings.position_absolute }};
+            }
+        {% endif %}
+    }	
+</style>
+{% endif %}
+
+
+{% schema %}
+    {
+        "name": "Home List Collections",
+        "class": "home-list-collections-sections",
+        "max_blocks": 6,
+        "settings": [
+            {
+                "type": "text",
+                "id": "list_collection_title_size",
+                "label": "Collection Title Font Size",
+                "default": "20"
+            },
+            {
+                "type": "checkbox",
+                "id": "display_padding",
+                "label": "Display padding between banner blocks",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "display_absolute",
+                "label": "Display Absolute?",
+                "default": false
+            },
+            {
+                "type" : "text", 
+                "id" : "position_absolute",
+                "label" : "Position Absolute - Unit % or px",
+                "default" : "5.3%"
+            },
+            {
+                "type": "header",
+                "content": "Descriptions for Block"
+            },
+            {
+                "type": "textarea",
+                "id": "block_des",
+                "label": "Descriptions"
+            },
+            {
+                "type": "header",
+                "content": "Margin Bottom:"
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_mb",
+                "label": "Mobile",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom_tab",
+                "label": "Tablet",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "label": "Margin Bottom",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 0
+            }                 	
+        ],
+        "blocks": [
+            {
+                "type": "collection",
+                "name": "Collection",
+                "settings": [
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Image"
+                    },
+                    {
+                        "label": "Collection",
+                        "id": "collection",
+                        "type": "collection"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "color",
+                        "label" : "Color",
+                        "default" : "#fff"
+                    },                                       
+                    {
+                        "type" : "color",
+                        "id": "bg_button",
+                        "label" : "Background Button",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "border_button",
+                        "label" : "Border Button",
+                        "default" : "#fff"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "color_button",
+                        "label" : "Button Color",
+                        "default" : "#232323"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Home List Collections",
+                "category": "List Collections"             
+            }
+        ]
+    }
+{% endschema %}

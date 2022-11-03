@@ -1,0 +1,265 @@
+{% if cart.attributes.pagination != blank and cart.attributes.pagination %}
+{% assign product_per_page = cart.attributes.pagination %}
+{% else %}
+{% assign product_per_page = section.settings.collection_results_per_page %}
+{% endif %}
+
+{% paginate collection.products by product_per_page %}
+
+<div data-section-id="{{ section.id }}" data-section-type="collection-template" style="overflow-x: auto;">   
+  
+    <div class="coll-express-order">
+        {% if collection.products_count > 0 %}  
+        <div class="express-order-header t-header">
+            <h4 class="column col-img col-title text-center">
+                {% include 'multilang' with section.settings.pro_image %}
+            </h4>        
+
+            <h4 class="column col-prod col-title">
+                {% include 'multilang' with section.settings.pro_name %}
+            </h4>
+
+            <h4 class="column col-price col-title text-center">
+                {% include 'multilang' with section.settings.pro_price %}
+            </h4>
+
+            <h4 class="column col-qtt col-title text-center">
+                {% include 'multilang' with section.settings.pro_quantity %}
+            </h4>
+
+            <h4 class="column col-options col-title text-center">
+                {% include 'multilang' with section.settings.pro_variant_options %}
+            </h4>
+        </div>
+        
+        <div class="express-order-content t-body product-collection">
+            {% for product in collection.products %}
+            <div class="grid-item">   
+                {% include 'product-express-order-item' %}
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+            <p class="col-12 text-center" {% if settings.enable_multilang %}data-translate="collections.general.no_matches"{% endif %}>
+                {{ 'collections.general.no_matches' | t }}
+            </p>
+        {% endif %}
+    </div>
+
+    {% if paginate.pages > 1 %}
+    <div class="padding">
+        {% include 'pagination-page' %}
+    </div>
+    {% endif %}
+</div>
+{% endpaginate %}   
+
+<style>
+    .coll-express-order .show-options-btn {
+        background: {{ section.settings.btn_1_bg_color }};
+        color: {{ section.settings.btn_1_text_color }};
+        border-color: {{ section.settings.btn_1_border_color }};
+    }
+    
+    .coll-express-order .show-options-btn:hover,
+    .coll-express-order .hide-options-btn,
+    .coll-express-order .hide-options-btn:hover {
+        background: {{ section.settings.btn_3_bg_color }};
+        color: {{ section.settings.btn_3_text_color }};
+        border-color: {{ section.settings.btn_3_border_color }};
+    }
+    
+    .coll-express-order .add-to-cart-btn {
+        background: {{ section.settings.btn_2_bg_color }};
+        color: {{ section.settings.btn_2_text_color }};
+        border-color: {{ section.settings.btn_2_border_color }};
+    }
+    
+    .coll-express-order .add-to-cart-btn:hover,
+    .coll-express-order .add-to-cart-btn.add_more {
+        background: {{ section.settings.btn_4_bg_color }};
+        color: {{ section.settings.btn_4_text_color }};
+        border-color: {{ section.settings.btn_4_border_color }};
+    }
+</style>
+
+
+{% schema %}
+  {
+    "name": "Collection Express Order",
+	"class": "col-12 col-xl-9 col-main",
+    "settings": [
+	  {
+        "type": "select",
+        "id": "collection_results_per_page",
+        "label": "Products per page",
+        "default": "12",
+        "options": [
+		  {
+            "value": "12",
+            "label": "12"
+          },
+          {
+            "value": "16",
+            "label": "16"
+          },
+          {
+            "value": "20",
+            "label": "20"
+          },
+          {
+            "value": "24",
+            "label": "24"
+          },
+          {
+            "value": "30",
+            "label": "30"
+          },
+	      {
+            "value": "50",
+            "label": "50"
+          }
+        ]
+      },
+	  {
+		"type": "header",
+		"content": "Settings Header Text"
+	  },
+	  {
+		"type" : "text",
+		"id" : "pro_image",
+		"label" : "Image",
+		"default" : "&nbsp;"
+      }, 
+	  {
+		"type" : "text",
+		"id" : "pro_name",
+		"label" : "Product Name",
+		"default" : "Product"
+      },
+	  {
+		"type" : "text",
+		"id" : "pro_price",
+		"label" : "Product Price",
+		"default" : "Price"
+      },
+	  {
+		"type" : "text",
+		"id" : "pro_quantity",
+		"label" : "Product Quantity",
+		"default" : "Qty"
+      },
+	  {
+		"type" : "text",
+		"id" : "pro_variant_options",
+		"label" : "Product Variant Options",
+		"default" : "Options"
+      },
+	  {
+		"type": "header",
+		"content": "Button 1",
+		"info": "Use for Show Variants Button"
+	  },
+	  {
+        "type": "color",
+        "id": "btn_1_bg_color",
+        "label": "Background Color",
+        "default": "#232323",
+        "info": "Default Value: #232323"
+      },
+      {
+        "type": "color",
+        "id": "btn_1_border_color",
+        "label": "Border Color",
+        "default": "#232323",
+        "info": "Default Value: #232323"
+      },
+      {
+        "type": "color",
+        "id": "btn_1_text_color",
+        "label": "Text Color",
+        "default": "#fff",
+        "info": "Default Value: #fff"
+      },
+	  {
+		"type": "header",
+		"content": "Button 2",
+		"info": "Use for Add To Cart Button"
+	  },
+	  {
+        "type": "color",
+        "id": "btn_2_bg_color",
+        "label": "Background Color",
+        "default": "#fff",
+        "info": "Default Value: #fff"
+      },
+      {
+        "type": "color",
+        "id": "btn_2_border_color",
+        "label": "Border Color",
+        "default": "#323232",
+        "info": "Default Value: #323232"
+      },
+      {
+        "type": "color",
+        "id": "btn_2_text_color",
+        "label": "Text Color",
+        "default": "#232323",
+        "info": "Default Value: #232323"
+      },
+	  {
+		"type": "header",
+		"content": "Button 3",
+		"info": "Use for Hide Variants Button and Show Variants when hover"
+	  },
+	  {
+        "type": "color",
+        "id": "btn_3_bg_color",
+        "label": "Background Color",
+        "default": "#fff",
+        "info": "Default Value: #fff"
+      },
+      {
+        "type": "color",
+        "id": "btn_3_border_color",
+        "label": "Border Color",
+        "default": "#e6e6e6",
+        "info": "Default Value: #e6e6e6"
+      },
+      {
+        "type": "color",
+        "id": "btn_3_text_color",
+        "label": "Text Color",
+        "default": "#232323",
+        "info": "Default Value: #232323"
+      },
+	  {
+		"type": "header",
+		"content": "Button 4",
+		"info": "Use for Add More... Button and Add To Cart when hover"
+	  },
+	  {
+        "type": "color",
+        "id": "btn_4_bg_color",
+        "label": "Background Color",
+        "default": "#69c69c",
+        "info": "Default Value: #69c69c"
+      },
+      {
+        "type": "color",
+        "id": "btn_4_border_color",
+        "label": "Border Color",
+        "default": "#69c69c",
+        "info": "Default Value: #69c69c"
+      },
+      {
+        "type": "color",
+        "id": "btn_4_text_color",
+        "label": "Text Color",
+        "default": "#fff",
+        "info": "Default Value: #fff"
+      }	  
+    ]
+  }
+{% endschema %}

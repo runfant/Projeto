@@ -1,0 +1,772 @@
+{% comment %}
+  Comments will not appear right after they are submitted, either to be checked for spam
+  or to await moderation. When a comment is submitted, the browser is redirected to a page
+  that includes the new comment id in its URL.
+    Example: http://shopname.myshopify.com/blogs/news/2022072-my-post?comment=3721372
+
+  More information:
+    - http://docs.shopify.com/themes/liquid-variables/comment
+{% endcomment %}
+
+{% comment %}
+  We're going to reference the number of comments below, so let's hold it in a variable.
+{% endcomment %}
+
+{% assign number_of_comments = article.comments_count %}
+
+{% comment %}
+  If a comment was just submitted and it has no blank fields, we have an extra comment to count.
+{% endcomment %}
+
+{% if comment and comment.created_at %}
+  {% assign number_of_comments = article.comments_count | plus: 1 %}
+{% endif %}
+
+<div class="blog-detail">
+  <h1 class="article-title">
+    {% include 'multilang' with article.title %}
+  </h1>
+  
+  <div class="blog_author">  
+    {% capture date %}
+    	<time datetime='{{ article.published_at | date: '%Y-%m-%d' }}'>{{ article.published_at | date: '%b %d, %Y' }}</time>
+    {% endcapture %}
+    
+    {% capture author %}by {{ article.author }}{% endcapture %}
+    
+    {% if section.settings.blog_show_author %}
+    <span class="article__author">
+      {{ author }}
+    </span>
+    {% endif %}
+
+    {% if section.settings.blog_show_date %}
+    <span class="article__date">
+      on {{ date }}
+    </span>
+    {% endif %}
+
+    {% if blog.comments_enabled? %}
+    <a class="blog-comment" href="{{ article.url }}#comments"{% if settings.enable_multilang %} data-translate="blogs.comments.comments_with_count|count:{{ article.comments_count }}"{%endif%}>
+      {{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
+    </a>
+    {% endif %}  
+  </div>
+  
+  <div class="article-details">
+    {% if settings.enable_multilang and article.content contains '[lang2]' %}
+    <div class="rte lang1">
+      {{ article.content | split: '[lang2]' | first}}
+    </div>
+    <div class="rte lang2">
+      {{ article.content | split: '[lang2]' | last}}
+    </div>
+    {% else %}
+    <div class="rte">
+      {{ article.content | split: '[lang2]' | first}}
+    </div>
+    {% endif %}
+  </div>
+
+  {% include 'blog-detail-gallery_lookbook' %}
+  
+  <div class="tags-share">
+    <ul class="user-tags">
+      {% include 'tags-article' %}
+    </ul>
+
+    {% include 'share' %}
+  </div>
+
+  {% if blog.next_article or blog.previous_article %}
+  <div class="action-btn">
+    {% if blog.previous_article %}
+    <div class="btn-left">
+      <i class="fa fa-angle-left" aria-hidden="true"></i>
+      {{ 'blogs.article.older_post' | t | link_to: blog.previous_article }}
+    </div>    
+    {% endif %}
+    
+    {% if blog.next_article %}
+    <div class="btn-right">
+      {{ 'blogs.article.newer_post' | t | link_to: blog.next_article }}
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if blog.comments_enabled? %}
+
+  {% comment %}
+  Just like our blog.liquid page, define how many comments should be on each page.
+  {% endcomment %}
+
+  {% if number_of_comments > 0 %}
+  <h2 class="title-comment">
+    {{ 'blogs.comments.comments_with_count' | t: count: number_of_comments }}
+  </h2>
+  {% endif %}
+  
+  {% paginate article.comments by 5 %}
+
+  {% comment %}
+  #comments is required, it is used as an anchor link by Shopify.
+  {% endcomment %}
+  
+  <div id="comments">
+    {% if comment and comment.created_at %}
+    <div class="note form-success">
+      {% if blog.moderated? %}
+      <span {% if settings.enable_multilang %}data-translate="blogs.comments.success_moderated"{%endif%}>
+        {{ 'blogs.comments.success_moderated' | t }}
+      </span>
+      {% else %}
+      <span {% if settings.enable_multilang %}data-translate="blogs.comments.success"{%endif%}>
+        {{ 'blogs.comments.success' | t }}
+      </span>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if number_of_comments > 0 %}
+    <ul class="list-comments">
+      {% comment %}If a comment was just submitted with no blank field, let's show it.{% endcomment %}
+      {% if comment and comment.created_at %}
+      <li id="{{ comment.id }}" class="comment first{% if article.comments_count == 0 %} last{% endif %}">
+        {% include 'comment' %}
+      </li>
+      {% endif %}
+
+      {% comment %}
+      Showing the rest of the comments.
+      {% endcomment %}
+      
+      {% for comment in article.comments %}
+      <li id="{{ comment.id }}" class="comment{% unless number_of_comments > article.comments_count %}{% if forloop.first %} first{% endif %}{% endunless %}{% if forloop.last %} last {% endif %}">
+        {% include 'comment' %}
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% if paginate.pages > 1 %}
+    {% include 'pagination' %}
+    {% endif %}
+    
+    {% endif %}
+
+    {% comment %}
+    Comment submission form
+    {% endcomment %}
+
+    {% form article %}
+    
+    {% comment %}
+    #add-comment-title is used simply as an anchor link
+    {% endcomment %}
+    
+    <h3 class="title-comment" id="add-comment-title" {% if settings.enable_multilang %}data-translate="blogs.comments.title"{%endif%}>
+      {{ 'blogs.comments.title' | t }}
+    </h3>
+    
+    {% include 'form-errors-custom' %}
+    
+    <div class="comment-form">
+      <div class="form-group">
+        <label for="comment-author" {% if settings.enable_multilang %}data-translate="blogs.comments.name"{%endif%}>
+          {{ 'blogs.comments.name' | t }}
+        </label>
+        <input {% if form.errors contains "author" %}class="error"{% endif %} type="text" name="comment[author]" id="comment-author" value="{{ form.author }}">
+      </div>
+
+      <div class="form-group">
+        <label for="comment-email" {% if settings.enable_multilang %}data-translate="blogs.comments.email"{%endif%}>
+          {{ 'blogs.comments.email' | t }}
+        </label>
+        <input {% if form.errors contains "email" %}class="error"{% endif %} type="email" name="comment[email]" id="comment-email" value="{{ form.email }}">
+      </div>
+    </div>
+
+    <div class="message form-group">
+      <label for="comment-body" {% if settings.enable_multilang %}data-translate="blogs.comments.message"{%endif%}>
+        {{ 'blogs.comments.message' | t }}
+      </label>
+      <textarea rows="7" {% if form.errors contains "body" %}class="error"{% endif %} name="comment[body]" id="comment-body">
+        {{ form.body }}
+      </textarea>
+    </div>
+
+    <div class="note" {% if settings.enable_multilang %}data-translate="blogs.comments.note"{%endif%}>
+      {{ 'blogs.comments.note' | t }}
+    </div>
+
+
+    <input type="submit" class="btn" value="{{ 'blogs.comments.post' | t }}">
+    
+    {% if form.errors %}
+    <script>
+      window.location.hash = '#add-comment-title';
+    </script>
+    {% endif %}
+
+    {% if form.posted_successfully? %}
+    <script>
+      window.location.hash = '#comments';
+    </script>
+    {% endif %}
+    {% endform %}
+  </div>
+  {% endpaginate %}
+  {% endif %}
+</div>
+
+{% schema %}
+  {
+    "name": "Article Page",
+	"class": "col-12 col-xl-9 col-main",
+    "settings": [           
+      {
+        "type": "checkbox",
+        "id": "blog_show_author",
+        "label": "Show author",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "blog_show_date",
+        "label": "Show date",
+        "default": true
+      },
+	  {
+        "type": "header",
+        "content": "Lookbook Description in Blog Detail"
+      },
+      {
+        "type": "checkbox",
+        "id": "dpl_lookbook_description",
+        "label": "Display Lookbook Description?",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "quote_title",
+        "label": "Quote Title 1"
+      },
+      {
+        "type": "textarea",
+        "id": "quote_des",
+        "label": "Quote Description 1"
+      },
+      {
+        "type": "text",
+        "id": "quote_title_2",
+        "label": "Quote Title 2"
+      },
+      {
+        "type": "textarea",
+        "id": "quote_des_2",
+        "label": "Quote Description 2"
+      },
+	  {
+        "type": "header",
+        "content": "LookBook Gallery in Blog Detail"
+      },
+      {
+        "type": "checkbox",
+        "id": "dpl_gallery_lookbook",
+        "label": "Display LookBook Gallery?",
+        "default": true
+      },
+	  {
+        "type": "text",
+        "id": "gallery_lb_title",
+        "label": "Title",
+		"default": "LookBook Gallery"
+      },
+	
+	  {
+		"type": "header",
+		"content": "Featured Product"
+	  },
+	  {
+        "type": "checkbox",
+        "id": "show_cart_best_sellers_product",
+        "label": "Enable",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Best Sellers"
+      },  	  
+      {
+        "type": "collection",
+        "id": "show_slider_featured_collection",
+        "label": "Collection to use"
+      },
+      {
+        "type": "range",
+        "id": "slider_featured_limit_all",
+        "label": "Number of new products to show",
+        "min": 3,
+        "max": 20,
+        "step": 1,
+        "default": 8
+      },
+      {
+        "type": "select",
+        "id": "collection_results_per_row1",
+        "label": "Products per row",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          }
+        ],
+        "default": "4"
+      }
+    ],
+
+    "blocks" : [
+      {
+        "type": "image",
+        "name": "LookBook Gallery",
+        "settings":[                    
+          {
+            "type" : "header",
+            "content" : "Image 1"
+          },
+          {
+            "type": "image_picker",
+            "id": "image_1",
+            "label" : "Select Image",
+            "info": "Recommended Image: Width x Height (290 x 387)px"
+          },            
+          {
+            "type" : "header",
+            "content" : "Product 1"
+          },
+          {
+            "type" : "product",
+            "id" : "lb_product_1_1",
+            "label" : "Select Product"
+          },
+          {
+            "type" : "text",
+            "id" : "top_position_1_1",
+            "label" : "Top Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "text",
+            "id" : "left_position_1_1",
+            "label" : "Left Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "color",
+            "id" : "dots_color_1_1",
+            "label" : "Select Icon Color",
+            "default" : "#fff"
+          },
+          {
+            "type" : "color",
+            "id" : "dots_bg_color_1_1",
+            "label" : "Select Icon Background color",
+            "default" : "#323232"			
+          },
+          {
+            "type" : "color",
+            "id" : "dots_shadow_color_1_1",
+            "label" : "Select Icon Shadow Color with opacity 0.3",
+            "default" : "#fff",
+            "info" : "======================="
+          },
+
+          {
+            "type" : "header",
+            "content" : "Product 2"
+          },
+          {
+            "type" : "product",
+            "id" : "lb_product_1_2",
+            "label" : "Select Product"
+          },
+          {
+            "type" : "text",
+            "id" : "top_position_1_2",
+            "label" : "Top Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "text",
+            "id" : "left_position_1_2",
+            "label" : "Left Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "color",
+            "id" : "dots_color_1_2",
+            "label" : "Select Icon Color",
+            "default" : "#fff"
+          },
+          {
+            "type" : "color",
+            "id" : "dots_bg_color_1_2",
+            "label" : "Select Icon Background color",
+            "default" : "#323232"			
+          },
+          {
+            "type" : "color",
+            "id" : "dots_shadow_color_1_2",
+            "label" : "Select Icon Shadow Color with opacity 0.3",
+            "default" : "#fff",
+            "info" : "======================="
+          },
+
+          {
+            "type" : "header",
+            "content" : "Product 3"
+          },
+          {
+            "type" : "product",
+            "id" : "lb_product_1_3",
+            "label" : "Select Product"
+          },
+          {
+            "type" : "text",
+            "id" : "top_position_1_3",
+            "label" : "Top Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "text",
+            "id" : "left_position_1_3",
+            "label" : "Left Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "color",
+            "id" : "dots_color_1_3",
+            "label" : "Select Icon Color",
+            "default" : "#fff"
+          },
+          {
+            "type" : "color",
+            "id" : "dots_bg_color_1_3",
+            "label" : "Select Icon Background color",
+            "default" : "#323232"			
+          },
+          {
+            "type" : "color",
+            "id" : "dots_shadow_color_1_3",
+            "label" : "Select Icon Shadow Color with opacity 0.3",
+            "default" : "#fff",
+            "info" : "======================="
+          },
+
+          {
+            "type" : "header",
+            "content" : "Image 2"
+          },
+          {
+            "type": "image_picker",
+            "id": "image_2",
+            "label" : "Select Image",
+            "info": "Recommended Image: Width x Height (290 x 387)px"
+          },            
+          {
+            "type" : "header",
+            "content" : "Product 1"
+          },
+          {
+            "type" : "product",
+            "id" : "lb_product_2_1",
+            "label" : "Select Product"
+          },
+          {
+            "type" : "text",
+            "id" : "top_position_2_1",
+            "label" : "Top Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "text",
+            "id" : "left_position_2_1",
+            "label" : "Left Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "color",
+            "id" : "dots_color_2_1",
+            "label" : "Select Icon Color",
+            "default" : "#fff"
+          },
+          {
+            "type" : "color",
+            "id" : "dots_bg_color_2_1",
+            "label" : "Select Icon Background color",
+            "default" : "#323232"			
+          },
+          {
+            "type" : "color",
+            "id" : "dots_shadow_color_2_1",
+            "label" : "Select Icon Shadow Color with opacity 0.3",
+            "default" : "#fff",
+            "info" : "======================="
+          },
+
+          {
+            "type" : "header",
+            "content" : "Product 2"
+          },
+          {
+            "type" : "product",
+            "id" : "lb_product_2_2",
+            "label" : "Select Product"
+          },
+          {
+            "type" : "text",
+            "id" : "top_position_2_2",
+            "label" : "Top Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "text",
+            "id" : "left_position_2_2",
+            "label" : "Left Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "color",
+            "id" : "dots_color_2_2",
+            "label" : "Select Icon Color",
+            "default" : "#fff"
+          },
+          {
+            "type" : "color",
+            "id" : "dots_bg_color_2_2",
+            "label" : "Select Icon Background color",
+            "default" : "#323232"			
+          },
+          {
+            "type" : "color",
+            "id" : "dots_shadow_color_2_2",
+            "label" : "Select Icon Shadow Color with opacity 0.3",
+            "default" : "#fff",
+            "info" : "======================="
+          },
+
+          {
+            "type" : "header",
+            "content" : "Product 3"
+          },
+          {
+            "type" : "product",
+            "id" : "lb_product_2_3",
+            "label" : "Select Product"
+          },
+          {
+            "type" : "text",
+            "id" : "top_position_2_3",
+            "label" : "Top Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "text",
+            "id" : "left_position_2_3",
+            "label" : "Left Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "color",
+            "id" : "dots_color_2_3",
+            "label" : "Select Icon Color",
+            "default" : "#fff"
+          },
+          {
+            "type" : "color",
+            "id" : "dots_bg_color_2_3",
+            "label" : "Select Icon Background color",
+            "default" : "#323232"			
+          },
+          {
+            "type" : "color",
+            "id" : "dots_shadow_color_2_3",
+            "label" : "Select Icon Shadow Color with opacity 0.3",
+            "default" : "#fff",
+            "info" : "======================="
+          },
+
+          {
+            "type" : "header",
+            "content" : "Image 3"
+          },
+          {
+            "type": "image_picker",
+            "id": "image_3",
+            "label" : "Select Image",
+            "info": "Recommended Image: Width x Height (290 x 387)px"
+          },            
+          {
+            "type" : "header",
+            "content" : "Product 1"
+          },
+          {
+            "type" : "product",
+            "id" : "lb_product_3_1",
+            "label" : "Select Product"
+          },
+          {
+            "type" : "text",
+            "id" : "top_position_3_1",
+            "label" : "Top Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "text",
+            "id" : "left_position_3_1",
+            "label" : "Left Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "color",
+            "id" : "dots_color_3_1",
+            "label" : "Select Icon Color",
+            "default" : "#fff"
+          },
+          {
+            "type" : "color",
+            "id" : "dots_bg_color_3_1",
+            "label" : "Select Icon Background color",
+            "default" : "#323232"			
+          },
+          {
+            "type" : "color",
+            "id" : "dots_shadow_color_3_1",
+            "label" : "Select Icon Shadow Color with opacity 0.3",
+            "default" : "#fff",
+            "info" : "======================="
+          },
+
+          {
+            "type" : "header",
+            "content" : "Product 2"
+          },
+          {
+            "type" : "product",
+            "id" : "lb_product_3_2",
+            "label" : "Select Product"
+          },
+          {
+            "type" : "text",
+            "id" : "top_position_3_2",
+            "label" : "Top Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "text",
+            "id" : "left_position_3_2",
+            "label" : "Left Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "color",
+            "id" : "dots_color_3_2",
+            "label" : "Select Icon Color",
+            "default" : "#fff"
+          },
+          {
+            "type" : "color",
+            "id" : "dots_bg_color_3_2",
+            "label" : "Select Icon Background color",
+            "default" : "#323232"			
+          },
+          {
+            "type" : "color",
+            "id" : "dots_shadow_color_3_2",
+            "label" : "Select Icon Shadow Color with opacity 0.3",
+            "default" : "#fff",
+            "info" : "======================="
+          },
+
+          {
+            "type" : "header",
+            "content" : "Product 3"
+          },
+          {
+            "type" : "product",
+            "id" : "lb_product_3_3",
+            "label" : "Select Product"
+          },
+          {
+            "type" : "text",
+            "id" : "top_position_3_3",
+            "label" : "Top Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "text",
+            "id" : "left_position_3_3",
+            "label" : "Left Position",
+            "default" : "10",
+            "info" : "Unit %" 
+          },
+          {
+            "type" : "color",
+            "id" : "dots_color_3_3",
+            "label" : "Select Icon Color",
+            "default" : "#fff"
+          },
+          {
+            "type" : "color",
+            "id" : "dots_bg_color_3_3",
+            "label" : "Select Icon Background color",
+            "default" : "#323232"			
+          },
+          {
+            "type" : "color",
+            "id" : "dots_shadow_color_3_3",
+            "label" : "Select Icon Shadow Color with opacity 0.3",
+            "default" : "#fff",
+            "info" : "======================="
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

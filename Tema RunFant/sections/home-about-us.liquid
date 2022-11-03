@@ -1,0 +1,107 @@
+<div class="home-about-us" id="home-about-{{ section.id }}">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-lg-10 offset-lg-1">
+      	{% if section.settings.title != blank %}
+        <h4 class="title">
+          {% include 'multilang' with section.settings.title %}
+        </h4>
+        {% endif %}
+        
+        {% if section.settings.des != blank %}
+        <p class="des">
+          {% include 'multilang' with section.settings.des %}
+        </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  {% assign margin_bottom =  section.settings.margin_bottom %}  
+  
+    #home-about-{{ section.id }} .title {
+        color: {{ section.settings.color_title }};
+        font-size: {{ section.settings.font_size_title }};
+        margin-bottom: {{ section.settings.font_size_title }};
+    }
+    
+    #home-about-{{ section.id }} .des {
+        color: {{ section.settings.color_des }};
+    }
+    
+    @media (min-width: 1200px) {
+        #home-about-{{ section.id }} {
+        margin-bottom: {{ margin_bottom }}px;
+        }
+    }	
+
+    {% unless section.settings.display_border_top %}
+    #home-about-{{ section.id }} {
+        border-top: none;
+    }
+    {% endunless %}
+</style>
+
+
+
+{% schema %}
+    {
+        "name": "About Us",
+        "class": "home-about-us-sections",
+        "settings": [
+            {
+                "type": "checkbox",
+                "id": "display_border_top",
+                "label": "Display Border Top?",
+                "default": true
+            },
+            {
+                "type": "textarea",
+                "id": "title",
+                "label": "Title",
+                "default": "About The Shop"
+            },
+            {
+                "type" : "text",
+                "id" : "font_size_title",
+                "label" : "Title Font Size",
+                "default" : "12px"
+            },
+            {
+                "type" : "color",
+                "id" : "color_title",
+                "label" : "Title Color",
+                "default" : "#232323"
+            },
+            {
+                "type": "textarea",
+                "id": "des",
+                "label": "Descriptions"
+            },
+            {
+                "type" : "color",
+                "id" : "color_des",
+                "label" : "Description Color",
+                "default" : "#787878"
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "label": "Margin Bottom",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 30
+            }	      
+        ],
+
+        "presets": [
+            {
+                "name": "About Us",
+                "category": "text"
+            }
+        ]
+    }
+{% endschema %}
