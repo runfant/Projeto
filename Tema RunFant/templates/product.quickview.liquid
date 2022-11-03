@@ -1,0 +1,557 @@
+{%layout none%}
+
+{% assign on_sale = false %}
+{% if product.compare_at_price_min > product.price_min %}
+    {% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available  %}
+    {% assign sold_out = false %}
+{% endif %}
+
+{% assign custom_label = false %}
+
+{% for tag in product.tags %}
+  {% assign tag_handle = tag | handle %}
+  {% if tag_handle == 'label' %}
+        {% assign custom_label = true %}
+  {% endif %}
+{% endfor %}
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{% assign variantCount = product.variants | size %}
+
+<div class="row quickview-tpl" data-collections-related="/collections/{{collection.handle}}?view=related">
+    <div class="col-md-6 product-photos" data-more-view-product-qv>
+        <div class="product-img-box">
+            <div class="product-photo-container slider-for quickview-featured-image">
+                {% for image in product.images %}
+                <div class="thumb">
+                    <a data-zoom rel="gallery1" href="{{ image | product_img_url: 'original'}}" data-fancybox="images-quickview">
+                        <img id="qv-product-featured-image-{{ image.id }}" src="{{ image | product_img_url: 'original' }}" alt="{{ image.alt | escape }}" />
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="slider-nav" data-rows="4">
+                {% for image in product.images %}
+                <div class="item">
+                    <a href="javascript:void(0)" data-image="{{ image.src | product_img_url: 'original' }}" data-zoom-image="{{ image.src | product_img_url: 'original' }}">
+                        <img src="{{ image.src | product_img_url: 'compact' }}" alt="{{ image.alt | escape }}">
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            
+            {% if on_sale or sold_out or custom_label %}
+            <div class="product-label">
+                {% if on_sale %}
+                {% if settings.type_label_sale == 'label_sale' %}
+                <strong class="label sale-label" {% if settings.enable_multilang %}data-translate="products.product.sale"{% endif %}>
+                  {{ 'products.product.sale' | t }}
+                </strong>
+                {% else %}
+                <strong class="label sale-label">
+                  -{{ product.variants[0].compare_at_price | minus:product.variants[0].price | times:100 | divided_by:product.variants[0].compare_at_price | money_without_currency | times: 100 | replace: '.0', '' }}%
+                </strong>
+                {% endif %}
+                <br>
+                {% endif %}
+                {% if sold_out %}
+                <strong class="label sold-out-label" {% if settings.enable_multilang %}data-translate="products.product.sold_out"{% endif %}>
+                    {{ 'products.product.sold_out' | t }}
+                </strong>
+                <br>
+                {% endif %}
+
+                {% if custom_label %}
+                <strong class="label custom-label" {% if settings.enable_multilang %}data-translate="products.product.custom_label"{% endif %} >
+                    {{ 'products.product.custom_label' | t }}
+                </strong>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>    
+    </div>
+    
+    <div class="col-md-6 product-shop">
+        <h2 class="product-title">
+            <a href="{{product.url}}">
+                {% include 'multilang' with product.title %}
+            </a>     
+        </h2>
+        
+        {% if settings.qv_display_product_reviews or settings.qv_show_sold_in %} 
+        <div class="group_item">
+            {% if settings.qv_display_product_reviews %}       
+            <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+            {% endif %}
+
+            {% if settings.qv_show_sold_in %}
+            <div data-soldOut-product class="sold_product" data-items="{{ settings.qv_item_prd }}" data-hours="{{ settings.qv_hours_prs }}">
+                <span class="items-count">2</span>
+                {% include 'multilang' with settings.qv_item_prds %}
+                <span class="hours-num">8</span>
+                {% include 'multilang' with settings.qv_item_hours %}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% if settings.display_quickview_vendor or settings.display_quickview_product_sku or settings.display_quickview_availability or settings.display_quickview_product_type %}
+        <div class="product-infor">
+            {% if settings.display_quickview_vendor %}
+            <div class="vendor-product">
+                {% if settings.quickview_text_vendor != blank %}
+                {% if settings.enable_multilang %}
+                <label class="lang1">
+                    {{ settings.quickview_text_vendor | split: '|' | first }}
+                </label>
+                <label class="lang2">
+                    {{ settings.quickview_text_vendor | split: '|' | last }}
+                </label>
+                {% else %}
+                <label>
+                    {{ settings.quickview_text_vendor | split: '|' | first }}
+                </label>
+                {% endif %}
+                {% endif %}
+                <span>{{ product.vendor | link_to_vendor }}</span>
+            </div>
+            {% endif %}
+
+            {% if settings.display_quickview_product_sku %}
+            <div class="sku-product">
+                {% if settings.text_quickview_product_sku != blank %}
+                {% if settings.enable_multilang %}
+                <label class="lang1">
+                    {{ settings.text_quickview_product_sku | split: '|' | first }}
+                </label>
+                <label class="lang2">
+                    {{ settings.text_quickview_product_sku | split: '|' | last }}
+                </label>
+                {% else %}
+                <label>
+                    {{ settings.text_quickview_product_sku | split: '|' | first }}
+                </label>
+                {% endif %}
+                {% endif %}
+                <span>{{ current_variant.sku }}</span>
+            </div>
+            {% endif %}
+
+            {% if settings.display_quickview_availability %}
+            <div class="product-inventory">
+                {% if settings.quickview_text_availability != blank %}
+                {% if settings.enable_multilang %}
+                <label class="lang1">
+                    {{ settings.quickview_text_availability | split: '|' | first }}
+                </label>
+                <label class="lang2">
+                    {{ settings.quickview_text_availability | split: '|' | last }}
+                </label>
+                {% else %}
+                <label>
+                    {{ settings.quickview_text_availability | split: '|' | first }}
+                </label>
+                {% endif %}
+                {% endif %}
+                <span>
+                {% if current_variant.inventory_management %}
+                {% assign first_inventory = current_variant.inventory_quantity %}
+                {% if first_inventory > 0 %}
+                {{ 'products.product.in_stock' | t }}
+                {% else %}
+                {{ 'products.product.out_of_stock' | t }}
+                {% endif %}
+                {% else %}
+                {{ 'products.product.many_in_stock' | t }}
+                {% endif %}
+                </span>
+            </div>
+            {% endif %}    
+
+            {% if settings.display_quickview_product_type %}
+            <div class="product-type">
+                {% if settings.quickview_text_product_type != blank %}
+                {% if settings.enable_multilang %}
+                <label class="lang1">
+                    {{ settings.quickview_text_product_type | split: '|' | first }}
+                </label>
+                <label class="lang2">
+                    {{ settings.quickview_text_product_type | split: '|' | last }}
+                </label>
+                {% else %}
+                <label>
+                    {{ settings.quickview_text_product_type | split: '|' | first }}
+                </label>              
+                {% endif %}
+                {% endif %}
+                {% if settings.enable_multilang %}
+                <span class="lang1">
+                  {{ product.type | split: '|' | first }}
+                </span>
+                <span class="lang2">
+                  {{ product.type| split: '|' | last }}
+                </span>
+                {% else %}
+                <span>
+                  {{ product.type | split: '|' | first }}
+                </span>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% if product.description contains '[countdown]' %}            
+        {% assign count_down_first = product.description | split:'[/countdown]' | first %}
+        {% assign count_down_final = count_down_first | split:'[countdown]' | last %}
+
+        <div class="countdown">
+            {% include 'multilang' with settings.quickview_text_countdown %}
+            <div class="countdown-item" data-countdown-normal data-countdown-value="{{ count_down_final }}"></div>
+        </div>         
+        {% endif %}
+        
+        <div class="prices">
+            {% if product.compare_at_price > product.price %}
+            <span class="compare-price">
+                {{ product.compare_at_price_max | money }}
+            </span>
+            <span class="price on-sale" itemprop="price">
+                {{ product.price | money }}
+            </span>
+            {% else %}
+            <span class="price" itemprop="price">
+                {{ product.price | money }}
+            </span>
+            {% endif %}
+          	<input type="hidden" id="product_regular_price" name="product_regular_price" value="{{ product.price }}">
+        </div>
+        
+        {% if product.description contains '[countdown]' %}
+        {% assign des = product.description | split:'[/countdown]' | last %}
+        {% if des contains '[custom tab]'%}
+        {% assign des = des | split:'[custom tab]' | first %}
+        {% endif %}
+        {% else %}
+        {% assign des = product.description %}
+        {% if des contains '[custom tab]'%}
+        {% assign des = des | split:'[custom tab]' | first %}
+        {% endif %}
+        {% endif %}
+        
+        {% if settings.display_quickview_short_desc and des != blank %}
+        {% if settings.enable_multilang and des contains '[lang2]' %}
+        <div class="short-description">
+            <div class="lang1">
+                {{ des | split: '[lang2]' | first | strip_html | replace: '&nbsp;', ' ' | truncate: 119 }}
+            </div>
+            <div class="lang2">
+                {{ des | split: '[lang2]' | last | strip_html | replace: '&nbsp;', ' ' | truncate: 119 }}
+            </div>
+        </div>
+        {% else %}
+        <div class="short-description">
+            {{ des | split: '[lang2]' | first | strip_html | replace: '&nbsp;', ' ' | truncate: 119 }}
+        </div>
+        {% endif %}
+        {% endif %}
+        
+        <form action="/cart/add" method="post" class="shopify-product-form" id="add-to-cart-quickview-form">
+            {% if product.available %}       
+            <div id="product-variants">                                    
+                {% assign variantCount = product.variants | size %}
+                {% if product.available %} 
+                {% if variantCount > 0 and product.variants[0].title != 'Default Title'  %}
+                <select id="product-select-qv" name="id" style="display:none">
+                    {% for variant in product.variants %}
+                    {% if variant.available %}
+                    <option {% if variant == current_variant %} selected="selected" {% endif %} value="{{ variant.id }}">
+                        {{ variant.title }}
+                    </option>
+                    {% else %}
+                    <option disabled="disabled">{{ variant.title }} - {{ 'products.product.sold_out' | t }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+
+                {% if settings.use_color_swatch %}
+                {% for option in product.options %}
+                {% include 'quickview-swatch' with option %}
+                {% endfor %}
+                {% endif %}
+                
+                {% else %}
+                <select id="product-select-qv" style="display:none">
+                </select>
+                <input type="hidden" name="id" value="{{ product.variants[0].id }}" />
+                {% endif %}
+                
+                {% endif %}                                    
+            </div>
+            {% endif %}
+
+            {% if current_variant.available %}
+            <div class="quantity">
+                <label for="quantity" {% if settings.enable_multilang %}data-translate="cart.label.quantity"{%endif%}>
+                    {{ 'cart.label.quantity' | t }}: 
+                </label>
+                <div class="qty-group">
+                    <a href="#" data-qv-minus-qtt class="minus button"></a>
+                    <input type="text" data-qv-qtt-id="quantity__{{ product.id }}" name="quantity" value="1">
+                    <a href="#" data-qv-plus-qtt class="plus button"></a>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if settings.display_quickview_subtotal and current_variant.available %} 
+            <div class="total-price">
+                <label {% if settings.enable_multilang %}data-translate="cart.general.subtotal"{%endif%}>
+                    {{ 'cart.general.subtotal' | t }}:
+                </label>
+                <span class="total-money">
+                    {{ current_variant.price | money }}
+                </span>
+            </div>
+            {% endif %}
+
+            <div class="groups-btn">
+                {% if current_variant.available %}
+                <input data-btn-addToCart type="submit" name="add" class="btn product-add-to-cart" {% if settings.enable_multilang %}data-translate="products.product.add_to_cart"{%endif%} value="{{ 'products.product.add_to_cart' | t }}" data-form-id="#add-to-cart-quickview-form">          
+                {% else %} 
+                <input type="submit" name="add" class="btn product-add-to-cart" {% if settings.enable_multilang %}data-translate="products.product.unavailable"{%endif%} disabled value="{{ 'products.product.unavailable' | t }}">          
+                {% endif %}
+
+                {% include 'wishlist-product' %}
+            </div>
+        </form>    
+        
+        {% if settings.dpl_customers_view_qv %}
+        <div id="customers_view_qv" data-customer-view="{{ settings.number_view_qv }}">
+            <i class="fa fa-eye" aria-hidden="true"></i>
+            <label>283</label> {% include 'multilang' with settings.title_view_qv %}
+        </div>
+        {% endif %}
+        
+        {% if settings.display_product_detail_share %}     
+        <div class="share_toolbox">  
+            <span>Share:</span>
+            <!----- www.addthis.com/dashboard ----->
+            <div class="addthis_inline_share_toolbox"></div>
+            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-595b0ea2fb9c5869"></script>
+        </div>    
+        {% endif %}
+    </div>  
+</div>
+
+<script> 
+    {% if settings.display_quickview_subtotal and product.available %}   
+    function updatePricingQuickview() {
+      var quantity = parseInt($('[data-qv-qtt-id]').val());
+      var p = $('.quickview-tpl #product_regular_price').val();
+      var totalPrice1 = p * quantity;
+      var g = Shopify.formatMoney(totalPrice1, window.money_format);
+      $('.quickview-tpl .total-price span').html(g);
+
+      {% if settings.enable_multiple_currencies %}
+      Currency.convertAll(window.shop_currency, $('#currencies .active').attr('data-currency'), 'span.money', 'money_format');
+      {% else %}
+      {% if settings.enable_auto_currency %}
+      Currency.convertAll(window.shop_currency, $('#currencies .active').attr('data-currency'), 'span.money', 'money_format');
+      {% endif %}
+      {% endif %}
+        //try pattern one before pattern 2
+//         var regex = /([0-9]+[.|,][0-9]+[.|,][0-9]+)/g;
+//         var unitPriceTextMatch = $('.quickview-tpl .price').text().match(regex);
+
+//         if (!unitPriceTextMatch) {
+//             regex = /([0-9]+[.|,][0-9]+)/g;
+//             unitPriceTextMatch = $('.quickview-tpl .price').text().match(regex);     
+//         }
+
+//         if (unitPriceTextMatch) {
+//             var unitPriceText = unitPriceTextMatch[0];     
+//             var unitPrice = unitPriceText.replace(/[.|,]/g,'');
+//             var quantity = parseInt($('[data-qv-qtt-id]').val());
+//             var totalPrice = unitPrice * quantity;
+
+//             var totalPriceText = Shopify.formatMoney(totalPrice, window.money_format);
+            
+//             regex = /([0-9]+[.|,][0-9]+[.|,][0-9]+)/g;  
+
+//             if (!totalPriceText.match(regex)) {
+//                 regex = /([0-9]+[.|,][0-9]+)/g;
+//             } 
+//             totalPriceText = totalPriceText.match(regex)[0];
+
+//             var regInput = new RegExp(unitPriceText, "g"); 
+//             var totalPriceHtml = $('.quickview-tpl .price').html().replace(regInput ,totalPriceText);
+
+//             $('.quickview-tpl .total-price span').html(totalPriceHtml); 
+//         };
+    };
+                                                        
+    $('[data-qv-qtt-id]').on('change', updatePricingQuickview);
+    
+    var buttonSlt = '[data-qv-minus-qtt], [data-qv-plus-qtt]',
+        buttonElm = $(buttonSlt);
+
+    $(document).off('click.changeQttQv', buttonSlt).on('click.changeQttQv', buttonSlt, function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var self = $(this),
+            input = self.siblings('input[name="quantity"]'),
+            oldVal = parseInt(input.val()),
+            newVal = 1;
+
+        switch (true) {
+            case (self.hasClass('plus')): {
+                newVal = oldVal + 1;
+                break;
+            }
+            case (self.hasClass('minus') && oldVal > 1): {
+                newVal = oldVal - 1;
+                break;
+            }            
+        }
+
+        input.val(newVal);
+
+        updatePricingQuickview();
+    });          
+    {% endif %}
+    
+    var selectCallbackQuickview = function(variant, selector) {
+        var addToCartBtn = $('.quickview-tpl .product-add-to-cart'),
+            productPrice = $('.quickview-tpl .price'),
+            comparePrice = $('.quickview-tpl .compare-price'),
+            productInventory = $('.quickview-tpl .product-inventory'),
+            productSku = $('.quickview-tpl .sku-product'),
+            labelSave = $('.quickview-tpl .product-photos .sale-label');
+
+        if(variant) {
+            // addToCartbtn
+            if (variant.available) {
+                addToCartBtn.removeClass('disabled').removeAttr('disabled').val(window.inventory_text.add_to_cart);
+            }
+
+            else {
+                addToCartBtn.val(window.inventory_text.sold_out).addClass('disabled').attr('disabled', 'disabled');
+            };
+
+            // Prices
+          	$('.quickview-tpl #product_regular_price').val(variant.price);
+            productPrice.html(Shopify.formatMoney(variant.price, "{{ shop.money_format }}"));    
+
+            if(variant.compare_at_price > variant.price) {
+                productPrice.addClass("on-sale");
+                comparePrice
+                    .html(Shopify.formatMoney(variant.compare_at_price, "{{ shop.money_format }}"))
+                    .show();
+               {% unless settings.type_label_sale == 'label_sale' %}
+               labelSave.html('-' + Math.floor((variant.compare_at_price - variant.price) * 100 / variant.compare_at_price) + '%').show();
+               {% endunless %}
+            }
+            else {
+                comparePrice.hide();
+                productPrice.removeClass("on-sale");
+              	{% unless settings.type_label_sale == 'label_sale' %}
+                labelSave.hide();
+              	{% endunless %}
+            };
+
+            {% if settings.enable_multiple_currencies %}
+            Currency.convertAll(window.shop_currency, $('#currencies .active').attr('data-currency'), 'span.money', 'money_format');
+            {% endif %}
+            
+            {% if settings.display_quickview_subtotal and product.available %}  
+            updatePricingQuickview();
+            {% endif %}
+            
+            {% if settings.display_quickview_availability %}
+            if (variant.available) {
+                if (variant.inventory_management != null) {
+                    productInventory.find('span').text(window.inventory_text.in_stock);
+                }
+                else {
+                    productInventory.find('span').text(window.inventory_text.many_in_stock);
+                }
+            }
+            else {
+                productInventory.find('span').text(window.inventory_text.out_of_stock);
+            }   
+            {% endif %}
+                
+            var form = $('#' + selector.domIdPrefix).closest('form');
+            
+            for (var i=0,length=variant.options.length; i<length; i++) {
+                var radioButton = form.find('.swatch[data-option-index="' + i + '"] :radio[value="' + variant.options[i] +'"]');
+                
+                if (radioButton.size()) {
+                    radioButton.get(0).checked = true;
+                }
+            };
+        }
+
+        else {
+            addToCartBtn.val(window.inventory_text.sold_out).addClass('disabled').attr('disabled', 'disabled');                   
+        };
+    
+        {% if settings.display_quickview_product_sku %}
+        if (variant) {
+            productSku.find('span').text(variant.sku);
+        }
+        else {
+            productSku.find('span').empty();
+        }
+        {% endif %}
+    
+        if (variant && variant.featured_image) {
+            var originalImage = $("img[id|='qv-product-featured-image']");
+            var newImage = variant.featured_image;
+            var element = originalImage[0];
+
+            Shopify.Image.switchImage(newImage, element, function (newImageSizedSrc, newImage, element) {
+                jQuery('.quickview-tpl .slider-nav img').each(function() {
+                    var grandSize = $(this).attr('src').split('?')[0];
+
+                    newImageSizedSrc = newImageSizedSrc.split('?')[0];
+
+                    grandSize = grandSize.replace('compact','1024x1024');
+                    if (grandSize == newImageSizedSrc) {
+                        $(this).closest('.item').trigger('click');              
+                        return false;
+                    }
+                });
+            });
+        };
+    };
+    
+    $(function($) {
+        {% if product.available and product.variants.size > 0 %}
+        new Shopify.OptionSelectors('product-select-qv', {
+            product: {{ product | json }},
+            onVariantSelected: selectCallbackQuickview
+        });
+        {% endif %}
+
+        Shopify.linkOptionSelectors({{ product | json }}, '.quickview-tpl');
+        
+        {% if product.options.size == 1 and product.options.first != 'Title' %}
+        $('.selector-wrapper:eq(0)').prepend('<label>{{ product.options.first }}</label>');  
+        {% elsif product.options.size > 1 %}
+        $('.selector-wrapper').append('<span class="icon-dropdown"><i class="fa fa-angle-down"></i></span>');                                      
+        {% endif %}
+        
+        $('.product-shop .selector-wrapper label').append('<em>*</em>');    
+        
+        {% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
+        $('.selector-wrapper').hide();
+        {% endif %} 
+    });  
+</script>

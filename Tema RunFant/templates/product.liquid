@@ -1,0 +1,68 @@
+{% if settings.product_layout == "default" %} 
+
+{% include 'product-default' %}
+
+{% elsif settings.product_layout == "grouped" %}
+
+{% include 'product-grouped' %}
+
+{% elsif settings.product_layout == "slider" %}
+
+{% include 'product-slider' %}
+
+{% elsif settings.product_layout == "gallery" %}
+
+{% include 'product-gallery' %}
+
+{% elsif settings.product_layout == "full_with" %}
+
+{% include 'product-full-width' %}
+
+{% endif %}
+
+{% if template contains 'product' %}
+
+<div class="modal fade halo_modal-custom" id="video_product" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a data-dismiss="modal" class="close close-modal" title="{{ 'cart.ajax_cart.close' | t }}" href="javascript:void(0)">
+                    {% include 'icon-close' %}
+                </a>
+            </div>
+
+            <div class="modal-body">
+                <div class="videoWrapper">
+                    {%  if product.description contains 'iframe' %}
+                    {% assign src = product.description | split:'<iframe' | last | split:'</iframe>' | first %}
+                    <iframe {{src}}> </iframe>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footbar-fixed footbar-fixed-product">
+    {% section 'someone-purchased' %}
+    {% section 'GDPR-modal' %}
+
+    {% if settings.display_sticky %} 
+        {% include 'sticky-add-to-cart' %}
+    {% endif %}
+</div>
+{% endif %}
+
+					
+<!-- RYVIU APP :: WIDGET -->
+<div class="lt-block-reviews"> 
+	<ryviu-widget  
+        handle="{{product.handle}}"
+        product_id="{{product.id}}"
+	    title_product="{{product.title}}"
+	    total_meta="{{ product.metafields.ryviu.r_count }}"
+		image_product="{{ product.featured_image.src | img_url: '180x' }}"></ryviu-widget>
+</div>
+<!-- / RYVIU APP --> 
+  <div id='Areviewsapp' class='page-full'>{%  render 'aliexpress_reviews' , product: product %}</div>
+<script src="https://www.mercadopago.com/v2/security.js" view="item"></script>

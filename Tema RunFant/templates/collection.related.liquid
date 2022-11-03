@@ -1,0 +1,25 @@
+{% layout none %}
+
+{% if settings.cart_popup_related_title != blank %}
+<div class="widget-title not-before">   
+  <h3 class="box-title">
+    <span class="title"> 
+      {% include 'multilang' with settings.cart_popup_related_title %}
+    </span>
+  </h3>      
+</div>
+{% endif %}
+
+<div class="row products-grid">
+  {% if collection.products_count > 0 %}    
+  {% for product in collection.products limit: 4 %}
+  <div class="grid-item col-12 col-sm-6 col-md-4 col-xl-3">
+    {% include 'product-grid-item-popup' %}
+  </div>
+  {% endfor%}
+  {% else %}
+  <div class="col-12 text-center" {% if settings.enable_multilang %}data-translate="collections.general.no_matches"{% endif %}>
+    {{ 'collections.general.no_matches' | t }}
+  </div>
+  {% endif %}
+</div>

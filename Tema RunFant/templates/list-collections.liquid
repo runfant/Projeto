@@ -1,0 +1,54 @@
+{% if settings.list_collections_layout == 'collections_full' %}
+<div class="bg-breddcrumb">
+    <div class="container-padd60">
+    {% include 'breadcrumb' %}
+    </div>
+</div>
+{% endif %}
+
+<div class="{% if settings.list_collections_layout == 'collections_full' %}container-padd60{% else %}container{% endif %}">
+    {% unless settings.list_collections_layout == 'collections_full' %}
+    {% include 'breadcrumb' %}
+    {% endunless %}
+    
+    <header class="page-header">
+        <h2 {% if settings.enable_multilang %}data-translate="collections.general.title"{%endif%}>
+        {{ 'collections.general.title' | t }}
+        </h2>
+    </header>
+    
+    {% if settings.list_collections_layout == 'collections_01_grid' %}
+    {% section 'list-collections-template' %}
+    
+    {% elsif settings.list_collections_layout == 'collections_02_list' %}
+    {% section 'list-collections-02-template' %}
+    
+    {% elsif settings.list_collections_layout == 'collections_3' %}
+    {% section 'list-collections-03-template' %}
+    
+    {% elsif settings.list_collections_layout == 'collections_mansory' %}
+    <div class="list-collections list-collections-mansory">
+        <div class="row">
+        {% section 'sidebar-section' %}
+        {% section 'list-collections_mansory-template' %}
+        </div>
+    </div> 
+    
+    {% elsif settings.list_collections_layout == 'collections_full' %}
+    <div class="list-collections list-collections-full">
+        <div class="row">
+        {% section 'sidebar-section' %}
+        {% section 'list-collections-full-template' %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% comment %}
+  This page represents the /collections and /products pages.
+  It is an optional, but highly recommended, template for your theme.
+  The contents of the list-collection.liquid template can be found in /sections/list-collection.liquid
+
+  More info:
+    - http://docs.shopify.com/manual/configuration/store-customization/taking-control-of-collections-listing
+{% endcomment %}

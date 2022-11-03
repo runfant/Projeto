@@ -1,0 +1,17 @@
+{% if settings.blog_layout == "default" %} 
+
+{% include 'blog-default' %}
+
+{% elsif settings.blog_layout == "full_width" %}
+
+{% include 'blog-full-width' %}
+
+{% elsif settings.blog_layout == "mansory" %}
+
+{% include 'blog-mansory' %}
+
+{% elsif settings.blog_layout == "right_sidebar" %}
+
+{% include 'blog-right-sidebar' %}
+
+{% endif %}

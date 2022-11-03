@@ -1,0 +1,15 @@
+<div class="wishlist-page">
+    <div class="container">
+        {% include 'breadcrumb' %}
+
+        <header class="page-header">
+            <h2>
+            {% include 'multilang' with page.title %}
+            </h2>  
+        </header>
+
+        <div class="wrapper-wishlist">
+            {% include 'wishlist-page' %}
+        </div>
+    </div>
+</div>

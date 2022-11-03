@@ -1,0 +1,30 @@
+{%- layout none -%}
+
+{%- capture results -%}
+    {%- for result in search.results limit:settings.popular_products_limit-%}
+
+        {%- assign first_available_variant = result.selected_or_first_available_variant -%}
+
+        {
+            "object_type"     : {{ result.object_type | json }},
+            "variants"        : {{ result.options | json }},
+            "vendor"          : {{ result.vendor | json }},
+            "title"           : {{ result.title | json }},
+            "url"             : {{ result.url | json }},
+            "on_sale"         : {% if result.compare_at_price > result.price %}true{% else %}false{% endif %},
+            "price"           : {{ result.price | money | json }},
+            "compare_at_price": {{ result.compare_at_price | money | json }},
+            "image"           : {{ result.featured_image | img_url: 'x430' | json }},            
+            "image_alt"       : {{ result.featured_image.alt | escape | json }}
+        }{% unless forloop.last %},{% endunless %}
+    
+
+    {%- endfor -%}
+{%- endcapture -%}
+
+{
+    "results": [{{ results }}],
+    "results_count": {{ search.results_count }},
+    "results_label": {% if search.results_count == 0 %}{{ 'general.search.no_results' | t | json }}{% else %}{{ 'general.search.view_results'| t | json }}{% endif %},
+    "url": "/search?q={{ search.terms }}"
+}

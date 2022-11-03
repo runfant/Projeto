@@ -1,0 +1,28 @@
+<div class="page-tpl">
+  <div class="container">
+    {% include 'breadcrumb' %}
+
+    <header class="page-header">
+      <h2>
+        {% include 'multilang' with page.title %}
+      </h2>      
+    </header>
+
+    {% comment %}
+    Regular page content goes here.
+    {% endcomment %}
+
+    {% if settings.enable_multilang and page.content contains '[lang2]' %}
+    <div class="rte lang1">
+      {{ page.content | split: '[lang2]' | first }}
+    </div>
+    <div class="rte lang2">
+      {{ page.content | split: '[lang2]' | last }}
+    </div>
+    {% else %}
+    <div class="rte">
+      {{ page.content | split: '[lang2]' | first }}
+    </div>
+    {% endif %}
+  </div>
+</div>

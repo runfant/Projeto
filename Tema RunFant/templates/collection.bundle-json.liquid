@@ -1,0 +1,44 @@
+{% layout none %}
+{% capture collectionsjson %}
+{% for product in collections[collection.handle].products %}
+
+{
+	"title" : {{ product.title | json }},
+	"id"    : {{product.id}},
+	"price" : {{product.selected_or_first_available_variant.price | money | json }},
+	"value": [
+	{
+		"option" : [
+		{% for option in product.options_with_values %}
+		{%- capture color_option_index -%}option{{ forloop.index }}{%- endcapture -%}
+		{
+			"name" : {{option.name | json}},
+			"value" : [
+			{% for value in option.values %}
+			{%- for variant in product.variants -%}
+			{%- if variant[color_option_index] == value -%}
+			{%- assign first_variant_for_color = variant -%} 
+			{%- break -%}
+			{%- endif -%} 
+			{%- endfor -%}
+			{
+				"title" :{{value | json }},
+				"id" : {{first_variant_for_color.id | json }},
+				"variant_id": [{%- for variant in product.variants -%}{{variant.id}} {% unless forloop.last %},{% endunless %}{%- endfor -%}]
+			}{% unless forloop.last %},{% endunless %}
+			{% endfor %}
+			]
+		}{% unless forloop.last %},{% endunless %}
+		{% endfor %}
+		]
+
+	}
+	]
+}{% unless forloop.last %},{% endunless %}
+{% endfor %}
+{% endcapture %}
+{
+	"results": [
+	{{collectionsjson}}
+	]
+}

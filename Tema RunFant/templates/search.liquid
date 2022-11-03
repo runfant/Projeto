@@ -1,0 +1,99 @@
+{% assign grid_results = true %}
+
+<div class="search-page collection-template" data-search-page>
+  <div class="container">
+    {% if search.performed %}
+
+    {% comment %}
+    Avoid accessing search.results before the opening paginate tag.
+    If you do, the pagination of results will be broken.
+    {% endcomment %}
+
+    {% paginate search.results by 15 %}
+
+    {% comment %}
+    We don't have any results to show. Feel free to show off featured products
+    or suggested searches here.
+    {% endcomment %}
+
+    {% if search.results_count == 0 %}
+    <header class="page-header">
+      <h2>
+        {% include 'multilang' with settings.search_1 %}
+        <strong> &nbsp;"{{ search.terms }}"&nbsp; </strong>
+        {% include 'multilang' with settings.search_2 %}
+      </h2>
+    </header>
+
+    {% else %}
+
+    <header class="page-header">
+      <h2>
+        {% include 'multilang' with settings.search_3 %}
+        <strong> &nbsp;"{{ search.terms }}"&nbsp; </strong>
+        {% include 'multilang' with settings.search_4 %}
+      </h2>
+    </header>
+
+    {% comment %}
+    Each result template, based on the grid_layout variable above
+    {% endcomment %}
+
+    <div class="block-row col-main">
+      {% if grid_results == false %}
+      <div class="product-collection products-list product-search row">
+        {% for product in search.results %}
+        <div class="grid-item col-12{% if settings.product_image_border%} grid-item-border{% endif %}">
+          {% include 'search-result' %}
+        </div>
+        {% endfor %}
+      </div>
+
+      {% else %}
+
+      <div class="products-grid product-search row product-collection">
+        {% for product in search.results %}
+        <div class="grid-item col-6 col-md-4 col-lg-3 col5{% if settings.product_image_border%} grid-item-border{% endif %}">
+          {% include 'search-result-grid' %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if paginate.pages > 1 %}
+    <div class="padding">
+      {% include 'pagination-page' %}
+    </div>
+    {% endif %}
+    {% endpaginate %}
+
+    {% else %}
+
+    {% comment %}
+    If search.performed is false, someone either accessed the page without
+    the q parameter, or it was blank.
+    Be sure to show a search form here, along with anything else you want to showcase.
+    {% endcomment %}
+
+    <header class="page-header">
+      <h2 style="text-align:center" {% if settings.enable_multilang %}data-translate="general.search.title"{%endif%}>{{ 'general.search.title' | t }}</h2>
+      <div class="header-search__form">
+          <form action="/search" method="get" class="search-bar" role="search">
+              <input type="hidden" name="type" value="product">
+
+              <input type="search" name="q"
+                  {% if settings.enable_multilang %} data-translate="general.search.placeholder" translate-item="placeholder"{% endif %}
+                  placeholder="{{ 'general.search.placeholder' | t }}"
+                  class="input-group-field" aria-label="Search Site" autocomplete="off">
+
+              <button type="submit" class="btn icon-search">
+                  {% include 'icon-search' %}
+              </button>
+          </form>
+      </div>
+    </header>
+    {% endif %}
+  </div>
+</div>

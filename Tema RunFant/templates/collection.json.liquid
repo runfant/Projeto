@@ -1,0 +1,18 @@
+{% layout none %}
+
+<div class="product-grids">
+    <div class="grid-items">
+        {% if collection.products_count > 0 %}    
+        {% for product in collection.products limit: 10 %}
+        <div class="grid-item col-6 col-md-4 col-lg-3 col5{% if settings.product_image_border %} grid-item-border{% endif %} ">
+            {% include 'product-grid-item' %}
+        </div>
+        {% endfor%}
+
+        {% else %}
+        <div class="text-center" {% if settings.enable_multilang %}data-translate="collections.general.no_matches"{% endif %}>
+            {{ 'collections.general.no_matches' | t }}
+        </div>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,83 @@
+{% layout none %}
+
+{% assign on_sale = false %}
+{% if product.variants[0].compare_at_price > product.variants[0].price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available  %}
+  {% assign sold_out = false %}
+{% endif %}
+
+<div class="inner product-item" data-product-id="product-{{ product.id }}">
+  <div class="inner-top">
+    <div class="product-top">
+      <div class="product-image">
+        <a href="{{ product.url | within: collection }}" class="product-grid-image" data-collections-related="/collections/{{collection.handle}}?view=related">
+          
+          {%- assign img_pr = product.featured_image.src | product_img_url: '300x' -%}
+          
+          <img src="{{ img_pr }}" alt="{{ product.featured_image.alt | escape }}"             
+               data-src="{{ img_pr }}"
+               class="lazyload"
+               data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+               data-aspectratio="{{ product.featured_image.aspect_ratio }}"
+               data-sizes="auto">
+        </a>
+        
+        <div class="action">
+          {% assign variantCount = product.variants | size %}
+          <form action="/cart/add" method="post" class="variants" id="list-product-form-{{ product.id }}" data-id="product-actions-{{ product.id }}" enctype="multipart/form-data">
+            {% if sold_out %}
+            <button class="btn add-to-cart-btn" type="submit" disabled="disabled" {% if settings.enable_multilang %}data-translate="products.product.unavailable"{% endif %}>
+              {{ 'products.product.unavailable' | t }}
+            </button>
+            {% else %}
+            {% if variantCount > 1 %}
+            <a class="btn" href="{{ product.url }}" title="{{ product.title }}" {% if settings.enable_multilang %}data-translate="products.product.select_options"{% endif %}>
+              {{ 'products.product.select_options' | t }}
+            </a>
+            {% else %}
+            <input type="hidden" name="id" value="{{ product.variants[0].id }}" /> 
+
+            <button data-btn-addToCart class="btn add-to-cart-btn" data-form-id="#list-product-form-{{ product.id }}" type="submit" {% if settings.enable_multilang %}data-translate="products.product.buy_now"{% endif %}>
+              {{ 'products.product.buy_now' | t }}
+            </button>
+            {% endif %}
+            {% endif %}
+          </form>
+        </div>       
+      </div>
+    </div>
+    
+    <div class="product-bottom">  
+      {% if settings.show_vendor %}
+      <div class="product-vendor">
+        {{ product.vendor | link_to_vendor }}
+      </div>
+      {% endif %}
+      
+      <a class="product-title" href="{{ product.url | within: collection }}">
+        {% include 'multilang' with product.title %}
+      </a>
+
+      <div class="price-box">
+        {% if on_sale %}
+        <div class="price-sale">
+          <span class="old-price">{{ product.variants[0].compare_at_price | money }}</span>
+          <span class="special-price">{% if product.price_varies %}{% include 'varies_from' %}{% endif %}{{ product.variants[0].price | money }}</span>
+        </div>
+        {% else %}
+        <div class="price-regular">
+          <span>{% if product.price_varies %}{% include 'varies_from' %}{% endif %}{{ product.variants[0].price | money }}</span>
+        </div>
+        {% endif %}
+      </div>
+      
+      <a class="pr-details" href="{{ product.url | within: collection }}" {% if settings.enable_multilang %}data-translate="products.product.details"{% endif %}>
+        {{ 'products.product.details' | t }}
+      </a>
+    </div>
+  </div>
+</div>

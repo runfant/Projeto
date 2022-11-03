@@ -1,0 +1,159 @@
+{% layout none %}
+
+{% if cart.item_count > 0 %}
+
+{% if settings.ajax_popup_cart == 'upsell' %}
+<div class="cart-des des"{% if settings.enable_multilang %} data-translate="cart.ajax_cart.popup_cart_des"{%endif%}>
+  {{ 'cart.ajax_cart.popup_cart_des' | t }}
+</div>
+
+<div class="cart-form wrapper-cart">
+  <div class="scroll-content">
+    <div class="left-col quick-cart">
+      <div class="box-title"{% if settings.enable_multilang %} data-translate="cart.label.quick_cart"{%endif%}>
+        {{ 'cart.label.quick_cart' | t }} 
+      </div>
+      
+      <div class="des">
+        <span class="cartCount" data-cart-count>
+          {{ cart.item_count }}
+        </span>
+        <span {% if settings.enable_multilang %}data-translate="cart.ajax_cart.items_in_your_cart"{%endif%}>
+          {{ 'cart.ajax_cart.items_in_your_cart' | t }} 
+        </span>      	
+      </div>
+      
+      <div class="cart-popup-action">
+        <div class="total">
+          <span class="label">
+            <span {% if settings.enable_multilang %}data-translate="cart.label.total"{% endif %}>
+              {{ 'cart.label.total' | t }}:
+            </span>
+          </span>
+          <span class="price">
+            {{ cart.total_price | money }}
+          </span> 
+        </div>
+        
+        <div class="btn-actions">
+          <a class="btn btn-continue" {% if settings.redirect_button == 'go_back' %}href="javascript:void(0)" onclick="window.history.back();"{% elsif settings.redirect_button == 'link_to' %} href="{{ settings.link_to_redirect }}"{% else %}href="javascript:void(0)" id="reload_page1"{% endif %} {% if settings.enable_multilang %}data-translate="cart.ajax_cart.continue_shopping"{% endif %}>
+            {{ 'cart.ajax_cart.continue_shopping' | t }}
+          </a>
+          <a class="btn btn-view-cart" href="/cart" {% if settings.enable_multilang %}data-translate="cart.general.view_cart"{% endif %}>
+            {{ 'cart.general.view_cart' | t }}
+          </a> 
+          <a class="btn btn-checkout" href="/checkout" {% if settings.enable_multilang %}data-translate="cart.general.button_checkout"{% endif %}>
+            {{ 'cart.general.button_checkout' | t }}
+          </a> 
+          
+          {% if additional_checkout_buttons %}
+          <div>{{ content_for_additional_checkout_buttons }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    
+    <div class="right-col cart_items">
+      <div class="box-title"{% if settings.enable_multilang %} data-translate="cart.label.your_order"{%endif%}>
+        {{ 'cart.label.your_order' | t }} 
+      </div>
+      <ul class="cart-list">
+        {% for item in cart.items %}
+        <li data-product-id="{{ item.variant.id }}">
+          <div class="details"> 
+            <div class="cart-thumb">
+              <a class="product-img" href="{{ item.url | within: collections.all }}">
+                <img src="{{ item | img_url: '160x' }}"  alt="{{ item.title | escape }}" />
+              </a>
+            </div>
+
+            <div class="cart-title">
+              <a href="{{ item.url }}" class="product-name">
+                {% include 'multilang' with item.product.title %}
+              </a>
+              <div class="size">  
+                {% if item.product.variants.size != 0 %}
+                {% unless item.variant.title contains 'Default' %}
+                <small>
+                  {{ item.variant.title }}
+                </small>
+                {% endunless %}
+                {% endif %}
+              </div>
+
+              {% if item.properties.size > 0 %}
+              <div>
+                {% for p in item.properties %}
+                {% unless p.last == blank %}
+                {{ p.first }}:
+                {% if p.last contains '/uploads/' %}
+                <a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
+                {% else %}
+                {{ p.last }}
+                {% endif %}
+                <br>
+                {% endunless %}
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="flex_row">           
+            <div class="cart-price">
+              <div class="price-box">
+                <span>
+                  {{ item.price | money }}
+                </span>
+              </div>
+            </div>
+
+            <div class="cart-quantity">
+              <div class="qty-group">
+                <a href="#" data-minus-quantity-cart class="minus button"></a>
+                <input type="text" data-qtt-id="quantity__{{ product.id }}" data-quantity-input name="quantity" value="{{ item.quantity }}"{% if item.variant.inventory_quantity <= item.quantity %} disabled{% endif %}>
+                <a href="#" data-plus-quantity-cart class="plus button{% if item.variant.inventory_quantity == item.quantity %} disabled{% endif %}"></a>
+              </div>
+            </div>
+
+            <div class="cart-line-price">
+              <div class="price-box">
+                <span>
+                  {{ item.line_price | money }}
+                </span>
+              </div>
+            </div>                    
+
+            <div class="cart-remove">
+              <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" title="Remove this item" data-id="{{ item.id }}">
+                {% include 'icon-close' %}
+              </a>
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% else %}
+<p class="alert alert-warning" {% if settings.enable_multilang %}data-translate="cart.general.empty"{%endif%}>
+  {{ 'cart.general.empty' | t }}
+</p>
+<p class="cart-empty" {% if settings.enable_multilang %}data-translate="cart.general.continue_browsing_html"{%endif%}>
+  {{ 'cart.general.continue_browsing_html' | t }}
+</p>
+{% endif %}
+{% if settings.redirect_button == 'none' %}
+<script>
+  $(document).ready(function(){
+    $("#reload_page1").on("click", function(){
+      $("body").removeClass("cart-active");
+      $(".close-modal").trigger('click');
+      $('html').removeClass("cart-show");
+    });
+  })
+</script>
+{% endif %}
