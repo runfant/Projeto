@@ -1,0 +1,83 @@
+<div class="loading-modal modal"><div></div><div></div><div></div><div></div></div>
+
+<div class="ajax-lookbook-modal">
+    <div class="overlay"></div>
+    <div class="ajax-modal-content">
+        <a href="javascript:void(0)" data-close-lookbook-modal class="close close-modal">
+        {% include 'icon-close' %}
+        </a>
+        <div class="lookbook-content"></div>
+    </div>  
+</div>
+
+<div class="ajax-error-modal modal">
+    <div class="modal-inner">
+        <div class="ajax-error-message"></div>
+    </div>
+</div>
+
+<div class="{% if settings.ajax_popup_cart == 'normal' %}ajax-success-normal {% endif %}ajax-success-modal halo-modal" data-ajax-cart-success>
+    <div class="modal-overlay">
+        <div class="halo-modal-content">
+            <a class="close close-modal" title="{{ 'cart.ajax_cart.close' | t }}">
+                {% include 'icon-close' %}
+            </a>
+            
+            <div class="halo-modal-body">
+                {% if settings.ajax_popup_cart == 'upsell' %}
+                <div class="cart-popup-content"></div>
+                <div class="cart-popup-coll-related"></div> 
+
+                {% elsif settings.ajax_popup_cart == 'normal' %}
+                <div class="cart-modal-content">
+                    <div class="ajax-left">
+                        <img class="ajax-product-image" alt="&nbsp;" src="" style="max-width:64px;"/>
+                    </div>
+
+                    <div class="ajax-right">
+                        <div class="ajax-product-title"></div>
+                        <p class="success-message message-added-cart" {% if settings.enable_multilang %}data-translate="cart.ajax_cart.success_text"{% endif %}>
+                            {{ 'cart.ajax_cart.success_text' | t }}
+                        </p>  
+                        <div class="actions">
+                            <button class="btn continue-shopping" onclick="javascript:void(0)" {% if settings.enable_multilang %}data-translate="cart.ajax_cart.continue_shopping"{% endif %}>{{ 'cart.ajax_cart.continue_shopping' | t }}</button>
+                            <button class="btn btn-go-to-cart" onclick="window.location='/cart'" {% if settings.enable_multilang %}data-translate="cart.ajax_cart.go_to_cart"{% endif %}>{{ 'cart.ajax_cart.go_to_cart' | t }}</button>
+                        </div>   
+                    </div>
+                </div> 
+                {% endif %}
+            </div>
+        </div>     
+  </div>
+</div>
+
+{% if settings.enable_quick_view %}
+<div class="ajax-success-modal halo-modal ajax-quickview" data-quickview-modal>
+    <div class="modal-overlay">
+        <div class="halo-modal-content">
+            <a class="close close-modal" title="{{ 'cart.ajax_cart.close' | t }}">
+                {% include 'icon-close' %}
+            </a>
+            
+            <div class="halo-modal-body"></div>
+        </div>     
+    </div>
+</div>
+{% endif %}
+
+
+<div class="newsletter-success-modal">
+    <div class="modal-overlay"></div>
+        <div class="halo-modal-content">
+            <a class="close close-modal" title="{{ 'cart.ajax_cart.close' | t }}">
+                {% include 'icon-close' %}
+            </a>
+            
+            <div class="halo-modal-body">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                <span>{{settings.newssletter_success_text}}</span>
+            </div>
+        </div>     
+    
+</div>
+

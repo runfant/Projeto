@@ -1,0 +1,381 @@
+<script>
+  window.show_auto_currency = {{ settings.enable_auto_currency }};
+</script>
+{% if settings.enable_shopify_payments_currencies %}
+{{ "//cdn.shopify.com/s/javascripts/currencies.js" | script_tag }}
+{{ "jquery.currencies.min.js" | asset_url | script_tag }}
+<script>      
+        // Select all your currencies buttons.
+    var currencySwitcher = $('#currencies'),
+        currencyItem = currencySwitcher.find('[data-currency]');
+        
+    currencyItem.on('click', function(e) {
+        e.preventDefault();
+        
+        if($(this).hasClass('active')) return false;
+        
+        currencyItem.removeClass('active');
+        
+        $(this).addClass('active');
+        
+        var label = $('#currencies').prev('[data-currency-label]');
+        
+        if(label.length && label.is(':visible')) {
+        var item = $(this).html();
+        
+        label.html(item);
+        
+        currencySwitcher.slideUp(300);
+        };
+        
+        var cur = $(this).attr('data-currency');
+        $('#currency_form option').filter(function() { 
+            return ($(this).text() == cur); //To select Blue
+        }).prop('selected', true);
+      	$('#currency_form').submit();
+        
+    });
+
+</script>
+{% else %}
+	{% if settings.enable_multiple_currencies %}
+{{ "//cdn.shopify.com/s/javascripts/currencies.js" | script_tag }}
+{{ "jquery.currencies.min.js" | asset_url | script_tag }}
+		{% if settings.enable_auto_currency == false %}
+<script>      
+    // Pick your format here:  
+    // Can be 'money_format' or 'money_with_currency_format'
+    Currency.format = 'money_format';
+
+    var shopCurrency = '{{ shop.currency }}';
+if(shopCurrency != '{{cart.currency.iso_code}}'){
+	window.location = window.location.href + '?currency='+shopCurrency;
+}
+    /* Sometimes merchants change their shop currency, let's tell our JavaScript file */
+    Currency.moneyFormats[shopCurrency].money_with_currency_format = {{ shop.money_with_currency_format | strip_html | json }};
+    Currency.moneyFormats[shopCurrency].money_format = {{ shop.money_format | strip_html | json }};
+
+    var cookieCurrency = Currency.cookie.read();
+
+    // Fix for customer account pages 
+    $('span.money span.money').each(function() {
+        $(this).parent('span.money').removeClass('money');
+    });
+
+    // Add precalculated shop currency to data attribute 
+    $('span.money').each(function() {
+        $(this).attr('data-currency-{{ shop.currency }}', jQuery(this).html());
+    });
+
+        // Select all your currencies buttons.
+    var currencySwitcher = $('#currencies'),
+        currencyItem = currencySwitcher.find('[data-currency]');
+
+    // When the page loads.
+    if (cookieCurrency == null || cookieCurrency == shopCurrency) {
+        Currency.currentCurrency = shopCurrency;
+    }
+    else {
+      	var flag = 0;
+        currencyItem.each(function(){
+          if(cookieCurrency == $(this).data('currency')){
+            flag = 1;
+          }
+        });
+        if(flag == 0 ){
+          cookieCurrency = shopCurrency;
+        }
+        Currency.currentCurrency = cookieCurrency;
+        currencySwitcher.find('.active').removeClass('active').parent().find('[data-currency=' + Currency.currentCurrency + ']').addClass('active');
+        Currency.convertAll(shopCurrency, cookieCurrency);	
+    };
+        
+    currencyItem.on('click', function(e) {
+        e.preventDefault();
+        
+        if($(this).hasClass('active')) return false;
+        
+        currencyItem.removeClass('active');
+        
+        $(this).addClass('active');
+        
+        var label = $('#currencies').prev('[data-currency-label]');
+        
+        if(label.length && label.is(':visible')) {
+        var item = $(this).html();
+        
+        label.html(item);
+        
+        currencySwitcher.slideUp(300);
+        };
+        
+        var cur = $(this).attr('data-currency');
+        
+        cur != Currency.currentCurrency && Currency.convertAll(Currency.currentCurrency, cur);
+    });
+
+    $('body').on('refreshCurrency', function() {
+        Currency.convertAll(shopCurrency, jQuery("#currencies .active").attr('data-currency'));
+    });      
+</script>
+		{%- else -%}
+	<script>      
+    // Pick your format here:  
+    // Can be 'money_format' or 'money_with_currency_format'
+    Currency.format = 'money_format';
+
+    var shopCurrency = '{{ shop.currency }}';
+if(shopCurrency != '{{cart.currency.iso_code}}'){
+	window.location = window.location.href + '?currency='+shopCurrency;
+}
+    /* Sometimes merchants change their shop currency, let's tell our JavaScript file */
+    Currency.moneyFormats[shopCurrency].money_with_currency_format = {{ shop.money_with_currency_format | strip_html | json }};
+    Currency.moneyFormats[shopCurrency].money_format = {{ shop.money_format | strip_html | json }};
+
+    var cookieCurrency = Currency.cookie.read();
+
+    // Fix for customer account pages 
+    $('span.money span.money').each(function() {
+        $(this).parent('span.money').removeClass('money');
+    });
+
+    // Add precalculated shop currency to data attribute 
+    $('span.money').each(function() {
+        $(this).attr('data-currency-{{ shop.currency }}', jQuery(this).html());
+    });
+
+        // Select all your currencies buttons.
+    var currencySwitcher = $('#currencies'),
+        currencyItem = currencySwitcher.find('[data-currency]');
+      
+if (cookieCurrency == null ){
+      
+     $.getScript('https://ssl.geoplugin.net/javascript.gp?k=9247556ec91c71e9', function() {
+       var newCurrency = geoplugin_currencyCode();
+//     	newCurrency = "GBP";
+    
+    	var flag = 0;
+    	currencyItem.each(function(){
+          if(newCurrency == $(this).data('currency')){
+              cookieCurrency = newCurrency;              
+              flag = 1;
+            	
+              currencyItem.removeClass('active');
+        
+              $(this).addClass('active');
+
+              var label = $('#currencies').prev('[data-currency-label]');
+
+              if(label.length && label.is(':visible')) {
+              	var item = $(this).html();
+
+              	label.html(item);
+              }
+          }
+        }); 
+
+        // When the page loads.
+        if (cookieCurrency == null || cookieCurrency == shopCurrency) {
+            Currency.currentCurrency = shopCurrency;
+        }
+    	else {
+          if(flag == 0 && newCurrency != shopCurrency){
+            cookieCurrency = shopCurrency;
+          }
+      
+        	Currency.currentCurrency = cookieCurrency;
+			currencySwitcher.find('.active').removeClass('active').parent().find('[data-currency=' + Currency.currentCurrency + ']').addClass('active');   
+        	Currency.convertAll(shopCurrency, cookieCurrency);
+
+        }
+     });
+
+}
+else if(cookieCurrency == shopCurrency){
+	Currency.currentCurrency = shopCurrency;
+}
+else {
+  	var flag = 0;
+    currencyItem.each(function(){
+      if(cookieCurrency == $(this).data('currency')){
+        flag = 1;
+      }
+    });
+    if(flag == 0 ){
+      cookieCurrency = shopCurrency;
+    }
+	Currency.currentCurrency = cookieCurrency;
+    currencySwitcher.find('.active').removeClass('active').parent().find('[data-currency=' + Currency.currentCurrency + ']').addClass('active');
+    Currency.convertAll(shopCurrency, cookieCurrency);
+}
+
+        
+    currencyItem.on('click', function(e) {
+        e.preventDefault();
+        
+        if($(this).hasClass('active')) return false;
+        
+        currencyItem.removeClass('active');
+        
+        $(this).addClass('active');
+        
+        var label = $('#currencies').prev('[data-currency-label]');
+        
+        if(label.length && label.is(':visible')) {
+        var item = $(this).html();
+        
+        label.html(item);
+        
+        currencySwitcher.slideUp(300);
+        };
+        
+        var cur = $(this).attr('data-currency');
+        
+        cur != Currency.currentCurrency && Currency.convertAll(Currency.currentCurrency, cur);
+    });
+
+    $('body').on('refreshCurrency', function() {
+        Currency.convertAll(shopCurrency, jQuery("#currencies .active").attr('data-currency'));
+    });  
+      
+            document.addEventListener('DOMContentLoaded', initBlocked, false);
+
+            function initBlocked(){
+              adsBlocked(function(blocked){
+                if(blocked){
+                  alert( 'Please turn off the uBlock addon on the browser for this site to display your currency!' );
+
+                } else {
+                  console.log( 'ads are not blocked' );
+                }
+              })
+            }
+
+            function adsBlocked(callback){
+              var testURL = 'https://ssl.geoplugin.net/javascript.gp?k=9247556ec91c71e9'
+
+              var myInit = {
+                method: 'HEAD',
+                mode: 'no-cors'
+              };
+
+              var myRequest = new Request(testURL, myInit);
+
+              fetch(myRequest).then(function(response) {
+                return response;
+              }).then(function(response) {
+                // console.log(response);
+                callback(false)
+              }).catch(function(e){
+                // console.log(e)
+                callback(true)
+              });
+            }
+        </script>
+		{%- endif -%}
+	{%- else -%}
+		{% if settings.enable_auto_currency %}
+<div id="currencies" style="display: none;">
+  <a class="dropdown-item active " href="#" data-currency="{{ shop.currency }}">
+    <span class="text">{{ shop.currency }}</span>       
+  </a>
+</div>
+{{ "//cdn.shopify.com/s/javascripts/currencies.js" | script_tag }}
+{{ "jquery.currencies.min.js" | asset_url | script_tag }}
+<script>     
+  
+// Pick your format here:  
+    // Can be 'money_format' or 'money_with_currency_format'
+    Currency.format = 'money_format';
+
+    var shopCurrency = '{{ shop.currency }}';
+if(shopCurrency != '{{cart.currency.iso_code}}'){
+	window.location = window.location.href + '?currency='+shopCurrency;
+}
+    /* Sometimes merchants change their shop currency, let's tell our JavaScript file */
+    Currency.moneyFormats[shopCurrency].money_with_currency_format = {{ shop.money_with_currency_format | strip_html | json }};
+    Currency.moneyFormats[shopCurrency].money_format = {{ shop.money_format | strip_html | json }};
+
+    var cookieCurrency = Currency.cookie.read();
+
+    // Fix for customer account pages 
+    $('span.money span.money').each(function() {
+        $(this).parent('span.money').removeClass('money');
+    });
+
+    // Add precalculated shop currency to data attribute 
+    $('span.money').each(function() {
+        $(this).attr('data-currency-{{ shop.currency }}', jQuery(this).html());
+    });
+	
+    var currencyCode = shopCurrency;
+    // When the page loads.
+    $.getScript('https://ssl.geoplugin.net/javascript.gp?k=9247556ec91c71e9', function() {
+      var newCurrency = geoplugin_currencyCode();
+//       newCurrency = "EEK";
+      console.log(newCurrency);    
+
+      if (newCurrency == null || newCurrency == shopCurrency) {
+          Currency.currentCurrency = shopCurrency;
+          $('#currencies .active').attr('data-currency', shopCurrency);
+      }
+      else {
+        try{
+          $('#currencies .active').attr('data-currency', newCurrency);
+          currencyCode = newCurrency;
+          Currency.currentCurrency = newCurrency;        
+          Currency.convertAll(shopCurrency, newCurrency);   
+
+        }
+        catch(e){
+          console.log(e)
+        }
+        $( document ).ajaxComplete(function( event, xhr, settings ) {
+          try{
+            Currency.convertAll(shopCurrency, currencyCode);
+          }
+          catch(e){
+            console.log(e)
+          }
+        });
+
+      }
+    });
+    
+      document.addEventListener('DOMContentLoaded', initBlocked, false);
+
+  function initBlocked(){
+    adsBlocked(function(blocked){
+      if(blocked){
+        alert( 'Please turn off the uBlock addon on the browser for this site to display your currency!' );
+
+      } else {
+        console.log( 'ads are not blocked' );
+      }
+    })
+  }
+
+  function adsBlocked(callback){
+    var testURL = 'https://ssl.geoplugin.net/javascript.gp?k=9247556ec91c71e9'
+
+    var myInit = {
+      method: 'HEAD',
+      mode: 'no-cors'
+    };
+
+    var myRequest = new Request(testURL, myInit);
+
+    fetch(myRequest).then(function(response) {
+      return response;
+    }).then(function(response) {
+      // console.log(response);
+      callback(false)
+    }).catch(function(e){
+      // console.log(e)
+      callback(true)
+    });
+  }
+</script>
+		{%- endif -%}
+	{%- endif -%}
+{% endif %}

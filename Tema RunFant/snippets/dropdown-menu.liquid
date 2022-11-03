@@ -1,0 +1,37 @@
+<ul class="site-nav-dropdown">
+    {% for link_child_item in linklists[link_child].links %}
+    <li class="menu-lv-2{% if linklists[link_child_item.handle] != empty %} dropdown{% endif %}">
+        <a {% if linklists[link_child_item.handle] != empty %}class="menu__moblie"{% endif %} href="{{ link_child_item.url }}">
+            {% include 'multilang' with link_child_item.title %}
+            
+            {% if linklists[link_child_item.handle] != empty %}
+            <span class="icon-dropdown" data-toggle-menu-mb>
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </span>
+            {% endif %}
+        </a>
+        
+        {% if linklists[link_child_item.handle] != empty %}
+        
+        <div class="sub-menu-mobile menu-mb-translate">
+            <div class="menu-mb-title">
+                <span class="icon-dropdown">
+                <i class="fa fa-angle-left" aria-hidden="true"></i>
+                </span>
+                {% include 'multilang' with link_child_item.title %}
+            </div>
+            
+            <ul class="site-nav-dropdown">
+                {% for n in linklists[link_child_item.handle].links %}                
+                <li class="menu-lv-3">
+                    <a {% if linklists[n.handle] != empty %}class="menu__moblie"{% endif %} href="{{ n.url }}">
+                        {% include 'multilang' with n.title %}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,20 @@
+<ul class="dropdown-menu" role="menu"> 
+  {% if settings.top_bar_linklist != blank %}
+    {% for link in linklists[settings.top_bar_linklist].links %}
+    <li>
+      {% if settings.enable_multilang %}
+      <a href="{{ link.url }}" title="{{ link.title | split: '|' | first }}" class="lang1">
+        {{ link.title | split: '|' | first }}
+      </a>
+      <a href="{{ link.url }}" title="{{ link.title | split: '|' | last }}" class="lang2">
+        {{ link.title | split: '|' | last }}
+      </a>
+      {% else %}
+      <a href="{{ link.url }}" title="{{ link.title | split: '|' | first }}">
+        {{ link.title | split: '|' | first }}
+      </a>
+      {% endif %}
+    </li>
+    {% endfor %}
+  {% endif %}
+</ul>

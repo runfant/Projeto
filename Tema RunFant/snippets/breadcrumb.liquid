@@ -1,0 +1,140 @@
+{% comment %}
+  Documentation - http://docs.shopify.com/support/your-website/navigation/creating-a-breadcrumb-navigation
+{% endcomment %}
+
+{% if settings.display_breadcrumb %}
+
+{% unless template == 'index' %}
+<div class="breadcrumb">
+  <a href="/" data-translate="general.breadcrumbs.home">{{ 'general.breadcrumbs.home' | t }}</a>  
+  {% if template contains 'product' %} 
+  
+    {% if collection %}
+      <span class="arrow">
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
+      </span>
+
+      {% if collection.handle %}
+      {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+        {% if settings.enable_multilang %}
+        <span class="lang1">{{ collection.title | split: '|' | first | link_to: url }}</span>
+        <span class="lang2">{{ collection.title | split: '|' | last | link_to: url }}</span>
+        {% else %}
+        <span>{{ collection.title | split: '|' | first | link_to: url }}</span>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  
+    <span class="arrow">
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
+  	</span>
+  	{% if settings.enable_multilang %}
+    <span class="lang1">{{ product.title | split: '|' | first }}</span>
+    <span class="lang2">{{ product.title | split: '|' | last }}</span>
+  	{% else %}
+  	<span>{{ product.title | split: '|' | first }}</span>
+    {% endif %}
+  
+  {% elsif template contains 'collection' and collection.handle %}
+    {% if current_tags %}
+      <span class="arrow">
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
+      </span>
+  
+      {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+	  <span class="bd-title">
+        {% if settings.enable_multilang %}
+        <span class="lang1">{{ collection.title | split: '|' | first | link_to: url }}</span>
+        <span class="lang2">{{ collection.title | split: '|' | last | link_to: url }}</span>
+        {% else %}
+        <span>{{ collection.title | split: '|' | first | link_to: url }}</span>
+        {% endif %}
+
+        <span class="arrow">
+          <i class="fa fa-angle-right" aria-hidden="true"></i>
+        </span>
+        
+        {% assign bd_tags = current_tags | join: " + " %}
+        {% if settings.enable_multilang %}
+        <span class="lang1">{{ bd_tags | split: '|' | first }}</span>
+        <span class="lang2">{{ bd_tags | split: '|' | last }}</span>
+        {% else %}
+        <span>{{ bd_tags | split: '|' | first }}</span>
+        {% endif %}
+	  </span>
+  
+    {% else %}
+  
+      <span class="arrow">
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
+      </span>
+  
+      <span class="bd-title">
+        {% if settings.enable_multilang %}
+        <span class="lang1">{{ collection.title | split: '|' | first | link_to: url }}</span>
+        <span class="lang2">{{ collection.title | split: '|' | last | link_to: url }}</span>
+        {% else %}
+        <span>{{ collection.title | split: '|' | first | link_to: url }}</span>
+        {% endif %}
+  	  </span>
+
+  	{% endif %}
+  
+  {% elsif template == 'cart' %}
+  	<span class="arrow">
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
+    </span> 	
+    <span {% if settings.enable_multilang %}data-translate="general.breadcrumbs.cart"{% endif %}>{{ 'general.breadcrumbs.cart' | t }}</span>
+  
+  {% elsif template == 'article' %}
+
+    <span class="arrow">
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
+    </span> 
+  
+  	{% if settings.enable_multilang %}
+    <span class="lang1">{{ blog.title | split: '|' | first | link_to: blog.url }}</span>
+    <span class="lang2">{{ blog.title | split: '|' | last | link_to: blog.url }}</span>
+  	{% else %}
+  	<span>{{ blog.title | split: '|' | first | link_to: blog.url }}</span>
+    {% endif %}
+  
+    <span class="arrow">
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
+    </span>
+  
+  	{% if settings.enable_multilang %}
+    <span class="lang1">{{ article.title | split: '|' | first }}</span>
+    <span class="lang2">{{ article.title | split: '|' | last }}</span>
+  	{% else %}
+  	<span>{{ article.title | split: '|' | first }}</span>
+    {% endif %}
+
+  {% elsif template contains 'page' %}
+
+    <span class="arrow">
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
+    </span>
+  
+  	{% if settings.enable_multilang %}
+    <span class="lang1">{{ page.title | split: '|' | first }}</span>
+    <span class="lang2">{{ page.title | split: '|' | last }}</span>
+  	{% else %}
+  	<span>{{ page.title | split: '|' | first }}</span>
+    {% endif %}
+
+  {% else %}
+    <span class="arrow">
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
+    </span>
+  
+  	{% if settings.enable_multilang %}
+    <span class="lang1">{{ page_title | split: '|' | first }}</span>
+    <span class="lang2">{{ page_title | split: '|' | last }}</span>
+  	{% else %}
+  	<span>{{ page_title | split: '|' | first }}</span>
+    {% endif %}
+  {% endif %}
+</div>
+{% endunless %}
+{% endif %}

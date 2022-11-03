@@ -1,0 +1,12 @@
+{% if settings.enable_multilang and multilang-block contains '[lang2]' %}
+<div class="lang1 {{class}}">
+  {{ multilang-block | split: '[lang2]' | first | strip }}
+</div>
+<div class="lang2 {{class}}">
+  {{ multilang-block | split: '[lang2]' | last | strip }}
+</div>
+{% else %}
+<div class="{{class}}">
+  {{ multilang-block }}
+</div>
+{% endif %}

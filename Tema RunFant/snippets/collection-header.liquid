@@ -1,0 +1,54 @@
+<header class="collection-header">
+  {% if section.settings.display_collection_image %}
+  <div class="collection-image">
+    {% if collection.description contains 'img' or section.settings.collection_image != blank or collection.image %}
+
+    {% if collection.description contains 'img' %}
+    {%- assign img_url = collection.description | split: '<img' | last | split: '>' | first -%}
+
+    {% elsif section.settings.collection_image != blank %}
+    {%- assign img_url = section.settings.collection_image | img_url: 'master' -%}
+
+    {% elsif collection.image %}
+    {%- assign img_url = collection.image | img_url: 'master' -%}
+    {% endif %}
+    
+    {% if collection.description contains 'img' %}
+    <img {{ img_url }} alt="{{ collection_title }}" class="lazyautosizes lazyloaded" data-sizes="auto"/>
+    {% else %}
+    <img data-src="{{ img_url }}"
+         src="{{ img_url }}" class="lazyautosizes lazyloaded" data-sizes="auto">
+    {% endif %}
+    
+    {% else %}
+
+    <div class="not_img">
+      930 x 320px
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+  
+  <div class="collection-wrapper page-header">
+    <h1>
+      {% include 'multilang' with collection.title %}
+    </h1>
+
+    {% if collection.description != '' and section.settings.display_collection_des %}
+    <div class="collection-des">
+      {% if settings.enable_multilang and collection.description contains '[lang2]' %}      
+      <div class="rte lang1">
+        {{ collection.description | split: '[lang2]' | first | split: '<img' | first }}
+      </div>
+      <div class="rte lang2">
+        {{ collection.description | split: '[lang2]' | last | split: '<img' | first }}
+      </div>
+      {% else %}
+      <div class="rte">
+        {{ collection.description | split: '[lang2]' | first | split: '<img' | first }}
+      </div>
+      {% endif %}
+    </div>      
+    {% endif %}
+  </div>
+</header>

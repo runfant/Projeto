@@ -1,0 +1,128 @@
+{% if settings.enable_shopify_payments_currencies %}
+{% case cart.currency.iso_code %}
+  {% when 'AUD' %}
+  	{% capture currency_flag %}d4e9cde3edb3e1732ec50170e158d750.svg{% endcapture %}
+  {% when 'CAD' %}
+  	{% capture currency_flag %}422898ab4299eb270f856e6c1b8d2250.svg{% endcapture %}
+  {% when 'DKK' %}
+  	{% capture currency_flag %}e60c493fdbe69069d943ecc37287aa90.svg{% endcapture %}
+  {% when 'EUR' %}
+  	{% capture currency_flag %}9886b4168efb1ebf48006093aa9807c5.svg{% endcapture %}
+  {% when 'GBP' %}
+  	{% capture currency_flag %}f9bbc4885a348eff84e4ef4155121fae.svg{% endcapture %}
+  {% when 'HKD' %}
+  	{% capture currency_flag %}d242bcbc3c871d94219f0b46ce803944.svg{% endcapture %}
+  {% when 'JPY' %}
+  	{% capture currency_flag %}8a87f52e21f7e84a157d6d425e957736.svg{% endcapture %}
+  {% when 'NZD' %}
+  	{% capture currency_flag %}cacb9f87701ae2707676064d036a97b2.svg{% endcapture %}
+  {% when 'SGD' %}
+  	{% capture currency_flag %}e6485856d9a242f47cbc1f396429aa7c.svg{% endcapture %}
+  {% when 'USD' %}
+  	{% capture currency_flag %}7f0109d94c888a663452af48e2d324d7.svg{% endcapture %}
+  {% else %}
+  	{% capture currency_flag %}7f0109d94c888a663452af48e2d324d7.svg{% endcapture %}
+{% endcase %}
+<div class="currency-block">
+  <label class="label-text"{% if settings.enable_multilang %} data-translate="general.currency.currency"{% endif %}>
+    {{ 'general.currency.currency' | t }}
+  </label>
+
+  <div class="btn-group currency-dropdown">
+    <label class="dropdown-toggle dropdown-label" data-currency-label>
+      <span class="img-icon">
+        <img src="https://cdn.shopifycloud.com/web/assets/{{currency_flag}}" alt="{{ cart.currency.iso_code }}" />
+      </span>
+      <span class="text">
+        {{ cart.currency.iso_code }}
+      </span>      
+    </label>
+    <div class="dropdown-menu currency-menu" id="currencies">
+      {%- for currency in shop.enabled_currencies -%}
+      	{% case currency.iso_code %}
+          {% when 'AUD' %}
+             {% capture currency_flag %}d4e9cde3edb3e1732ec50170e158d750.svg{% endcapture %}
+          {% when 'CAD' %}
+            {% capture currency_flag %}422898ab4299eb270f856e6c1b8d2250.svg{% endcapture %}
+          {% when 'DKK' %}
+            {% capture currency_flag %}e60c493fdbe69069d943ecc37287aa90.svg{% endcapture %}
+      	  {% when 'EUR' %}
+            {% capture currency_flag %}9886b4168efb1ebf48006093aa9807c5.svg{% endcapture %}
+      	  {% when 'GBP' %}
+            {% capture currency_flag %}f9bbc4885a348eff84e4ef4155121fae.svg{% endcapture %}
+          {% when 'HKD' %}
+            {% capture currency_flag %}d242bcbc3c871d94219f0b46ce803944.svg{% endcapture %}
+          {% when 'JPY' %}
+            {% capture currency_flag %}8a87f52e21f7e84a157d6d425e957736.svg{% endcapture %}
+          {% when 'NZD' %}
+            {% capture currency_flag %}cacb9f87701ae2707676064d036a97b2.svg{% endcapture %}
+          {% when 'SGD' %}
+            {% capture currency_flag %}e6485856d9a242f47cbc1f396429aa7c.svg{% endcapture %}
+          {% when 'USD' %}
+            {% capture currency_flag %}7f0109d94c888a663452af48e2d324d7.svg{% endcapture %}
+          {% else %}
+             {% capture currency_flag %}7f0109d94c888a663452af48e2d324d7.svg{% endcapture %}
+        {% endcase %}
+      <a class="dropdown-item{% if currency == cart.currency %} active {% endif %}" href="#" data-currency="{{currency.iso_code}}">
+        <span class="img-icon">
+          <img src="https://cdn.shopifycloud.com/web/assets/{{currency_flag}}" alt="{{currency.iso_code}}" />
+        </span>
+        <span class="text">
+          {{currency.iso_code}}
+        </span>       
+      </a>      
+      {%- endfor -%}
+    </div>
+  </div>       
+</div>
+{% form 'currency' %}
+  <select name="currency" style="display:none;">
+    {%- for currency in shop.enabled_currencies -%}
+      {%- if currency == cart.currency -%}
+        <option selected="true">{{currency.iso_code}}</option>
+      {%- else -%}
+        <option>{{currency.iso_code}}</option>
+      {%- endif -%}
+    {%- endfor -%}
+  </select>
+{% endform %}
+
+{% else %}
+	{% if settings.enable_multiple_currencies %}
+<div class="currency-block">
+  <label class="label-text"{% if settings.enable_multilang %} data-translate="general.currency.currency"{% endif %}>
+    {{ 'general.currency.currency' | t }}
+  </label>
+
+  <div class="btn-group currency-dropdown">
+    <label class="dropdown-toggle dropdown-label" data-currency-label>
+      <span class="img-icon">
+        <img src="{{"i-currency-1.png" | asset_url}}" alt="{{ settings.currency_1_unit }}" />
+      </span>
+      <span class="text">
+        {{ settings.currency_1_unit }}
+      </span>      
+    </label>
+
+    <div class="dropdown-menu currency-menu" id="currencies">
+      {% for i in (1..10) %}
+      {% capture currency_unit %}currency_{{ i }}_unit{% endcapture %}
+      {% capture i-currency_unit %}i-currency-{{ i }}.png{% endcapture %}
+      {% assign currency_length = settings[currency_unit] | size %}
+
+      {% if currency_length > 0 %}
+      <a class="dropdown-item{% if shop.currency == settings[currency_unit] %} active {% endif %}" href="#" data-currency="{{ settings[currency_unit] }}">
+        <span class="img-icon">
+          <img src="{{i-currency_unit | asset_url}}" alt="{{ settings.settings[currency_unit] }}" />
+        </span>
+        <span class="text">
+          {{ settings[currency_unit] }}
+        </span>       
+      </a>
+      {% endif %}  
+      {% endfor %}
+    </div>
+  </div>       
+</div>
+	{% endif %}
+{% endif %}

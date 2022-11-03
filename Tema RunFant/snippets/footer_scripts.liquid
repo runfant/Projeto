@@ -1,0 +1,28 @@
+<!-- Footer scripts -->
+<script src="{{ 'vendor.min.js' | asset_url }}" defer></script>
+<script src="{{ 'api.jquery.js' | shopify_asset_url }}" async></script>
+<script src="{{ 'option_selection.js' | shopify_asset_url }}" async></script>
+{%  include 'new-currency' %}
+<script src="{{ 'jquery.sticky.js' | asset_url }}" defer></script>
+<!-- <script src="{{ 'ella.min.js' | asset_url }}"></script> -->
+<script src="{{ 'halo.js' | asset_url }}"></script>
+{% if template contains 'collection' %}
+<script>
+  $(document).ready(function(){
+    $('.dropdown-cat a').each(function(){
+      if($(this).hasClass('active')) {
+      	$(this).parents('li').addClass('open');
+      }
+    });
+  })
+</script>
+{% endif %}
+{% if settings.redirect_button == 'none' %}
+<script>
+  $(document).ready(function(){
+    $("#reload_page").on("click", function(){
+      $('html').removeClass("cart-show");
+    });
+  })
+</script>
+{% endif %}

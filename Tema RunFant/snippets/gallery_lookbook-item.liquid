@@ -1,0 +1,212 @@
+{% if img_1 != blank %}
+<div class="item {{ col_grid }}">
+  <div class="images-contain">
+    <a class="fancybox" rel="gallery" href="{{ img_1 | img_url: 'original' }}" data-fancybox="lookbook-gallery">
+      <img data-src="{{ img_1 | img_url: 'original' }}"
+           src="{{ img_1 | img_url: 'original' }}" alt="{{ block.settings.image_1.alt }}"
+           class="lazyautosizes lazyloaded" data-sizes="auto">
+    </a>
+
+    {% if block.settings.lb_product_1_1 != blank %}
+    <div class="select-icon lb-icon-1-1-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_1_1 }}" style="top:{{ block.settings.top_position_1_1 }}%; left:{{ block.settings.left_position_1_1 }}%;">
+      <span class="glyphicon"></span>
+    </div>
+    {% endif %}
+
+    {% if block.settings.lb_product_1_2 != blank %}
+    <div class="select-icon lb-icon-1-2-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_1_2 }}" style="top:{{ block.settings.top_position_1_2 }}%; left:{{ block.settings.left_position_1_2 }}%;">
+      <span class="glyphicon"></span>
+    </div>
+    {% endif %}
+
+    {% if block.settings.lb_product_1_3 != blank %}
+    <div class="select-icon lb-icon-1-3-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_1_3 }}" style="top:{{ block.settings.top_position_1_3 }}%; left:{{ block.settings.left_position_1_3 }}%;">
+      <span class="glyphicon"></span>
+    </div>
+    {% endif %}
+
+    <style type="text/css">
+      .gallery_lookbook-box .lb-icon-1-1-{{ block.id }} .glyphicon {
+        background-color: {{ block.settings.dots_bg_color_1_1 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-1-1-{{ block.id }} .glyphicon:before,
+      .gallery_lookbook-box .lb-icon-1-1-{{ block.id }} .glyphicon:after {
+        background-color: {{ block.settings.dots_color_1_1 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-1-1-{{ block.id }}:before{
+        color: {{ block.settings.dots_shadow_color_1_1 }};
+      } 
+
+      .gallery_lookbook-box .lb-icon-1-2-{{ block.id }} .glyphicon {
+        background-color: {{ block.settings.dots_bg_color_1_2 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-1-2-{{ block.id }} .glyphicon:before,
+      .gallery_lookbook-box .lb-icon-1-2-{{ block.id }} .glyphicon:after {
+        background-color: {{ block.settings.dots_color_1_2 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-1-2-{{ block.id }}:before{
+        color: {{ block.settings.dots_shadow_color_1_2 }};
+      } 
+
+      .gallery_lookbook-box .lb-icon-1-3-{{ block.id }} .glyphicon {
+        background-color: {{ block.settings.dots_bg_color_1_3 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-1-3-{{ block.id }} .glyphicon:before,
+      .gallery_lookbook-box .lb-icon-1-3-{{ block.id }} .glyphicon:after {
+        background-color: {{ block.settings.dots_color_1_3 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-1-3-{{ block.id }}:before{
+        color: {{ block.settings.dots_shadow_color_1_3 }};
+      } 
+    </style> 
+  </div>
+</div>
+{% endif %}
+
+{% if img_2 != blank %}
+<div class="item {{ col_grid }}">
+  <div class="images-contain">
+    <a class="fancybox" rel="gallery" href="{{ img_2 | img_url: 'original' }}" data-fancybox="lookbook-gallery">
+      <img data-src="{{ img_2 | img_url: 'original' }}"
+           src="{{ img_2 | img_url: 'original' }}" alt="{{ block.settings.image_2.alt }}"
+           class="lazyautosizes lazyloaded" data-sizes="auto">
+    </a>
+
+    {% if block.settings.lb_product_2_1 != blank %}
+    <div class="select-icon lb-icon-2-1-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_2_1 }}" style="top:{{ block.settings.top_position_2_1 }}%; left:{{ block.settings.left_position_2_1 }}%;">
+      <span class="glyphicon"></span>
+    </div>
+    {% endif %}
+
+    {% if block.settings.lb_product_2_2 != blank %}
+    <div class="select-icon lb-icon-2-2-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_2_2 }}" style="top:{{ block.settings.top_position_2_2 }}%; left:{{ block.settings.left_position_2_2 }}%;">
+      <span class="glyphicon"></span>
+    </div>
+    {% endif %}
+
+    {% if block.settings.lb_product_2_3 != blank %}
+    <div class="select-icon lb-icon-2-3-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_2_3 }}" style="top:{{ block.settings.top_position_2_3 }}%; left:{{ block.settings.left_position_2_3 }}%;">
+      <span class="glyphicon"></span>
+    </div>
+    {% endif %}
+
+    <style type="text/css">
+      .gallery_lookbook-box .lb-icon-2-1-{{ block.id }} .glyphicon {
+        background-color: {{ block.settings.dots_bg_color_2_1 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-2-1-{{ block.id }} .glyphicon:before,
+      .gallery_lookbook-box .lb-icon-2-1-{{ block.id }} .glyphicon:after {
+        background-color: {{ block.settings.dots_color_2_1 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-2-1-{{ block.id }}:before{
+        color: {{ block.settings.dots_shadow_color_2_1 }};
+      } 
+
+      .gallery_lookbook-box .lb-icon-2-2-{{ block.id }} .glyphicon {
+        background-color: {{ block.settings.dots_bg_color_2_2 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-2-2-{{ block.id }} .glyphicon:before,
+      .gallery_lookbook-box .lb-icon-2-2-{{ block.id }} .glyphicon:after {
+        background-color: {{ block.settings.dots_color_2_2 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-2-2-{{ block.id }}:before{
+        color: {{ block.settings.dots_shadow_color_2_2 }};
+      } 
+
+      .gallery_lookbook-box .lb-icon-2-3-{{ block.id }} .glyphicon {
+        background-color: {{ block.settings.dots_bg_color_2_3 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-2-3-{{ block.id }} .glyphicon:before,
+      .gallery_lookbook-box .lb-icon-2-3-{{ block.id }} .glyphicon:after {
+        background-color: {{ block.settings.dots_color_2_3 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-2-3-{{ block.id }}:before{
+        color: {{ block.settings.dots_shadow_color_2_3 }};
+      } 
+    </style> 
+  </div>
+</div>
+{% endif %}
+
+{% if img_3 != blank %}
+<div class="item {{ col_grid }}">
+  <div class="images-contain">
+    <a class="fancybox" rel="gallery" href="{{ img_3 | img_url: 'original' }}" data-fancybox="lookbook-gallery">
+      <img data-src="{{ img_3 | img_url: 'original' }}"
+           src="{{ img_3 | img_url: 'original' }}" alt="{{ block.settings.image_3.alt }}"
+           class="lazyautosizes lazyloaded" data-sizes="auto">
+    </a>
+
+    {% if block.settings.lb_product_3_1 != blank %}
+    <div class="select-icon lb-icon-3-1-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_3_1 }}" style="top:{{ block.settings.top_position_3_1 }}%; left:{{ block.settings.left_position_3_1 }}%;">
+      <span class="glyphicon"></span>
+    </div>
+    {% endif %}
+
+    {% if block.settings.lb_product_3_2 != blank %}
+    <div class="select-icon lb-icon-3-2-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_3_2 }}" style="top:{{ block.settings.top_position_3_2 }}%; left:{{ block.settings.left_position_3_2 }}%;">
+      <span class="glyphicon"></span>
+    </div>
+    {% endif %}
+
+    {% if block.settings.lb_product_3_3 != blank %}
+    <div class="select-icon lb-icon-3-3-{{ block.id }}" data-lookbook-icon data-handle="{{ block.settings.lb_product_3_3 }}" style="top:{{ block.settings.top_position_3_3 }}%; left:{{ block.settings.left_position_3_3 }}%;">
+      <span class="glyphicon"></span>
+    </div>
+    {% endif %}
+
+    <style type="text/css">
+      .gallery_lookbook-box .lb-icon-3-1-{{ block.id }} .glyphicon {
+        background-color: {{ block.settings.dots_bg_color_3_1 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-3-1-{{ block.id }} .glyphicon:before,
+      .gallery_lookbook-box .lb-icon-3-1-{{ block.id }} .glyphicon:after {
+        background-color: {{ block.settings.dots_color_3_1 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-3-1-{{ block.id }}:before{
+        color: {{ block.settings.dots_shadow_color_3_1 }};
+      } 
+
+      .gallery_lookbook-box .lb-icon-3-2-{{ block.id }} .glyphicon {
+        background-color: {{ block.settings.dots_bg_color_3_2 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-3-2-{{ block.id }} .glyphicon:before,
+      .gallery_lookbook-box .lb-icon-3-2-{{ block.id }} .glyphicon:after {
+        background-color: {{ block.settings.dots_color_3_2 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-3-2-{{ block.id }}:before{
+        color: {{ block.settings.dots_shadow_color_3_2 }};
+      } 
+
+      .gallery_lookbook-box .lb-icon-3-3-{{ block.id }} .glyphicon {
+        background-color: {{ block.settings.dots_bg_color_3_3 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-3-3-{{ block.id }} .glyphicon:before,
+      .gallery_lookbook-box .lb-icon-3-3-{{ block.id }} .glyphicon:after {
+        background-color: {{ block.settings.dots_color_3_3 }};
+      }
+
+      .gallery_lookbook-box .lb-icon-3-3-{{ block.id }}:before{
+        color: {{ block.settings.dots_shadow_color_3_3 }};
+      } 
+    </style> 
+  </div>
+</div>
+{% endif %}

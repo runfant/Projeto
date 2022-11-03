@@ -1,0 +1,376 @@
+<div class="row">
+    {% if block_style == "style_1" %}
+    <div class="col-12 {% if banner_first_style != blank or featured_product != blank %}{% if banner_first_style == blank or featured_product == blank %}col-xl-9{% else %}col-xl-7{% endif %}{% else %}col-xl-12{% endif %}">
+        <div class="row" data-masonry='{ "itemSelector": "[data-gridItem]", "columnWidth": ".grid-sizer" }'>
+            <div class="grid-sizer"></div>
+
+            {% for l in linklists[link.handle].links %}
+            <div data-gridItem class="menu-lv-2 inner{% if linklists[link.handle] != empty %} dropdown{% endif %} col-12 {% if banner_first_style != blank or featured_product != blank %}col-xl-4{% else %}col5{% endif %}">
+                <!-- Menu level 2 -->
+                <a {%if linklists[link.handle] != empty %}class="menu__moblie"{% endif %} href="{{ l.url }}" class="current">
+                    {% include 'multilang' with l.title %}
+
+                    {% if linklists[l.handle] != empty %}
+                    <span class="icon-dropdown" data-toggle-menu-mb>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </span>
+                    {% endif %}
+                </a>
+
+                {% if linklists[l.handle] != empty %}
+                <div class="sub-menu-mobile menu-mb-translate">
+                    <div class="menu-mb-title">
+                        <span class="icon-dropdown">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        </span>
+                        {% include 'multilang' with l.title %}
+                    </div>
+
+                    <ul class="site-nav-dropdown">
+                        {% for child_l in linklists[l.handle].links %}
+                        <!-- Menu level 3 -->
+                        <li class="menu-lv-3">
+                            <a href="{{ child_l.url }}" {% if child_l.active %}class="current"{% endif %}>
+                                {% include 'multilang' with child_l.title %}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if banner_first_style != blank or featured_product != blank %}
+    <div class="col-12 {% if banner_first_style == blank or featured_product == blank %}col-xl-3{% else%}col-xl-5{% endif %}">
+        <div class="mega-banner">
+            {% if featured_product != blank %}
+            <div class="mega-col{% if banner_first_style != blank %} col-left{% endif %}">
+                {% if title_featured_product != blank %}
+                <h3 class="title">
+                    {% include 'multilang' with title_featured_product %}
+                </h3>
+                {% endif %}
+
+                {% if product.available %}
+                {% include 'mega-menu-product-grid' %}
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% if banner_first_style != blank %}
+            <div class="mega-col {% if featured_product != blank %}col-right{% else %}no-feature-product{% endif %}">
+                <a class="animate-scale" href="{{ link_banner_first_style }}" title="">
+                    <img src="{{ banner_first_style | img_url : '250x' }}" alt="" />
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% elsif block_style == "style_2" %}
+    <div class="col-12 {% if banner_first_style != blank or banner_second_style != blank or banner_third_style != blank %}col-xl-7{% else %}col-xl-12{% endif %}">
+        <div class="row" data-masonry='{ "itemSelector": "[data-gridItem]", "columnWidth": ".grid-sizer" }'>
+            <div class="grid-sizer"></div>
+
+            {% for l in linklists[link.handle].links %}
+            <div data-gridItem class="menu-lv-2 inner{% if linklists[link.handle] != empty %} dropdown{% endif %} col-12 {% if banner_first_style != blank or banner_second_style != blank or banner_third_style != blank %}col-xl-4{% else %}col5{% endif %}">
+                <!-- Menu level 2 -->
+                <a {%if linklists[link.handle] != empty %}class="menu__moblie"{% endif %} href="{{ l.url }}" class="current">
+                    {% include 'multilang' with l.title %}
+
+                    {% if linklists[l.handle] != empty %}
+                    <span class="icon-dropdown" data-toggle-menu-mb>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </span>
+                    {% endif %}
+                </a>
+
+                {% if linklists[l.handle] != empty %}
+                <div class="sub-menu-mobile menu-mb-translate">
+                    <div class="menu-mb-title">
+                        <span class="icon-dropdown">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        </span>
+                        {% include 'multilang' with l.title %}
+                    </div>
+
+                    <ul class="site-nav-dropdown">
+                        {% for child_l in linklists[l.handle].links %}
+                        <!-- Menu level 3 -->
+                        <li class="menu-lv-3">
+                        <a href="{{ child_l.url }}" {% if child_l.active %}class="current"{% endif %}>
+                            {% include 'multilang' with child_l.title %}
+                        </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if banner_first_style != blank or banner_second_style != blank or banner_third_style != blank %}
+    <div class="col-12 col-xl-5">
+        <div class="mega-banner">
+            {% if banner_first_style != blank or banner_second_style != blank %}
+            <div class="mega-col{% if banner_third_style != blank %} col-left{% endif %}">
+                {% if banner_first_style != blank %}
+                <a class="animate-scale" href="{{ link_banner_first_style }}" title="">
+                    <img src="{{ banner_first_style | img_url : "250x" }}" alt="" />
+                </a>
+                {% endif %}
+
+                {% if banner_second_style != blank %}
+                <a class="animate-scale" href="{{ link_banner_second_style }}" title="">
+                    <img src="{{ banner_second_style | img_url : "250x" }}" alt="" />
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% if banner_third_style != blank %}
+            <div class="mega-col{% if banner_first_style != blank or banner_second_style != blank %} col-right{% endif %}">
+                <a class="animate-scale" href="{{ link_banner_third_style }}" title="">
+                    <img src="{{ banner_third_style | img_url : '250x' }}" alt="" />
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% elsif block_style == "style_3" %}
+    {% for l in linklists[link.handle].links %}
+    <div class="menu-lv-2 col-12 col5 inner{% if linklists[link.handle] != empty %} dropdown{% endif %}">
+        <!-- Menu level 2 -->
+        <a {%if linklists[link.handle] != empty %}class="menu__moblie"{% endif %} href="{{ l.url }}" class="current">
+            {% include 'multilang' with l.title %}
+
+            {% if linklists[l.handle] != empty %}
+            <span class="icon-dropdown" data-toggle-menu-mb>
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </span>
+            {% endif %}
+        </a>
+        <a {%if linklists[link.handle] != empty %}class="menu__moblie"{% endif %} href="{{ l.url }}" class="current">
+            {% assign imgColl = l.object.image | img_url :"210x", format: 'jpg' %}
+
+            {% if l.object %}
+            <img src="{{ imgColl }}" alt="{{ l.title }}">
+            {% endif %}
+        </a>
+        {% if linklists[l.handle] != empty %}
+        <div class="sub-menu-mobile menu-mb-translate">
+            <div class="menu-mb-title">
+                <span class="icon-dropdown">
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                </span>
+                {% include 'multilang' with l.title %}
+            </div>
+
+
+
+            <ul class="site-nav-dropdown">
+                {% for child_l in linklists[l.handle].links %}
+                <!-- Menu level 3 -->
+                <li class="menu-lv-3">
+                    <a href="{{ child_l.url }}" {% if child_l.active %}class="current"{% endif %}>
+                        {% include 'multilang' with child_l.title %}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+
+    {% elsif block_style == "style_4" %}
+    <div class="col-12 {% if banner_first_style != blank %}col-xl-80{% else %}col-xl-12{% endif %}">
+        <div class="row" data-masonry='{ "itemSelector": "[data-gridItem]", "columnWidth": ".grid-sizer" }'>
+            <div class="grid-sizer"></div>
+
+            {% for l in linklists[link.handle].links %}
+            <div data-gridItem class="menu-lv-2 inner{% if linklists[link.handle] != empty %} dropdown{% endif %} col-12 {% if banner_first_style != blank %}col-xl-3{% else %}col5{% endif %}">
+                <!-- Menu level 2 -->
+                <a {%if linklists[link.handle] != empty %}class="menu__moblie"{% endif %} href="{{ l.url }}" class="current">
+                    {% include 'multilang' with l.title %}
+
+                    {% if linklists[l.handle] != empty %}
+                    <span class="icon-dropdown" data-toggle-menu-mb>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </span>
+                    {% endif %}
+                </a>
+
+                {% if linklists[l.handle] != empty %}
+                <div class="sub-menu-mobile menu-mb-translate">
+                    <div class="menu-mb-title">
+                        <span class="icon-dropdown">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        </span>
+                        {% include 'multilang' with l.title %}
+                    </div>
+
+                    <ul class="site-nav-dropdown">
+                        {% for child_l in linklists[l.handle].links %}
+                        <!-- Menu level 3 -->
+                        <li class="menu-lv-3">
+                        <a href="{{ child_l.url }}" {% if child_l.active %}class="current"{% endif %}>
+                            {% include 'multilang' with child_l.title %}
+                        </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if banner_first_style != blank %}
+    <div class="col-12 col5">
+        <div class="mega-banner">
+            {% if banner_first_style != blank %}
+            <div class="mega-col col-right">
+                <a class="animate-scale" href="{{ link_banner_first_style }}" title="">
+                    <img src="{{ banner_first_style | img_url : "250x" }}" alt="" />
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% elsif block_style == "style_5" %}
+    <div class="col-12 {% if banner_first_style != blank %}col-xl-9{% else %}col-xl-12{% endif %}">
+        <div class="row" data-masonry='{ "itemSelector": "[data-gridItem]", "columnWidth": ".grid-sizer" }'>
+            <div class="grid-sizer"></div>
+
+            {% for l in linklists[link.handle].links %}
+            <div data-gridItem class="menu-lv-2 inner{% if linklists[link.handle] != empty %} dropdown{% endif %} col-12 {% if banner_first_style != blank %}col-xl-4{% else %}col-xl-3{% endif %}">
+                <!-- Menu level 2 -->
+                <a {%if linklists[link.handle] != empty %}class="menu__moblie"{% endif %} href="{{ l.url }}" class="current">
+                    {% include 'multilang' with l.title %}
+
+                    {% if linklists[l.handle] != empty %}
+                    <span class="icon-dropdown" data-toggle-menu-mb>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </span>
+                    {% endif %}
+                </a>
+
+                {% if linklists[l.handle] != empty %}
+                <div class="sub-menu-mobile menu-mb-translate">
+                    <div class="menu-mb-title">
+                        <span class="icon-dropdown">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        </span>
+                        {% include 'multilang' with l.title %}
+                    </div>
+
+                    <ul class="site-nav-dropdown">
+                        {% for child_l in linklists[l.handle].links %}
+                        <!-- Menu level 3 -->
+                        <li class="menu-lv-3">
+                        <a href="{{ child_l.url }}" {% if child_l.active %}class="current"{% endif %}>
+                            {% include 'multilang' with child_l.title %}
+                        </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if banner_first_style != blank %}
+    <div class="col-12 col-xl-3">
+        <div class="mega-banner">
+            <div class="mega-col">
+                {% if banner_first_style != blank %}
+                <a class="animate-scale" href="{{ link_banner_first_style }}" title="">
+                    <img src="{{ banner_first_style | img_url : '250x' }}" alt="" />
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if banner_second_style != blank or banner_third_style != blank or display_cms_custom %}
+    <div class="col-12">
+        <div class="row mega-banner-bt">
+            {% if banner_second_style != blank or banner_third_style != blank %}
+            <div class="col-12 {% if display_cms_custom %}col-banner col-xl-6{% else %}col-xl-12{% endif %}">
+                <div class="{% if banner_third_style != blank %}two-mega-banner{% endif %}">
+                    {% if banner_second_style != blank %}
+                    <div class="mega-col">
+                        <a class="animate-scale" href="{{ link_banner_second_style }}" title="">
+                            <img src="{{ banner_second_style | img_url : '250x' }}" alt="" />
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    {% if banner_third_style != blank %}
+                    <div class="mega-col">
+                        <a class="animate-scale" href="{{ link_banner_third_style }}" title="">
+                            <img src="{{ banner_third_style | img_url : '250x' }}" alt="" />
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+             {% if display_cms_custom %}
+            <div class="col-12 {% if banner_second_style != blank or banner_third_style != blank %}col-xl-6 col-cms{% else %}col-xl-12{% endif %}">
+                <div class="mega-cms-block">
+                    {% if cms_custom_title != blank %}
+                    <h3 class="title">
+                        {% include 'multilang' with cms_custom_title %}
+                    </h3>
+                    {% endif %}
+
+                    {% if quote != blank %}
+                        {% if settings.enable_multilang and quote contains '|' %}
+                        <div class="rte-setting lang1">
+                            {{ quote | split: '|' | first }}
+                        </div>
+                        <div class="rte-setting lang2">
+                            {{ quote | split: '|' | last }}
+                        </div>
+                        {% else %}
+                        <div class="rte-setting">
+                            {{ quote | split: '|' | first }}
+                        </div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if cms_read_more_text != blank %}
+                    <a class="read-more text-hover" href="{{ cms_read_more_link }}" title="{{ cms_read_more_text }}">
+                        {% include 'multilang' with cms_read_more_text %}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% endif %}
+</div>

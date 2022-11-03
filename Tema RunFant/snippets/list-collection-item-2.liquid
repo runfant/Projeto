@@ -1,0 +1,119 @@
+{% case section.settings.list_collection_results_per_row %}
+  {% when '2' %}
+  	{%- assign grid_item_width = 'col-sm-6' -%}
+  {% when '3' %}
+  	{%- assign grid_item_width = 'col-sm-6 col-lg-4' -%}
+  {% when '4' %}
+  	{%- assign grid_item_width = 'col-sm-6 col-lg-4 col-xl-3' -%}
+{% endcase %}
+
+<div class="grid-item col-12{% if settings.list_collections_layout == 'collections_full' %} {{ grid_item_width }}{% endif %}">
+  {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+  <div class="collection-item">
+    {% if settings.list_collections_layout == 'collections_02_list' %}
+    <div class="row">
+      <div class="col-12 col-md-6">
+    {% endif %} 
+        
+        <div class="img-box banner-item">
+          <a href="{{ collection.url }}" title="{{ collection_title }}">
+            {% if block.settings.image != blank %}
+
+            {%- assign img_url = block.settings.image | img_url: '600x', crop: 'center' -%}
+            <img data-src="{{ img_url }}"
+                 src="{{ img_url }}" alt="{{ block.settings.image.alt | default: shop.name }}" itemprop="logo"
+                 class="lazyautosizes lazyloaded" data-sizes="auto">
+
+            {% elsif collection.image %}
+            {{ collection.image.src | collection_img_url: '600x' | img_tag: collection_title }}
+
+            {% elsif collection.description contains 'img' %}        
+            {% assign image = collection.description | split: '<img' | last | split: '>' | first %}
+            <img {{ image }} alt="{{ collection_title }}"/>
+
+            {% else %}
+            {{ collection.products.first.featured_image | product_img_url: '600x' | img_tag: collection_title }}
+            {% endif %}
+          </a>
+          
+          {% if block.settings.display_countdow %}
+          {% if block.settings.title != blank or block.settings.des != blank or block.settings.countdown!= blank %}
+          <div class="content-box" style="{% if block.settings.color != blank %}color: {{ block.settings.color }};{% endif %}">
+            {% if block.settings.title != blank %}
+            <h3 class="banner-title">
+              {% include 'multilang' with block.settings.title %} 
+            </h3>
+            {% endif %}
+
+            {% if block.settings.des != blank %}
+            <p class="des">
+              {% include 'multilang' with block.settings.des %} 
+            </p>
+            {% endif %}
+
+            {% if block.settings.countdown != blank %}
+            <div class="collection-countdown countdown-{{ block.id }}" data-countdown data-countdown-value="{{ block.settings.countdown }}"></div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <style>
+            .countdown-{{ block.id }} .clock-item {
+              border-color: {{ block.settings.color | color_modify: 'alpha', 0.8 }};
+            }
+          </style>
+          {% endif %}
+        </div>
+        
+      {% if settings.list_collections_layout == 'collections_02_list' %}    
+      </div>
+      
+      <div class="col-12 col-md-6">
+      {% endif %}
+        
+        <div class="collections-wrapper">
+          <h3 class="collection-title">
+            <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}" {% if settings.enable_multilang %}data-translate="collections.general.link_title|title:{{collection_title}}" translate-item="title"{% endif %}>
+              {% include 'multilang' with collection.title %}
+            </a>
+          </h3>
+          <span class="count-products" {% if settings.enable_multilang %}data-translate="collections.general.items_with_count|count:{{collection.all_products_count}}"{% endif %}>
+            {{ 'collections.general.items_with_count' | t: count: collection.all_products_count }}
+          </span>
+          <div class="des">
+            {% if settings.enable_multilang and collection.description contains '[lang2]' %}
+            <div class="lang1">
+              {% if settings.list_collections_layout == 'collections_02_list' %}
+              {{ collection.description | split: '[lang2]' | first | strip_html | truncatewords: 28 }}
+              {% else %}
+              {{ collection.description | split: '[lang2]' | first | strip_html | truncatewords: 25 }}
+              {% endif %}
+            </div>
+            <div class="lang2">
+              {% if settings.list_collections_layout == 'collections_02_list' %}
+              {{ collection.description | split: '[lang2]' | last | strip_html  | truncatewords: 28 }}
+              {% else %}
+              {{ collection.description | split: '[lang2]' | last | strip_html  | truncatewords: 25 }}
+              {% endif %}              
+            </div>
+            {% else %}
+            <div>
+              {% if settings.list_collections_layout == 'collections_02_list' %}
+              {{ collection.description | strip_html | truncatewords: 28 }}
+              {% else %}
+              {{ collection.description | strip_html | truncatewords: 25 }}
+              {% endif %}              
+            </div>
+            {% endif %}
+          </div>
+          <a href="{{ collection.url }}" class="btn{% unless settings.list_collections_layout == 'collections_02_list' %} collections-btn{% else %} text-hover{% endunless %}" {% if settings.enable_multilang %}data-translate="collections.general.shop_now"{% endif %}>
+            {{ 'collections.general.shop_now' | t }}
+          </a>
+        </div>
+      
+      {% if settings.list_collections_layout == 'collections_02_list' %}
+      </div>
+    </div>
+    {% endif %}
+  </div>  
+</div>

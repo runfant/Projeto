@@ -1,0 +1,36 @@
+{% if settings.enable_multilang %}
+<div class="lang-block">
+  <label class="label-text"{% if settings.enable_multilang %} data-translate="general.language.language"{% endif %}>
+    {{ 'general.language.language' | t }}
+  </label>
+
+  <div class="btn-group lang-dropdown">
+    <label class="dropdown-toggle dropdown-label" data-language-label>
+      <span class="img-icon">
+        <img src="{{'i-lang-1.png' | asset_url}}" alt="{{settings.lange_1}}" />
+      </span>        
+      <span class="text">
+        {{ settings.lange_1 }}
+      </span>
+    </label>
+    <div class="dropdown-menu lang-menu" id="lang-switcher">
+      <a class="dropdown-item active" href="#" data-value="1">
+        <span class="img-icon">
+          <img src="{{'i-lang-1.png' | asset_url}}" alt="{{settings.lange_1}}" />
+        </span>        
+        <span class="text">
+          {{ settings.lange_1 }}
+        </span>
+      </a>
+      <a class="dropdown-item" href="#" data-value="2">
+        <span class="img-icon">
+          <img src="{{'i-lang-2.png' | asset_url}}" alt="{{settings.lange_2}}" />
+        </span>     
+        <span class="text">
+          {{ settings.lange_2 }}
+        </span>        
+      </a>                    
+    </div>
+  </div>       
+</div>
+{% endif %}

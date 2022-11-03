@@ -1,0 +1,21 @@
+<div class="collection-template collection-template-fullwidth translate-filter-pc">
+  <div class="reverse-mb">
+    {% section 'collection-header' %}
+    
+    <div class="container-padd60">
+      {% include 'breadcrumb' %}
+    </div>
+  </div>
+  
+  
+  <div class="container-padd60">
+    <div class="halo-collection-content">
+      <div class="row">        
+        {% section 'sidebar-filter' %}
+        {% section 'collection-template-fullwidth' %}
+      </div>
+      
+      {% section 'recently-viewed-products' %}
+    </div>   
+  </div>
+</div>

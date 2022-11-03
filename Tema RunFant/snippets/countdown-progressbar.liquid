@@ -1,0 +1,15 @@
+<div class="countdown-progressbar">
+  <div class="progressbar">
+    {% if section.settings.progressbar_1 != blank or section.settings.progressbar_2 != blank %}
+    <p class="progressbar-text">
+      {% include 'multilang' with section.settings.progressbar_1 %} 
+      <span class="count"></span>
+      {% include 'multilang' with section.settings.progressbar_2 %} 
+    </p>
+    {% endif %}
+    <div id="progressbar">
+      <span></span>
+    </div>
+  </div>
+
+</div>

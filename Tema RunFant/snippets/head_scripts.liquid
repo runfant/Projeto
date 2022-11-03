@@ -1,0 +1,43 @@
+{{ 'jquery.min.js' | asset_url | script_tag }}
+{{ 'jquery-cookie.min.js' | asset_url | script_tag }}
+
+<script>
+    window.ajax_cart = "{{ settings.ajax_popup_cart }}";
+    window.money_format = "{{shop.money_format}}";//"{{ shop.money_with_currency_format }}";
+    window.shop_currency = "{{ shop.currency }}";
+    window.show_multiple_currencies = {{ settings.enable_multiple_currencies }};
+    window.use_color_swatch = {{ settings.use_color_swatch }};
+    window.color_swatch_style = "{{ settings.color_swatch_style }}";
+    window.enable_sidebar_multiple_choice = {{ settings.enable_sidebar_multiple_choice}};
+    window.file_url = "{{ '' | file_url }}";
+    window.asset_url = "{{ '' | asset_url }}";
+    
+    window.inventory_text = {
+        in_stock: "{{ 'products.product.in_stock' | t }}",
+        many_in_stock: "{{ 'products.product.many_in_stock' | t }}",
+        out_of_stock: "{{ 'products.product.out_of_stock' | t }}",
+        add_to_cart: "{{ 'products.product.add_to_cart' | t }}",
+        add_all_to_cart: "{{ 'products.product.add_all_to_cart' | t }}",
+        sold_out: "{{ 'products.product.sold_out' | t }}",
+        select_options : "{{ 'products.product.select_options' | t }}",
+        unavailable: "{{ 'products.product.unavailable' | t }}",
+        no_more_product: "{{ 'collections.general.no_more_product' | t }}",
+        show_options: "{{ 'products.product.show_options' | t }}",
+        hide_options: "{{ 'products.product.hide_options' | t }}",
+        adding : "{{ 'products.product.adding' | t }}",
+        thank_you : "{{ 'products.product.thank_you' | t }}",
+        add_more : "{{ 'products.product.add_more' | t }}",
+        cart_feedback : "{{ 'products.product.cart_feedback' | t }}",
+        add_wishlist : "{{ 'wishlist.general.add_to_wishlist' | t }}",
+        remove_wishlist : "{{ 'wishlist.general.remove_wishlist' | t }}",
+        previous: "{{ 'collections.toolbar.previous' | t }}",
+        next: "{{ 'collections.toolbar.next' | t }}"
+    };
+    
+    window.multi_lang = {{ settings.enable_multilang }};
+    window.infinity_scroll_feature = {{ settings.infinity_scroll_feature }};
+    window.newsletter_popup = {{ settings.display_popup_newsletter }};  
+</script>
+
+
+{% include 'translator' %}

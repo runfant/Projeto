@@ -1,0 +1,24 @@
+<ul class="dropdown-cat">
+  {% for link_child_item in linklists[link_child].links %}
+  <li {% if linklists[link_child_item.handle] != empty %}class="dropdown{% if link_child_item.active %} active open{% endif %}"{% endif %}>
+    <a href="{{ link_child_item.url }}"{% if link_child_item.active %}class="active"{% endif %}>
+      {% include 'multilang' with link_child_item.title %}
+    </a>
+    
+    {% if linklists[link_child_item.handle] != empty %}
+    <span class="icon-dropdown">
+      <i class="fa fa-angle-down"></i>
+    </span>
+    <ul class="dropdown-cat">
+      {% for link_child_item_c in linklists[link_child_item.handle].links %}
+      <li {% if linklists[link_child_item_c.handle] != empty %}class="dropdown"{% endif %}>
+        <a href="{{ link_child_item_c.url }}" class="{% if link_child_item_c.active %}active{% endif %}">
+          {% include 'multilang' with link_child_item_c.title %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>

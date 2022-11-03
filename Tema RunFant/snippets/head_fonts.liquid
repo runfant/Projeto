@@ -1,0 +1,27 @@
+{% if settings.font == 'google_fonts' or settings.font_2 == 'google_fonts' %}
+<script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 
+      {% if settings.font == 'google_fonts' %}
+          '{{ settings.fonts_name }}:100,200,300,400,500,600,700,800,900'
+	  {% endif %}
+      {% if settings.font_2 == 'google_fonts' %}
+      	{% if settings.font == 'google_fonts' %}
+      		,
+      	{% endif %}      
+        '{{ settings.fonts_name_2 }}:100,200,300,400,500,600,700,800,900'
+	  {% endif %}
+    ] }
+  };
+  
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })(); 
+</script>
+{% endif %}

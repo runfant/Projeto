@@ -1,0 +1,30 @@
+
+<div class="collection-template collection-template-no-sidebar">
+    <div class="container">
+        {% include 'breadcrumb' %}
+    </div>
+
+    <div class="halo-collection-content">
+        <div class="bg-header-page">
+            <div class="container">
+                <div class="page-header text-center">
+                    <h1>
+                        {% include 'multilang' with collection.title %}
+                    </h1>
+                </div>
+            </div>            
+        </div>
+
+        <div class="bg-filter">
+            <div class="container">
+                {% section 'filter-no-sidebar' %}   
+            </div>
+        </div>
+
+        <div class="container">
+            {% section 'collection-template-no-sidebar' %}
+
+            {% section 'recently-viewed-products' %}
+        </div>        
+    </div>
+</div>

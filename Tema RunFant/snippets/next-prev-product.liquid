@@ -1,0 +1,186 @@
+{% if collection.previous_product or collection.next_product %}
+<div class="next-prev-product">
+  <div class="next-prev-icons">
+  	{% if collection and collection.previous_product %}
+    <a class="prev-icon icon-pro" href="{{ collection.previous_product }}" data-next-prev-icon data-target="#prev-product-modal">
+      {% include 'icon-left' %}
+    </a>
+    {% endif %}
+    
+    {% if collection and collection.next_product %}
+    <a class="next-btn icon-pro" href="{{ collection.next_product }}" data-next-prev-icon data-target="#next-product-modal">
+      {% include 'icon-right' %}
+    </a>
+    {% endif %}
+  </div>
+  
+  <div class="next-prev-modal" data-next-prev-modal>
+  	{% if collection and collection.previous_product %}
+    <div id="prev-product-modal" class="next-prev-content" data-next-prev-content>
+      <div class="content">
+        <a class="product-image" href="{{ collection.previous_product }}">
+          <img src="{{ collection.previous_product.images[0] | img_url: 'compact' }}" alt="{{ collection.previous_product.title }}">
+        </a>
+        <div class="column-right">
+          <a class="product-name" href="{{ collection.previous_product }}">
+            {% include 'multilang' with collection.previous_product.title %}
+          </a>
+          
+          <div class="price-box">
+            {% if collection.previous_product.compare_at_price_min > collection.previous_product.price_min %}
+            <div class="price-sale">
+              <span class="old-price">
+                {{ collection.previous_product.compare_at_price_min | money }}
+              </span>
+              <span class="special-price">
+                {% if collection.previous_product.price_varies %}
+                {% include 'varies_from' %}
+                {% endif %}
+                {{ collection.previous_product.price_min | money }}
+              </span>
+            </div>
+
+            {% else %}
+
+            <div class="price-regular">
+              {% if collection.previous_product.price_varies %} 
+              <div class="group-prices">
+                <span class="price-min">
+                  {{ collection.previous_product.price_min | money }}
+                </span>
+                <span class="symbol">-</span>
+                <span class="price-max">
+                  {{ collection.previous_product.price_max | money }}
+                </span>
+              </div>
+              {% else %}
+              <span>
+                {{ collection.previous_product.price_min | money }}
+              </span>
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    
+    {% if collection and collection.next_product %}
+    <div id="next-product-modal" class="next-prev-content" data-next-prev-content>
+      <div class="content">
+        <a class="product-image" href="{{ collection.next_product }}">
+          <img src="{{ collection.next_product.images[0] | img_url: 'compact' }}" alt="{{ collection.next_product.title }}">
+        </a>
+        <div class="column-right">
+          <a class="product-name" href="{{ collection.next_product }}">
+            {% include 'multilang' with collection.next_product.title %}
+          </a>
+          
+          <div class="price-box">
+            {% if collection.next_product.compare_at_price_min > collection.next_product.price_min %}
+            <div class="price-sale">
+              <span class="old-price">
+                {{ collection.next_product.compare_at_price_min | money }}
+              </span>
+              <span class="special-price">
+                {% if collection.next_product.price_varies %}
+                {% include 'varies_from' %}
+                {% endif %}
+                {{ collection.next_product.price_min | money }}
+              </span>
+            </div>
+
+            {% else %}
+
+            <div class="price-regular">
+              {% if collection.next_product.price_varies %} 
+              <div class="group-prices">
+                <span class="price-min">
+                  {{ collection.next_product.price_min | money }}
+                </span>
+                <span class="symbol">-</span>
+                <span class="price-max">
+                  {{ collection.next_product.price_max | money }}
+                </span>
+              </div>
+              {% else %}
+              <span>
+                {{ collection.next_product.price_min | money }}
+              </span>
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    var nextPrevProduct = $('.next-prev-product'),
+        iconNextPrev = nextPrevProduct.find('[data-next-prev-icon]'),
+        contentNextPrev = nextPrevProduct.find('[data-next-prev-content]'),
+        modal = nextPrevProduct.find('[data-next-prev-modal]');
+    
+    if(!('ontouchstart' in document)) {
+      iconNextPrev.hover(function() {
+        var curLink = $(this),
+            curContent = $(curLink.data('target'));    
+        
+        if(!$(this).hasClass('active')) {
+          iconNextPrev.removeClass('active');
+          contentNextPrev.removeClass('active');
+          
+          curLink.addClass('active');
+          curContent.addClass('active');
+          modal.show();
+        }
+                
+        nextPrevProduct.mouseleave(function() {
+          if(modal.is(':visible')) {
+            iconNextPrev.removeClass('active');
+            contentNextPrev.removeClass('active');
+            modal.hide();
+          };
+        });   
+      });
+    }
+    
+    else {
+      iconNextPrev.off('click').on('click', function(e) {
+      	e.preventDefault();
+        e.stopPropagation();
+        
+        var curLink = $(this),
+            curContent = $(curLink.data('target'));
+        
+        if(!$(this).hasClass('active')) {
+          iconNextPrev.removeClass('active');
+          contentNextPrev.removeClass('active');
+          
+          curLink.addClass('active');
+          curContent.addClass('active');
+          modal.show();
+        }
+        else {
+          curLink.removeClass('active');
+          curContent.removeClass('active');
+          modal.hide();
+        }
+      });
+    };
+    
+    $(document).on('click', function(e) {
+      if(!$(e.target).closest('[data-next-prev-modal]').length && modal.is(':visible')) {
+        iconNextPrev.removeClass('active');
+        contentNextPrev.removeClass('active');
+        modal.hide();
+      };
+    });
+  });
+</script>
+{% endif %}

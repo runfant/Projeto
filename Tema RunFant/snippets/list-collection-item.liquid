@@ -1,0 +1,66 @@
+{% case section.settings.list_collection_results_per_row %}
+  {% when '2' %}
+  	{%- assign grid_item_width = 'col-sm-6' -%}
+  {% when '3' %}
+  	{%- assign grid_item_width = 'col-sm-6 col-lg-4' -%}
+  {% when '4' %}
+  	{%- assign grid_item_width = 'col-sm-6 col-lg-4 col-xl-3' -%}
+{% endcase %}
+
+<div class="grid-item col-12 {{ grid_item_width }}">
+  {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+  <div class="collection-item">
+    <div class="img-box animate-hvr">
+      <a href="{{ collection.url }}" title="{{ collection_title }}">
+        {% if block.settings.image != blank %}
+
+        {%- assign img_url = block.settings.image | img_url: '600x', crop: 'center' -%}
+        <img data-src="{{ img_url }}"
+             src="{{ img_url }}" alt="{{ block.settings.image.alt | default: shop.name }}" itemprop="logo"
+             class="lazyautosizes lazyloaded" data-sizes="auto">
+
+        {% elsif collection.image %}
+        {{ collection.image.src | collection_img_url: '600x' | img_tag: collection_title }}
+
+        {% elsif collection.description contains 'img' %}        
+        {% assign image = collection.description | split: '<img' | last | split: '>' | first %}
+        <img {{ image }} alt="{{ collection_title }}"/>
+
+        {% else %}
+        {{ collection.products.first.featured_image | product_img_url: '600x' | img_tag: collection_title }}
+        {% endif %}
+      </a>
+      <div class="view-abs">
+        <a href="{{ collection.url }}" class="view"></a>
+      </div>
+    </div>
+
+    <div class="collections-wrapper">
+      <h3 class="collection-title">
+        <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}" {% if settings.enable_multilang %}data-translate="collections.general.link_title|title:{{collection_title}}" translate-item="title"{% endif %}>
+          {% include 'multilang' with collection.title %}
+        </a>
+      </h3>
+      <span class="count-products" {% if settings.enable_multilang %}data-translate="collections.general.items_with_count|count:{{collection.all_products_count}}"{% endif %}>
+        {{ 'collections.general.items_with_count' | t: count: collection.all_products_count }}
+      </span>
+      <div class="des">
+        {% if settings.enable_multilang and collection.description contains '[lang2]' %}
+        <div class="lang1">
+          {{ collection.description | split: '[lang2]' | first | strip_html | truncatewords: 23 }}
+        </div>
+        <div class="lang2">
+          {{ collection.description | split: '[lang2]' | last | strip_html  | truncatewords: 23 }}
+        </div>
+        {% else %}
+        <div>
+          {{ collection.description | strip_html | truncatewords: 23 }}
+        </div>
+        {% endif %}
+      </div>
+      <a href="{{ collection.url }}" class="btn collections-btn" {% if settings.enable_multilang %}data-translate="collections.general.shop_now"{% endif %}>
+        {{ 'collections.general.shop_now' | t }}
+      </a>
+    </div>
+  </div>  
+</div>

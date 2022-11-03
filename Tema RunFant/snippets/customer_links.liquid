@@ -1,0 +1,75 @@
+<div id="dropdown-customer" class="ct_login">  
+  <div class="customer-title">
+    <a href="javascript:void(0)" title="{{ 'cart.general.close_cart' | t }}" class="close-customer close">
+      {% include 'icon-close' %}
+      <span {% if settings.enable_multilang %}data-translate="cart.general.close_cart"{% endif %}>
+        {{ 'cart.general.close_cart' | t }}
+      </span>
+    </a>
+    {% if customer %}
+    <h5>
+      {{ customer.name }}
+    </h5>
+    {% else %}
+    <h5 {% if settings.enable_multilang %}data-translate="customer.login.title"{% endif %}>
+      {{ 'customer.login.title' | t }}:
+    </h5>
+    {% endif %}
+  </div>
+  
+  <div class="customer-content">
+    {% if customer %}
+    <div class="customer-inner is-customer">
+      <a class="acc" href="/account" {% if settings.enable_multilang %}data-translate="customer.account.title"{% endif %}>
+        {{ 'customer.account.title' | t }}
+      </a>
+      
+      <a class="btn btn-logout" id="customer_logout_link" href="/account/logout" {% if settings.enable_multilang %}data-translate="layout.customer.log_out"{% endif %}>
+        {{ 'layout.customer.log_out' | t }}
+      </a>      
+    </div>
+
+    {% else %}
+    <div class="customer-inner login-customer">
+      <form accept-charset="UTF-8" action="/account/login" method="post">
+        <input name="form_type" type="hidden" value="customer_login" />
+        <input name="utf8" type="hidden" value="✓" />
+
+        <div class="ct-login">
+          <div class="form-group">
+            <label for="customer_email">
+              <span {% if settings.enable_multilang %}data-translate="customer.login.email"{%endif%}>
+                {{ 'customer.login.email' | t }}
+              </span>
+              <em>*</em>
+            </label>
+            <input class="form-control" type="email" value="" name="customer[email]" placeholder="{{ 'customer.login.email' | t }}" >
+          </div>
+          <div class="form-group">
+            <label for="customer_password">
+              <span {% if settings.enable_multilang %}data-translate="customer.login.password"{%endif%}>
+                {{ 'customer.login.password' | t }}
+              </span>
+              <em>*</em>
+            </label>
+            <input class="form-control" type="password" value="" placeholder="{{ 'customer.login.password' | t }}" name="customer[password]" >
+          </div>
+
+          <div class="action-btn">
+            <input type="submit" class="btn btn-login" {% if settings.enable_multilang %}data-translate="customer.login.login"{% endif %} value="{{ 'customer.login.login' | t }}">
+            <a class="text-hover forgot-password" href="/account/login#recover" {% if settings.enable_multilang %}data-translate="customer.login.forgot_password"{% endif %}>
+              {{ 'customer.login.forgot_password' | t }}
+            </a>
+          </div>
+        </div>
+
+        <div class="ct-register">
+          <a href="/account/register" class="btn btn-register" {% if settings.enable_multilang %}data-translate="customer.register.title"{% endif %}>
+            {{  'customer.register.title' | t }}
+          </a>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,104 @@
+{% if product.metafields.c_f['Grouped Sub Product'] %}
+
+{%- assign handle_metafields =  product.metafields.c_f['Grouped Sub Product'] | split: ',' -%}
+
+
+<div class="grouped-content">
+    <div class="scroll-content">
+    	{% for handle in handle_metafields limit:10 %} 
+        {% assign a = handle | strip %}
+        {%- assign pro = all_products[a] -%}
+		{% if pro != blank %}
+      	{% assign variantCount1 = pro.variants | size %}
+		<div class="grouped-product">
+			<div class="column column-1">
+                <div class="thumb">
+                    <a class="product-img" href="{{ pro.url | within: collections.all }}" title="{{ pro.title }}">
+                        <img src="{{ pro.featured_image.src | img_url: '160x' }}"  alt="{{ pro.title | escape }}" />
+                    </a>
+                     
+                    {% unless pro.available %}
+                    <div class="product-label">
+                        <strong class="label sold-out-label" {% if settings.enable_multilang %}data-translate="products.product.sold_out"{% endif %}>
+                            {{ 'products.product.sold_out' | t }}
+                        </strong>
+                    </div>
+                    {% endunless %}
+                </div>
+                
+                <div class="caption">
+                    <div class="product-vendor">
+                        {{ pro.vendor | link_to_vendor }}
+                    </div>
+                    
+                    <a class="product-title" href="{{ pro.url | within: collection }}">
+                        {% include 'multilang' with pro.title %}
+                    </a>
+                </div>
+			</div>
+			
+			<div class="column column-2">
+				<div class="grouped-actions">			
+					{% if pro.available %} 
+                  	{%- assign current_variant = pro.selected_or_first_available_variant -%}
+                  	{% if variantCount1 > 1 or pro.variants[0].title != 'Default Title' %}
+                  	
+					<div class="form-group">
+						<select data-select-change-variant autocomplete="off">
+							{% for variant in pro.variants %}
+
+							<option {% if variant == current_variant %} selected="selected" {% endif %}data-price="{{ variant.price }}"{% unless variant.available %} class="sold-out" disabled{% endunless %} value="{{ variant.id }}"{% if variant.image != null %} data-img="{{ variant.image.src | product_img_url: '200x' }}"{% endif %}>
+								{{ variant.title }}
+							</option>
+							{% endfor %}
+						</select>
+	
+						<span class="icon-dropdown">
+						    <i class="fa fa-angle-down"></i>
+						</span>
+					</div>	
+                  	{% endif %}
+					{% endif %}
+
+					{% if pro.available %}
+					<div class="qty-group">
+						<a href="#" data-minus-quantity class="minus button"></a>
+						
+						<input type="hidden" name="group_id" value="{{ current_variant.id  }}" /> 
+						
+						<input type="text" name="group_quantity" value="0" min="0" data-id="{{ pro.variants[0].id }}">
+						
+						<a href="#" data-plus-quantity class="plus button"></a>
+					</div>
+					{% endif %}
+				</div>  
+
+				<div class="grouped-prices">
+					<div class="price-box">
+						{% if pro.variants[0].compare_at_price > pro.variants[0].price %}
+						<div class="price-sale">
+							<span class="old-price">
+								{{ pro.variants[0].compare_at_price | money }}
+							</span>
+							<span class="special-price" data-price-change>
+								{{ pro.variants[0].price | money }}
+							</span>
+						</div>
+
+						{% else %}
+
+						<div class="price-regular">               
+							<span data-price-change>
+								{{ pro.variants[0].price | money }}
+							</span>
+						</div>
+						{% endif %}
+					</div>
+				</div>    
+			</div>
+		</div>
+		{% endif %}
+	{% endfor %}
+	</div>  
+</div>
+{% endif %}

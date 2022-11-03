@@ -1,0 +1,59 @@
+{% if settings.display_popup_newsletter %}
+<div class="wrapper-newsletter halo-modal" data-newsletter data-delay="{{settings.popup_newsletter_delay | times:1000}}" data-expire="{{ settings.popup_newsletter_expire }}">
+    <div class="modal-overlay">
+        <div class="halo-modal-content">
+            <a class="close close-window" title="{{ 'cart.ajax_cart.close' | t }}">
+                {% include 'icon-close' %}
+            </a>
+            
+            <div class="halo-modal-body">
+                <div class="column-left">
+                    {%- assign img_url = settings.newsletter | img_url: '360x360' -%}
+                    
+                    {% if settings.newsletter != blank %}
+                    <img data-src="{{ img_url }}"
+                        src="{{ img_url }}" class="lazyautosizes lazyloaded" data-sizes="auto">
+                    {% else %}
+                    <div class="not_img">
+                        360 x 360px
+                    </div>   
+                    {% endif %}
+                </div>
+                
+                <div class="column-right">
+                    {% if settings.popup_newsletter_title != blank %}
+                    <h2 class="title">
+                        {% include 'multilang' with settings.popup_newsletter_title %}
+                    </h2>
+                    {% endif %}
+                    
+                    {% if settings.popup_newsletter_des != blank %}
+                    <div class="des">
+                        {% include 'multilang' with settings.popup_newsletter_des %}
+                    </div>
+                    {% endif %}
+                    
+                    <div id="mailchimp-email-subscibe" class="newsletter">
+                        <div id="mc_embed_signup">
+                            {% include 'newsletter-form' %}
+                        </div>
+                    </div>
+                    
+                    {% if settings.display_popup_social %}
+                    <div class="icon-social">
+                        {% include 'social-media' %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if settings.popup_newsletter_text_note != blank and settings.when_to_show == 'first_time' %}
+                    <input id="dismiss" type="checkbox" name="dismiss">
+                    <label for="dismiss">
+                        {% include 'multilang' with settings.popup_newsletter_text_note %}
+                    </label>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

@@ -1,0 +1,7 @@
+<ul>
+  <li>{{ link_child.title }}</li>
+  {% if linklists[link_child.handle] != empty %}
+  {% assign link_child2 = linklists[link_child.handle] %}
+  {% include 'multi-dropdown-menu' with link_child2 %}
+  {% endif %}
+</ul>
