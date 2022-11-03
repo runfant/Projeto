@@ -1,0 +1,46 @@
+<div class="sub-banner banner-item">
+    <div class="img-box">
+        <a href="{{ block.settings.link }}" class="animate-scale">
+        {% if block.settings.image != blank %}
+        
+        {%- assign img_url = block.settings.image | img_url: 'original', crop: 'center' -%}
+
+        <img data-src="{{ img_url }}" {% include 'lazyload' %}
+             alt="{{ block.settings.image.alt | default: shop.name }}" itemprop="logo">
+
+        {% else %}
+
+        <div class="not_img">
+            370 x 200px
+        </div>   
+        {% endif %}
+        </a>
+    </div>
+
+    {% if block.settings.title != blank %}
+    <div class="content-box">
+        <h3 class="banner-title" style="{% if block.settings.color_title != blank %}color: {{ block.settings.color_title }};{% endif %}">
+            {% include 'multilang' with block.settings.title %} 
+            
+            <span class="border-bt-hover" style="{% if block.settings.color_title != blank %}background-color: {{ block.settings.color_title }};{% endif %}"></span>
+        </h3>
+    </div>
+    {% endif %}
+
+    {% if block.settings.button != blank %}
+    <div class="action-link">
+        <a href="{{ block.settings.link }}" class="btn btn-img-block"
+            style="{% if block.settings.bg_button != blank %}
+                    background-color:{{ block.settings.bg_button }};
+                    {% endif %}
+                    {% if block.settings.border_button != blank %}
+                    border-color:{{ block.settings.border_button }};
+                    {% endif %}
+                    {% if block.settings.color_button != blank %}
+                    color:{{ block.settings.color_button }};
+                    {% endif %}">
+            {% include 'multilang' with block.settings.button %}
+        </a>        
+    </div>
+    {% endif %}
+</div>

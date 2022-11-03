@@ -1,0 +1,40 @@
+<div class="wishlist-product" data-wishlist-content>
+    <div class="wrapper-overflow">
+        <div class="wishlist-header t-header">
+            <h4 class="column col-img col-title"{% if settings.enable_multilang %} data-translate="wishlist.general.product_image"{% endif %}>
+                {{ 'wishlist.general.product_image' | t }}
+            </h4>
+
+            <h4 class="column col-prod col-title"{% if settings.enable_multilang %} data-translate="wishlist.general.product_name"{% endif %}>
+                {{ 'wishlist.general.product_name' | t }}
+            </h4>       
+
+            <h4 class="column col-price col-title text-center"{% if settings.enable_multilang %} data-translate="wishlist.general.unit_price"{% endif %}>
+                {{ 'wishlist.general.unit_price' | t }}
+            </h4> 
+
+            <h4 class="column col-options col-title text-center"{% if settings.enable_multilang %} data-translate="products.product.add"{% endif %}>
+                {{ 'products.product.add' | t }}
+            </h4>
+
+            <h4 class="column col-remove col-title text-center"{% if settings.enable_multilang %} data-translate="cart.general.remove"{% endif %}>
+                {{ 'cart.general.remove' | t }}
+            </h4>
+        </div>
+
+        <div class="wishlist-content t-body" data-wishlist-container>
+        
+        </div>   
+    </div>
+
+     <div class="wishlist-footer t-footer">
+        <a class="share" href="mailto:?subject= {{ page.title | strip_html }}&amp;body=">
+            <i class="fa fa-envelope-o" aria-hidden="true"></i>
+            <span {% if settings.enable_multilang %}data-translate="wishlist.general.share_wishlist"{% endif %}>
+                {{ 'wishlist.general.share_wishlist' | t }}            
+            </span>
+        </a>
+
+        <ul id="wishlist-paginate" class="wishlist-pagination"></ul>
+    </div>
+</div>

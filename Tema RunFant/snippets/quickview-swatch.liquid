@@ -1,0 +1,106 @@
+{% comment %}
+  Set the extension of your color files below. Use 'png', 'jpeg', 'jpg' or 'gif'.
+{% endcomment %}
+
+{% assign file_extension = 'png' %}
+
+{% if quickview-swatch == blank %}
+<div class="swatch error">
+    <p>You must include the snippet quickview-swatch.liquid with the name of a product option.</p> 
+    <p>Use: <code>{% raw %}{% include 'quickview-swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+    <p>Example: <code>{% raw %}{% include 'quickview-swatch' with 'Color' %}{% endraw %}</code></p>
+</div>
+{% else %}
+
+{% assign found_option = false %}
+{% assign is_color = false %}
+{% assign option_index = 0 %}
+{% assign size = false %}
+
+{% for option in product.options %}
+{% if option == quickview-swatch %}
+    {% assign found_option = true %}
+    {% assign option_index = forloop.index0 %}
+    <style>
+        #add-to-cart-quickview-form .selector-wrapper {
+            display:none
+        }
+    </style>
+
+    {% assign downcased_option = quickview-swatch | downcase %}
+    {% assign option_color_swatch = settings.option_color_swatch | downcase %}
+    {% if downcased_option contains option_color_swatch %}
+        {% assign is_color = true %}
+    {% endif %}
+
+    {% assign downcased_option = quickview-swatch | downcase %}
+    {% assign downcased_sizechart_opt = settings.display_size_chart_at | downcase %}
+    {% if downcased_option contains  downcased_sizechart_opt %}
+        {% assign size = true %}
+    {% endif %}
+{% endif %}
+{% endfor %}
+
+{% unless found_option %}
+<div class="swatch error">
+    <p>You included the snippet quickview-swatch.liquid with the name of a product option — <code>'{{ quickview-swatch }}'</code> — that does not belong to your product.</p>
+    <p>Use <code>{% raw %}{% include 'quickview-swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+    <p>Example: <code>{% raw %}{% include 'quickview-swatch' with 'Color' %}{% endraw %}</code></p>
+    <p><strong>This is case-sensitive!</strong> Do not put in <code>'color'</code> if your product option name is <code>'Color'</code>.</p>
+</div>
+
+{% else %}
+
+<div class="swatch" data-option-index="{{ option_index }}">               
+    <div class="header{% if size and settings.display_size_chart and settings.size_chart == 'none' %} has-size-chart{% endif %}">
+        {% include 'multilang' with quickview-swatch %}
+        <em>*</em>
+        
+        {% if size and settings.display_size_chart and settings.size_chart == 'none' %}
+        <a data-toggle="modal" data-target="#size_chart" class="size-chart-open-popup">
+            {% include 'multilang' with settings.size_guide_text %}
+        </a>
+        {% endif %}
+    </div>
+
+    {% assign values = '' %}
+    {% for variant in product.variants %}
+        {% assign value = variant.options[option_index] %}
+        {% unless values contains value %}
+        {% assign values = values | join: ';' %}	
+        {% assign values = values | append: ';' | append: value %} 
+        {% assign values = values | split: ';' %}
+        <div data-value="{{ value | escape }}" class="swatch-element{% if is_color %} color{% endif %} {{ value | handle }}{% if variant.available %} available{% else %} soldout{% endif %}">
+            {% if is_color %}
+            <div class="tooltip">
+                {{ value }}
+            </div>
+            {% endif %}
+            
+            <input id="quickview-swatch-{{ option_index }}-{{ value | handle }}" type="radio" name="option-{{ option_index }}" value="{{ value | escape }}"{% unless variant.available %} disabled{% endunless %} />
+            
+            {% if is_color %}
+            {% if settings.color_swatch_style == 'normal' %}
+            <label for="quickview-swatch-{{ option_index }}-{{ value | handle }}">
+                <span class="bgImg" style="background-color: {{ value | split: ' ' | last | handle }}; background-image: url({{ value | handle | append: '.' | append: file_extension | file_url }})">            	
+                </span>
+            </label>
+
+            {% elsif settings.color_swatch_style == 'variant' or settings.color_swatch_style == 'variant_grouped' %}
+            <label class="swatch_variant_img" for="quickview-swatch-{{ option_index }}-{{ value | handle }}">
+                <span class="bgImg" {% if variant.image.src != blank %}style="background-image: url({{ variant.image.src | product_img_url: '50x' }}); background-size: contain;"{% else %}style="background-color: {{ value | split: ' ' | last | handle }}; background-image: url({{ value | handle | append: '.' | append: file_extension | file_url }})"{% endif %}>            	
+                </span>
+            </label>
+            {% endif %}
+            
+            {% else %}
+            <label for="quickview-swatch-{{ option_index }}-{{ value | handle }}">
+                {{ value }}
+            </label>
+            {% endif %}
+        </div>
+        {% endunless %} 
+    {% endfor %}
+</div>
+{% endunless %}
+{% endif %}

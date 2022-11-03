@@ -1,0 +1,24 @@
+<div class="widget widget-recent-articles">
+  <div class="widget-title">
+    <h3 class="sidebar-title">
+      <span {% if settings.enable_multilang %}data-translate="blogs.sidebar.recent_articles"{% endif %}>
+        {{ 'blogs.sidebar.recent_articles' | t }}
+      </span>
+    </h3>
+  </div>
+  
+  <div class="widget-content">
+    <ul>
+      {% for article in blog.articles limit:3 %}
+      <li class="article">
+        <h3>
+          <a href="{{ article.url }}">
+            {% include 'multilang' with article.title %}
+          </a>
+          <em>{{ article.published_at | date: "%B %d, %Y" }}</em>
+        </h3>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

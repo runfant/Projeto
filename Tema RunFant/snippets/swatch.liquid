@@ -1,0 +1,104 @@
+{% comment %}
+  Set the extension of your color files below. Use 'png', 'jpeg', 'jpg' or 'gif'.
+{% endcomment %}
+
+{% assign file_extension = 'png' %}
+
+{% if swatch == blank %}
+<div class="swatch error">
+    <p>You must include the snippet swatch.liquid with the name of a product option.</p>
+    <p>Use: <code>{% raw %}{% include 'swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+    <p>Example: <code>{% raw %}{% include 'swatch' with 'Color' %}{% endraw %}</code></p>
+</div>
+{% else %}
+
+{% assign found_option = false %}
+{% assign is_color = false %}
+{% assign option_index = 0 %}
+{% assign size = false %}
+
+{% for option in product.options %}
+{% if option == swatch %}
+    {% assign found_option = true %}
+    {% assign option_index = forloop.index0 %}
+
+    <style>
+        #add-to-cart-form .selector-wrapper {
+            display:none
+        }
+    </style>
+
+    {% assign downcased_option_1 = swatch | downcase %}
+    {% assign option_color_swatch = settings.option_color_swatch | downcase %}
+    {% if downcased_option_1 contains option_color_swatch %}
+        {% assign is_color = true %}
+    {% endif %}
+
+    {% assign downcased_option_2 = swatch | downcase %}
+    {% assign downcased_sizechart_opt = settings.display_size_chart_at | downcase %}
+    {% if downcased_option_2 contains  downcased_sizechart_opt %}
+        {% assign size = true %}
+    {% endif %}
+
+{% endif %}
+{% endfor %}
+
+{% unless found_option %}
+<div class="swatch error">
+    <p>You included the snippet swatch.liquid with the name of a product option — <code>'{{ swatch }}'</code> — that does not belong to your product.</p>
+    <p>Use <code>{% raw %}{% include 'swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+    <p>Example: <code>{% raw %}{% include 'swatch' with 'Color' %}{% endraw %}</code></p>
+    <p><strong>This is case-sensitive!</strong> Do not put in <code>'color'</code> if your product option name is <code>'Color'</code>.</p>
+</div>
+
+{% else %}
+<div class="swatch" data-option-index="{{ option_index }}">
+    <div class="header{% if size and settings.display_size_chart %} has-size-chart{% endif %}">
+        {% include 'multilang' with swatch %}
+        <em>*</em>
+        
+    </div>
+
+    {% assign values = '' %}
+    {% for variant in product.variants %}
+        {% assign value = variant.options[option_index] %}
+
+        {% unless values contains value %}
+
+        {% assign values = values | join: ';' %}
+        {% assign values = values | append: ';' | append: value %}
+        {% assign values = values | split: ';' %}
+        <div data-value="{{ value | escape }}" class="swatch-element{% if is_color %} color{% endif %} {{ value | handle }}{% if variant.available %} available{% else %} soldout{% endif %}">
+            {% if is_color %}
+            <div class="tooltip">
+                {{ value }}
+            </div>
+            {% endif %}
+
+            <input {% if is_color != blank and settings.color_swatch_style == 'variant_grouped' %}data-filter=".filter-{{ value | handle }}"{% endif %} id="swatch-{{ option_index }}-{{ value | handle }}" type="radio" name="option-{{ option_index }}" value="{{ value | escape }}"{% unless variant.available %} disabled{% endunless %} {% if forloop.length == 1 %}checked{% endif %}/>
+
+            {% if is_color %}
+            {% if settings.color_swatch_style == 'normal' %}
+            <label for="swatch-{{ option_index }}-{{ value | handle }}">
+                <span class="bgImg" style="background-color: {{ value | split: ' ' | last | handle }}; background-image: url({{ value | handle | append: '.' | append: file_extension | file_url }})"></span>
+            </label>
+
+            {% elsif settings.color_swatch_style == 'variant' or settings.color_swatch_style == 'variant_grouped' %}
+            <label class="swatch_variant_img" for="swatch-{{ option_index }}-{{ value | handle }}">
+                <span class="bgImg" {% if variant.image.src != blank %}style="background-image: url({{ variant.image.src | product_img_url: '50x' }}); background-size: contain;"{% else %}style="background-color: {{ value | split: ' ' | last | handle }}; background-image: url({{ value | handle | append: '.' | append: file_extension | file_url }})"{% endif %}></span>
+            </label>
+            {% endif %}
+
+            {% else %}
+            <label for="swatch-{{ option_index }}-{{ value | handle }}">
+                {{ value }}
+            </label>
+            {% endif %}
+        </div>
+        {% endunless %}
+
+        <input class="text" data-value="swatch-{{ option_index }}-{{ value | handle }}" type="hidden" data-value-sticky="{{ variant.id }}" />
+    {% endfor %}
+</div>
+{% endunless %}
+{% endif %}

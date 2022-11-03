@@ -1,0 +1,177 @@
+{% assign on_sale = false %}
+{% if product.variants[0].compare_at_price > product.variants[0].price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available  %}
+  {% assign sold_out = false %}
+{% endif %}
+
+<!-- new product -->
+{% assign custom_label = false %}
+
+{% for tag in product.tags %}
+{% assign tag_handle = tag | handle %}
+{% if tag_handle == 'label' %}
+{% assign custom_label = true %}
+{% endif %}
+{% endfor %}
+
+<div class="suppermarket-product-item inner product-item{% if sold_out %} sold-out{% endif %}{% if on_sale %} on-sale{% endif %}" data-product-id="product-{{ product.id }}">
+    <div class="inner-top">
+        <div class="product-top">
+            <div class="product-image{% if product.images.size > 1 and settings.image_swap %} image-swap{% endif %}">
+                <a href="{{ product.url | within: collection }}" class="product-grid-image" data-collections-related="/collections/{{collection.handle}}?view=related">
+                    {%- assign img_pr = product.featured_image.src | product_img_url: '800x' -%}
+                    {%- assign img_pr_1 = product.featured_image.src | product_img_url: '300x' -%}
+                    {%- assign img_pr_2 = product.featured_image.src | product_img_url: '400x' -%}
+                    
+                    {%- assign img_0 = product.images[0].src | product_img_url: '800x' -%}
+                    {%- assign img_01 = product.images[0].src | product_img_url: '300x' -%}
+                    {%- assign img_02 = product.images[0].src | product_img_url: '400x' -%}
+                    
+                    {%- assign img_1 = product.images[1].src | product_img_url: '800x' -%}
+                    {%- assign img_11 = product.images[1].src | product_img_url: '300x' -%}
+                    {%- assign img_12 = product.images[1].src | product_img_url: '400x' -%}
+                    
+                    {% if product.images.size > 1 and settings.image_swap %}
+                    <img src="{{ product.images[0].src | product_img_url: '300x' }}" alt="{{ product.images[0].alt | escape }}"
+                        class="images-one lazyload"
+                        data-src="{{ img_0 }}"
+                        data-srcie="{{ img_01 }}"
+                        data-srcief="{{ img_02 }}"
+                        data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                        data-aspectratio="{{ product.featured_image.aspect_ratio }}"
+                        data-sizes="auto">
+
+                    <span class="images-two">
+                        <img src="{{ product.images[1].src | product_img_url: '300x'}}" alt="{{ product.images[1].alt | escape }}"
+                            class="lazyload"
+                            data-src="{{ img_1 }}"
+                            data-srcie="{{ img_11 }}"
+                            data-srcief="{{ img_12 }}"
+                            data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                            data-aspectratio="{{ product.featured_image.aspect_ratio }}"
+                            data-sizes="auto">
+
+                    </span>	
+                    {% else %}
+                    <img src="{{ product.featured_image.src | product_img_url: '300x' }}" alt="{{ product.featured_image.alt | escape }}"             
+                        data-src="{{ img_pr }}"
+                        data-srcie="{{ img_pr_1 }}"
+                        data-srcief="{{ img_pr_2 }}"
+                        class="lazyload"
+                        data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                        data-aspectratio="{{ product.featured_image.aspect_ratio }}"
+                        data-sizes="auto">       
+                    {% endif %}
+                </a>
+            </div>
+
+            {% if on_sale or sold_out or custom_label %}
+            <div class="product-label">
+                {% unless section.settings.countdown != blank %}
+                {% if on_sale %}
+                {% if settings.type_label_sale == 'label_sale' %}
+                <strong class="label sale-label" {% if settings.enable_multilang %}data-translate="products.product.sale"{% endif %}>
+                  {{ 'products.product.sale' | t }}
+                </strong>
+                {% else %}
+                <strong class="label sale-label">
+                  -{{ product.variants[0].compare_at_price | minus:product.variants[0].price | times:100 | divided_by:product.variants[0].compare_at_price | money_without_currency | times: 100 | replace: '.0', '' }}%
+                </strong>
+                {% endif %}
+                <br>
+                {% endif %}
+                {% endunless %}
+
+                {% if sold_out %}
+                <strong class="label sold-out-label" {% if settings.enable_multilang %}data-translate="products.product.sold_out"{% endif %}>
+                    {{ 'products.product.sold_out' | t }}
+                </strong>
+                <br>
+                {% endif %}
+                
+                {% if custom_label %}
+                <strong class="label custom-label" {% if settings.enable_multilang %}data-translate="products.product.custom_label"{% endif %} >
+                    {{ 'products.product.custom_label' | t }}
+                </strong>
+                {% endif %}
+            </div>
+            {% endif %}
+                       
+            <div class="product-des abs-center">
+                {% include 'wishlist-product' %}
+
+                {% if settings.display_button %}
+                <div class="action">
+                    {% include 'add-to-cart-form', id: 'supermarket-product-form' %}
+                </div>
+                {% endif %} 
+            </div>
+                
+            {% if settings.display_item_size or settings.enable_quick_view %}
+            <div class="product-des abs-bottom">
+                {% if settings.display_item_size %}
+                {% include 'items-size' %}
+                {% endif %}
+
+                {% if settings.enable_quick_view %}
+                <a class="quickview-button" href="javascript:void(0)" id="{{ product.handle }}" title="{{ 'products.product.quick_view' | t }}" {% if settings.enable_multilang %}data-translate="products.product.quick_view" translate-item="title"{% endif %}>
+                    <span {% if settings.enable_multilang %}data-translate="products.product.quick_view"{% endif %}>
+                        {{ 'products.product.quick_view' | t }}
+                    </span>
+                </a>
+                {% endif %}
+            </div>   
+            {% endif %}
+        </div>
+
+        <div class="product-bottom">
+            {% if settings.show_vendor %}
+            <div class="product-vendor">
+                {{ product.vendor | link_to_vendor }}
+            </div>
+            {% endif %}
+        
+            <a class="product-title" href="{{ product.url | within: collection }}">
+                {% include 'multilang' with product.title %}
+            </a>
+                    
+            <div class="price-box">
+                {% if on_sale %}
+                <div class="price-sale">
+                    <span class="old-price">
+                        {{ product.variants[0].compare_at_price | money }}
+                    </span>
+                    <span class="special-price">
+                        {{ product.variants[0].price | money }}
+                    </span>
+                </div>
+
+                {% if section.settings.countdown != blank %}
+                <div class="price-saving">
+                    <span class="price-save">
+                        -{{ product.variants[0].compare_at_price | minus: product.variants[0].price | times: 100.0 | divided_by: product.variants[0].compare_at_price | money_without_currency | times: 100 | replace: '.0', ''}}%
+                    </span>
+                </div>
+                {% endif %}
+                {% else %}
+
+                <div class="price-regular">
+                    <span>{% if product.price_varies %}{% include 'varies_from' %}{% endif %}{{ product.price_min | money }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if settings.display_product_reviews %}
+            <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+            {% endif %}
+
+            {% if settings.display_item_swatch %}
+            {% include 'item-swatch' %}
+            {% endif %}
+        </div> 
+    </div>        
+</div>

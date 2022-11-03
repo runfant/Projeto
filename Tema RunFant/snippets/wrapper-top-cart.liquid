@@ -1,0 +1,98 @@
+{% if settings.header_layout == 'default' %}
+<a href="javascript:void(0)" title="Cart" class="cart-icon" data-cart-toggle>
+    {% include 'icon-cart' %}
+    <span class="cart-text"{% if settings.enable_multilang %} data-translate="cart.general.shopping_cart"{% endif %}>
+        {{ 'cart.general.shopping_cart' | t }}
+    </span>
+    <span class="cartCount" data-cart-count>
+        {{ cart.item_count }}
+    </span>
+</a>
+{% endif %}
+
+<div id="dropdown-cart"> 
+  <div class="cart-title">
+    <a href="javascript:void(0)" title="{{ 'cart.general.close_cart' | t }}" class="close-cart close">
+      {% include 'icon-close' %}
+      <span {% if settings.enable_multilang %}data-translate="cart.general.close_cart"{% endif %}>
+        {{ 'cart.general.close_cart' | t }}
+      </span>
+    </a>
+    
+    <h5 {% if settings.enable_multilang %}data-translate="cart.general.shopping_cart"{% endif %}>
+      {{ 'cart.general.shopping_cart' | t }}:
+    </h5>
+  </div>
+  
+  <div class="no-items">
+    <p class="cart_empty" {% if settings.enable_multilang %}data-translate="cart.general.empty"{% endif %} >
+      {{ 'cart.general.empty' | t }}
+    </p>
+    <div class="text-continue">
+      <a class="btn btn-continue" {% if settings.redirect_button == 'go_back' %}href="javascript:void(0)" onclick="window.history.back();"{% elsif settings.redirect_button == 'link_to' %} href="{{ settings.link_to_redirect }}"{% else %}href="javascript:void(0)" id="reload_page"{% endif %} {% if settings.enable_multilang %}data-translate="cart.ajax_cart.continue_shopping"{% endif %}>
+        {{ 'cart.ajax_cart.continue_shopping' | t }}
+      </a>
+    </div>
+  </div>
+
+  <div class="has-items">
+    <ol class="mini-products-list">  
+      {% for item in cart.items %}
+      <li class="item" id="cart-item-{{item.id}}">
+        <a href="{{item.url}}" class="product-image">
+          <img src="{{ item.image | product_img_url: '160x' }}" alt="{{item.title}}">
+        </a>
+
+        <div class="product-details">
+          <a href="javascript:void(0)" title="{{ 'cart.general.remove' | t }}" class="btn-remove">
+            {% include 'icon-close' %}
+          </a>
+
+          <a class="product-name" href="{{item.url}}">
+            {% include 'multilang' with item.product.title %}
+          </a>
+          
+          <div class="option">
+            {% if item.product.variants.size != 0 %}
+            {% unless item.variant.title contains 'Default' %}
+            <small>{{ item.variant.title }}</small>
+            {% endunless %}
+            {% endif %}
+          </div>
+
+          <div class="cart-collateral">
+            <span class="qtt">
+              {{item.quantity}} X
+            </span>
+            <span class="price">
+              {{item.price | money}}
+            </span>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+
+    <div class="summary">                
+      <div class="total">
+        <span class="label">
+          <span {% if settings.enable_multilang %}data-translate="cart.label.total"{% endif %}>
+            {{ 'cart.label.total' | t }}:
+          </span>
+        </span>
+        <span class="price">
+          {{cart.total_price | money}}
+        </span> 
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-checkout" onclick="window.location='/checkout'" {% if settings.enable_multilang %}data-translate="cart.general.checkout"{% endif %}>
+        {{ 'cart.general.checkout' | t }}
+      </button>
+      <a class="btn btn-view-cart" href="/cart" {% if settings.enable_multilang %}data-translate="cart.general.view_cart"{% endif %}>
+        {{ 'cart.general.view_cart' | t }}
+      </a>      
+    </div>
+  </div>
+</div>

@@ -1,0 +1,89 @@
+{% assign number_of_related_products = section.settings.number_of_related_products | plus:1 %}
+{% if collection == null or collection.handle == 'frontpage' or collection.handle == 'all' %}
+{% assign found_a_collection = false %}
+{% for c in product.collections %}
+  {% if found_a_collection == false and c.handle != 'frontpage' and c.handle != 'all' and c.all_products_count > 1 %}
+    {% assign found_a_collection = true %}
+    {% assign collection = c %}
+  {% endif %}
+{% endfor %}
+{% endif %}
+
+{% if settings.product_layout == "gallery" or template.suffix == 'gallery' or settings.product_layout == "full_with" or template.suffix == 'full-width' %}
+    {%- assign class = 'four-items verticle' -%}
+    {%- assign rows = '4' -%}
+    {%- assign grid_item_width = 'col-6 col-md-4 col-lg-3 col-xl-12' -%}
+
+{% elsif settings.product_layout == "grouped" or template.suffix == 'grouped' %}
+    {%- assign class = 'five-items' -%}
+    {%- assign rows = '5' -%}
+    {%- assign grid_item_width = 'col-6 col-md-4 col-lg-3 col5' -%}
+{% else %}
+
+  {% if section.settings.style_moreview == 'horizontal' %}
+    {%- assign class = 'four-items' -%}
+    {%- assign rows = '4' -%}
+    {%- assign grid_item_width = 'col-6 col-md-4 col-lg-3' -%}
+
+  {% else %}
+    {%- assign class = 'five-items' -%}
+    {%- assign rows = '5' -%}
+    {%- assign grid_item_width = 'col-6 col-md-4 col-lg-3 col5' -%}
+  {% endif %}
+{% endif %}
+
+{% if collection and collection.products_count > 1 %}
+<section class="related-products" data-featured-products>
+  {% if section.settings.related_products_title %}
+  <div class="widget-title not-before">   
+    <h3 class="box-title">
+      <span class="title"> 
+        {% include 'multilang' with section.settings.related_products_title %}
+      </span>
+    </h3>    
+  </div>
+  {% endif %}
+  
+  <div class="widget-product">
+    <div class="products-grid row {{ class }}" data-row="{{ rows }}">
+      {% assign current_product = product %}
+      {% assign current_product_found = false %}
+      {% for product in collection.products limit: number_of_related_products %}
+      {% if product.handle == current_product.handle %}
+      {% assign current_product_found = true %}
+      {% else %}
+      {% unless current_product_found == false and forloop.last %}
+      
+      <div class="grid-item {{ grid_item_width }}{% if settings.product_image_border %} grid-item-border{% endif %} ">
+        {% include 'product-grid-item' %}
+      </div>      
+      {% endunless %}
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>  
+</section>
+
+{% if settings.product_layout == "gallery" or template.suffix == 'gallery' or settings.product_layout == "full_with" or template.suffix == 'full-width' %}
+<script>
+    $(document).ready(function() {
+        if (window.innerWidth >= 1200) {
+            var relatedBlock = $('.relate-verticle'),
+                productItem = relatedBlock.find('.products-grid .grid-item');
+
+            var maxHeight = -1;
+            productItem.each(function() {
+                if ($(this).height() > maxHeight) {
+                    maxHeight = $(this).height();
+                };
+            });
+            productItem.each(function() {
+                if ($(this).height() < maxHeight) {
+                    $(this).css('margin', Math.ceil((maxHeight-$(this).height())/2) + 'px 0');
+                };
+            }); 
+        };          
+    });
+</script>
+{% endif %}
+{% endif %}

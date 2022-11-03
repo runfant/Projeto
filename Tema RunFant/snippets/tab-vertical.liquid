@@ -1,0 +1,134 @@
+<div class="tabs__product-page vertical-tabs">
+  <div class="wrapper-tab-content">
+    {% if section.settings.display_product_detail_description == false %}
+    {% assign tab2_active = true %}
+    {% elsif section.settings.display_product_detail_description == false and section.settings.display_product_reviews == false %}
+    {% assign tab3_active = true %}
+    {% elsif section.settings.display_product_detail_description == false and section.settings.display_product_reviews == false and section.settings.display_shipping_returns == false %}
+    {% assign tab4_active = true %}
+    {% endif %}
+
+    {% if section.settings.display_product_detail_description %}
+    
+    {% assign des = product.description %}
+    {% if des contains '[countdown]' or product.description contains '[custom tab]' %}            
+    {% assign des = product.description | split:'[/countdown]</p>' | last %}
+    {% assign des = des | split:'[custom tab]' | first | split:'<iframe' | first %}
+    {% endif %}
+    
+    <div class="tab-title">
+      <a href="#" data-tapTop data-target="#collapse-tab1" class="tab-links active">
+        {% include 'multilang' with section.settings.product_description_title %}
+        <span class="icon-dropdown">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+    </div>
+    
+    <div class="tab-content" data-TabContent id="collapse-tab1">
+      {% if settings.enable_multilang and des contains '[lang2]' %}
+      <div class="lang1">
+        {{ des | split: '[lang2]' | first }}
+      </div>
+      <div class="lang2">
+        {{ des | split: '[lang2]' | last }}
+      </div>
+      {% else %}
+      <div>
+        {{ des | split: '[lang2]' | first }}
+      </div>
+      {% endif %}
+      
+      {% include 'product-detail-gallery_lookbook' %}
+      
+      {% if settings.enable_ask_an_expert %}
+      <div class="theme-ask" data-toggle="modal" data-target="#ask_an_expert">
+        <h5 class="ask-an-expert-text">
+          {% include 'multilang' with settings.ask_an_expert %}
+        </h5>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+    
+    {% if section.settings.display_product_reviews %}
+    <div class="tab-title">
+      <a href="#" data-tapTop data-target="#collapse-tab2" class="tab-links {% if tab2_active%}active{% endif %}">
+      	{% include 'multilang' with section.settings.product_review_title %}
+        <span class="icon-dropdown">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+    </div>
+    
+    <div class="tab-content" data-TabContent id="collapse-tab2">
+      <div id="shopify-product-reviews" data-id="{{product.id}}">
+        {{ product.metafields.spr.reviews }}
+      </div>
+    </div>
+    {% endif %}
+    
+    {% if section.settings.display_shipping_returns %}
+    <div class="tab-title">
+      <a href="#" data-tapTop data-target="#collapse-tab3" class="tab-links {% if tab3_active%}active{% endif %}">
+      	{% include 'multilang' with section.settings.shipping_returns_title %}
+        <span class="icon-dropdown">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+    </div>
+    
+    <div class="tab-content" data-TabContent id="collapse-tab3">
+      {% assign content = section.settings.shipping_returns_content %}
+      
+      {% if content != blank %}
+      {% if settings.enable_multilang and content contains '[lang2]' %}
+      <div class="lang1">
+        {{ content | split: '[lang2]' | first }}
+      </div>
+      <div class="lang2">
+        {{ content | split: '[lang2]' | last }}
+      </div>
+      {% else %}
+      <div>
+        {{ content | split: '[lang2]' | first }}
+      </div>
+      {% endif %}
+      {% endif %}
+    </div>
+    {% endif %}
+    
+   {% if section.settings.display_custom_tab %}
+    <div class="tab-title">
+      <a href="#" data-tapTop data-target="#collapse-tab4" class="tab-links {% if tab2_active%}active{% endif %}">
+      	{% include 'multilang' with section.settings.custom_tab_title %}
+        <span class="icon-dropdown">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+    </div>
+    
+    <div class="tab-content" data-TabContent id="collapse-tab4">
+      {% if section.settings.custom_tab_type == 'all' %}
+        {% include 'multilang-block' with section.settings.custom_tab_content %}
+      {% elsif product.description contains '[custom tab]' %}
+        {% assign des = product.description | split:'[custom tab]' | last | split: '[/custom tab]' | first %}
+        
+        {% if settings.enable_multilang and des contains '[lang2]' %}
+        <div class="lang1">
+          {{ des | split: '[lang2]' | first }}
+        </div>
+        <div class="lang2">
+          {{ des | split: '[lang2]' | last }}
+        </div>
+        {% else %}
+        <div>
+          {{ des | split: '[lang2]' | first }}
+        </div>
+        {% endif %}
+        
+      {% endif %}
+      </div>
+  {% endif %} 
+  </div>
+</div>

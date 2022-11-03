@@ -1,0 +1,67 @@
+<div class="sticky_form" data-sticky-add-to-cart>
+    <div class="container">
+        <div class="row align-items-center">
+
+            <div class="col-12{% if settings.display_countdown and product.description contains '[countdown]' %} col-lg-9{% else %} col-lg-12{% endif %}">
+                {% form 'product', product, id: "form-sticky" %}
+                    <div class="row align-items-center">
+                        <div class=" col-img-title">
+                            <div class="pr-img sticky-item">
+                                <img src="{{ product.featured_image.src  | product_img_url: 'compact' }}" alt="">
+
+                                <div class="product-title">
+                                    {% include 'multilang' with product.title %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-variant">                           
+                            <div class="sticky-item sticky_group">
+                                {% assign variantCount = product.variants | size %}
+                                {% if variantCount > 1 and product.available %}
+                                <div class="pr-selectors">
+                                    <a href="javascript:void(0)" class="pr-active" data-value="{{ product.variants[0].id }}">
+                                        {{ product.variants[0].title }} - {{ product.variants[0].price | money }}
+                                    </a>
+
+                                    <ul>
+                                        {% for variant in product.variants %}
+                                        {% assign value = variant.options[option_index] %}
+                                        <li>
+                                            <a {% if variant.image != null %} data-img="{{ variant.image.src | product_img_url: 'compact' }}"{% else %} data-img="{{ product.featured_image.src | product_img_url: 'compact' }}"{% endif %} data-value="{{ variant.id }}" class="pr-swatch {% if variant.available == false %}sold-out{% endif %}" {% if variant.available == false %}disabled="disabled"{% endif %} href="javascript:void(0)">
+                                                {{ variant.title }} - {{ variant.price | money }}
+                                            </a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% endif %}
+
+                                {% if product.available %}
+                                <div class="quantity">
+                                    <div class="qty-group">
+                                        <a href="#" data-minus-qtt class="minus button"></a>
+                                        <input type="text" data-qtt-id="quantity__{{ product.id }}" name="quantity" value="1">
+                                        <a href="#" data-plus-qtt class="plus button"></a>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>                                                        
+                        </div>
+
+                        <div class=" col-actions">
+                            <div class="action sticky-item">
+                                {% if product.selected_or_first_available_variant.available %}
+                                <input type="hidden" name="id" value="{{ product.variants[0].id }}" /> 
+                                <input data-sticky-btn-addToCart type="submit" name="add" class="btn sticky-add-to-cart" {% if settings.enable_multilang %}data-translate="products.product.add_to_cart"{%endif%} value="{{ 'products.product.add_to_cart' | t }}">          
+                                {% else %} 
+                                <input type="submit" name="add" class="btn sticky-add-to-cart" {% if settings.enable_multilang %}data-translate="products.product.unavailable"{%endif%} disabled value="{{ 'products.product.unavailable' | t }}">          
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endform %}
+            </div>
+        </div>
+    </div>
+</div>

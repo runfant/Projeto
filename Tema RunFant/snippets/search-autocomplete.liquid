@@ -1,0 +1,146 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/template7/1.4.0/template7.js"></script>
+
+<script>
+    (function ($) {
+        var pluginName = 'Search',
+        namespace = 'plugin_' + pluginName;
+
+        function Plugin(element) {
+            this.headerSearch = $(element);
+            this.headerSearchForm = this.headerSearch.find('.header-search__form');
+            this.headerInput = this.headerSearch.find('.header-search__input');
+            this.headerSearchResults = this.headerSearch.find('.header-search__results-wrapper');
+            this.searchResultsTemplate = Template7.compile($('#search-results-template').html());
+            this.PopularProducts = this.headerSearch.find(".header-search__product");
+            this.searchMode = "product";
+            this.searchTrending = $(".quickSearchResultsWrap .header-search__trending .item");
+            this.trending = $(".header-search__trending");
+            this.searchWrapper = this.headerSearch.find('.quickSearchResultsWrap');
+
+            this.headerInput.focus(function(e){
+                e.stopPropagation();
+                
+                $(this).closest('.header-search').find('.quickSearchResultsWrap').show();
+            });
+
+            $(document).mouseup(function (e) {
+                var container = $(".search-form");
+
+                if (!container.is(e.target) && container.has(e.target).length === 0){
+                    container.find('.quickSearchResultsWrap').hide();
+                }
+            });
+
+            this.headerInput.on('focusin', $.proxy(this._focusin, this));
+
+
+            this.headerInput.on('keyup', $.proxy(this._initSearch, this));
+        };
+
+        Plugin.prototype._initSearch = function(event) {
+            var target = $(event.currentTarget);
+
+            if ((event.keyCode ? event.keyCode : event.which) != 13) {
+                clearTimeout(target.data('timeout'));
+                target.data('timeout', setTimeout($.proxy(this._doSearch, this), 250));
+            }
+        };
+
+        Plugin.prototype._doSearch = function(event) {
+
+            if (this.headerInput.val().trim() === '') {
+                this.headerSearchResults.empty();
+                this.searchTrending.show();
+                this.PopularProducts.show();
+                this.searchWrapper.show();
+                this.trending.show();
+
+                return; 
+            }
+            else {
+                this.headerSearchResults.html(this.searchResultsTemplate({is_loading: true}));
+            }
+
+            if (this.headerInput.val().length > 2) {
+                this.searchWrapper.hide();
+                this._doCompleteSearch();
+            }
+            else {
+                this.headerSearchResults.html(this.searchResultsTemplate({is_show: false}));
+                this.searchTrending.show();
+                this.PopularProducts.show();
+                this.searchWrapper.show();
+            }
+
+            if(this.searchTrending.css('display') == 'none') {
+                this.trending.hide();
+            } else {
+                this.trending.show();
+            }
+        };
+
+        Plugin.prototype._doCompleteSearch = function(event) {
+            var self = this;
+
+            $.ajax({
+                method: 'GET',
+                url: '/search?view=json',
+                dataType: 'json',
+                data: {
+                    q: this.headerInput.val() + '*',
+                    type: this.searchMode
+                }
+            }).then(function(data) {
+
+                self.headerSearchResults.html(self.searchResultsTemplate({
+                    is_show: true,
+                    is_loading: false,
+                    results: data['results'],
+                    has_results: (data['results'].length > 0),
+                    results_count: data['results_count'],
+                    results_label: data['results_label'],
+                    results_url: (data['url'] + '&type=' + self.searchMode)
+                }));
+
+                self.PopularProducts.hide();
+
+
+                var value = self.headerInput.val().toLowerCase();
+                if (data && data.length) {
+                    self.searchTrending.filter(function(e) {
+                        $(this).toggle($(this).find('.highlight span').text().toLowerCase().indexOf(value) > -1);
+                    });
+                    self.trending.show();
+                }
+                else {
+                    self.trending.hide();
+                }
+
+                self.searchWrapper.show();
+            });
+        };
+
+        $.fn[pluginName] = function(options) {
+            var method = false,
+            methodArgs = arguments;
+
+            if (typeof options == 'string') {
+                method = options;
+            }
+
+            return this.each(function() {
+                var plugin = $.data(this, namespace);
+
+                if (!plugin && !method) {
+                    $.data(this, namespace, new Plugin(this, options));
+                } else if (method) {
+                    callMethod(plugin, method, Array.prototype.slice.call(methodArgs, 1));
+                }
+            });
+        };
+    }(jQuery));
+
+    $(function() {
+        $('[data-ajax-search]').Search();
+    });
+</script>

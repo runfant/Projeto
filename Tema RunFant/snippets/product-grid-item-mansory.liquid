@@ -1,0 +1,239 @@
+<div class="inner product-item{% if sold_out %} sold-out{% endif %}{% if on_sale %} on-sale{% endif %}" data-product-id="product-{{ product.id }}">
+  <div class="inner-top">
+    <div class="product-top">
+      <div class="product-image{% if product.images.size > 1 and settings.image_swap %} image-swap{% endif %}">
+        <a href="{{ product.url | within: collection }}" class="product-grid-image" data-collections-related="/collections/{{collection.handle}}?view=related">
+          {%- assign img_pr = product.featured_image.src | product_img_url: '800x' -%}
+          {%- assign img_pr_1 = product.featured_image.src | product_img_url: '300x' -%}
+          {%- assign img_pr_2 = product.featured_image.src | product_img_url: '400x' -%}
+
+          {%- assign img_0 = product.images[0].src | product_img_url: '800x' -%}
+          {%- assign img_01 = product.images[0].src | product_img_url: '300x' -%}
+          {%- assign img_02 = product.images[0].src | product_img_url: '400x' -%}
+
+          {%- assign img_1 = product.images[1].src | product_img_url: '800x' -%}
+          {%- assign img_11 = product.images[1].src | product_img_url: '300x' -%}
+          {%- assign img_12 = product.images[1].src | product_img_url: '400x' -%}
+
+          {% if product.images.size > 1 and settings.image_swap %}
+          <img src="{{ product.images[0].src | product_img_url: '300x' }}" alt="{{ product.images[0].alt | escape }}"
+               class="images-one lazyload"
+               data-src="{{ img_0 }}"
+               data-srcie="{{ img_01 }}"
+               data-srcief="{{ img_02 }}"
+               data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+               data-aspectratio="{{ product.featured_image.aspect_ratio }}"
+               data-sizes="auto">
+
+          <span class="images-two">
+            <img src="{{ product.images[1].src | product_img_url: '300x'}}" alt="{{ product.images[1].alt | escape }}"
+                 class="lazyload"
+                 data-src="{{ img_1 }}"
+                 data-srcie="{{ img_11 }}"
+                 data-srcief="{{ img_12 }}"
+                 data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                 data-aspectratio="{{ product.featured_image.aspect_ratio }}"
+                 data-sizes="auto">
+
+          </span>
+          {% else %}
+          <img src="{{ product.featured_image.src | product_img_url: '300x' }}" alt="{{ product.featured_image.alt | escape }}"
+               data-src="{{ img_pr }}"
+               data-srcie="{{ img_pr_1 }}"
+               data-srcief="{{ img_pr_2 }}"
+               class="lazyload"
+               data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+               data-aspectratio="{{ product.featured_image.aspect_ratio }}"
+               data-sizes="auto">
+          {% endif %}
+        </a>
+      </div>
+
+      {% include 'product-label' %}
+
+      {% comment %} Use for productGrid {% endcomment %}
+      <div class="product-des abs-center">
+        {% include 'wishlist-product' %}
+
+        {% if settings.display_button %}
+        <div class="action">
+          {% include 'add-to-cart-form', id: 'massonry-product-form' %}
+        </div>
+        {% endif %}
+
+        {% if settings.display_product_reviews %}
+        <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+        {% endif %}
+      </div>
+
+      {% if product.description contains '[countdown]' and on_sale and section.settings.show_countdown %}
+      {% assign count_down_first = product.description | split:'[/countdown]' | first %}
+      {% assign count_down_final = count_down_first | split:'[countdown]' | last %}
+      <div class="countdown countdown-grid-item">
+        {% include 'multilang' with section.settings.text_countdown %}
+        <div class="countdown-item" data-countdown-normal data-countdown-value="{{ count_down_final }}"></div>
+      </div>
+      {% endif %}
+
+      {% if settings.display_item_size or settings.enable_quick_view %}
+      <div class="product-des abs-bottom">
+        {% if settings.display_item_size %}
+        {% include 'items-size' %}
+        {% endif %}
+
+        {% if settings.enable_quick_view %}
+        <a class="quickview-button" href="javascript:void(0)" id="{{ product.handle }}" title="{{ 'products.product.quick_view' | t }}" {% if settings.enable_multilang %}data-translate="products.product.quick_view" translate-item="title"{% endif %}>
+          <span {% if settings.enable_multilang %}data-translate="products.product.quick_view"{% endif %}>
+            {{ 'products.product.quick_view' | t }}
+          </span>
+        </a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    {% comment %} Use for productGrid {% endcomment %}
+    <div class="product-bottom">
+      {% if settings.show_vendor %}
+      <div class="product-vendor">
+        {{ product.vendor | link_to_vendor }}
+      </div>
+      {% endif %}
+
+      <a class="product-title" href="{{ product.url | within: collection }}">
+        {% include 'multilang' with product.title %}
+      </a>
+
+      {% if section.settings.show_pro_des %}
+      <div class="short-description">
+        {% if product.description contains '[countdown]' %}
+        {% assign des = product.description | split:'[/countdown]' | last %}
+        {% else %}
+        {% assign des = product.description %}
+        {% endif %}
+
+        {% if settings.enable_multilang and des contains '[lang2]' %}
+        <div class="lang1">
+          {{ des | split: '[lang2]' | first | strip_html | truncatewords: 10 }}
+        </div>
+        <div class="lang2">
+          {{ des | split: '[lang2]' | last | strip_html | truncatewords: 10 }}
+        </div>
+        {% else %}
+        <div>
+          {{ des | split: '[lang2]' | first | strip_html | truncatewords: 10 }}
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <div class="price-box">
+        {% if on_sale %}
+        <div class="price-sale">
+          <span class="old-price">{{ product.variants[0].compare_at_price | money }}</span>
+          <span class="special-price">{% if product.price_varies %}{% include 'varies_from' %}{% endif %}{{ product.variants[0].price | money }}</span>
+        </div>
+        {% else %}
+        <div class="price-regular">
+          <span>{% if product.price_varies %}{% include 'varies_from' %}{% endif %}{{ product.variants[0].price | money }}</span>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if settings.display_item_swatch %}
+      {% include 'item-swatch' %}
+      {% endif %}
+
+      {% if product.description contains '[countdown]' and on_sale and section.settings.show_countdown %}
+      {% assign count_down_first = product.description | split:'[/countdown]' | first %}
+      {% assign count_down_final = count_down_first | split:'[countdown]' | last %}
+      <div class="countdown countdown-grid-item">
+        {% include 'multilang' with section.settings.text_countdown %}
+        <div class="countdown-item" data-countdown-normal data-countdown-value="{{ count_down_final }}"></div>
+      </div>
+      {% endif %}
+    </div>
+
+    {% comment %} Use for productList {% endcomment %}
+    <div class="product-details">
+      {% if settings.show_vendor %}
+      <div class="product-vendor">
+        {{ product.vendor | link_to_vendor }}
+      </div>
+      {% endif %}
+
+      <a class="product-title" href="{{ product.url | within: collection }}">
+        {% include 'multilang' with product.title %}
+      </a>
+
+      {% if settings.display_product_reviews %}
+      <span class="shopify-product-reviews-badge" data-id="{{ product.id }}" style="min-height: 20px; display: block; margin-bottom: 9px;"></span>
+      {% endif %}
+
+      <div class="short-description">
+        {% if product.description contains '[countdown]' %}
+        {% assign des = product.description | split:'[/countdown]' | last %}
+        {% else %}
+        {% assign des = product.description %}
+        {% endif %}
+
+        {% if settings.enable_multilang and des contains '[lang2]' %}
+        <div class="lang1">
+          {{ des | split: '[lang2]' | first | strip_html | truncatewords: 40 }}
+        </div>
+        <div class="lang2">
+          {{ des | split: '[lang2]' | last | strip_html | truncatewords: 40 }}
+        </div>
+        {% else %}
+        <div>
+          {{ des | split: '[lang2]' | first | strip_html | truncatewords: 40 }}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="price-box">
+        {% if on_sale %}
+        <div class="price-sale">
+          <span class="old-price">{{ product.variants[0].compare_at_price | money }}</span>
+          <span class="special-price">{% if product.price_varies %}{% include 'varies_from' %}{% endif %}{{ product.variants[0].price | money }}</span>
+        </div>
+        {% else %}
+        <div class="price-regular">
+          <span>{% if product.price_varies %}{% include 'varies_from' %}{% endif %}{{ product.variants[0].price | money }}</span>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if settings.display_item_swatch %}
+      {% include 'item-swatch' %}
+      {% endif %}
+
+      {% if settings.display_button %}
+      <div class="action">
+        {% assign variantCount = product.variants | size %}
+        <form action="/cart/add" method="post" class="variants" data-id="product-actions-{{ product.id }}" enctype="multipart/form-data">
+          {% if sold_out %}
+          <button class="btn add-to-cart-btn" type="submit" disabled="disabled" {% if settings.enable_multilang %}data-translate="products.product.unavailable"{% endif %}>
+            {{ 'products.product.unavailable' | t }}
+          </button>
+          {% else %}
+          {% if variantCount > 1 %}
+          <a class="btn" href="{{ product.url }}" title="{{ product.title }}" {% if settings.enable_multilang %}data-translate="products.product.select_options"{% endif %}>
+            {{ 'products.product.select_options' | t }}
+          </a>
+          {% else %}
+          <input type="hidden" name="id" value="{{ product.variants[0].id }}" />
+
+          <button data-btn-addToCart class="btn add-to-cart-btn" type="submit" {% if settings.enable_multilang %}data-translate="products.product.add_to_cart"{% endif %}>
+            {{ 'products.product.add_to_cart' | t }}
+          </button>
+          {% endif %}
+          {% endif %}
+        </form>
+      </div>
+      {% endif %}
+
+      {% include 'wishlist-product' %}
+    </div>
+  </div>
+</div>

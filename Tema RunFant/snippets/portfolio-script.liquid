@@ -1,0 +1,189 @@
+<script type="text/javascript">
+  function initShuffle(){
+    // init shuffle
+    var Shuffle = window.Shuffle;
+    var element = document.querySelector('.shuffle-container');
+    var sizer = document.querySelector('.sizer-element');
+
+    var shuffleInstance = new Shuffle(element, {
+      itemSelector: '.pfl-item',
+      sizer: sizer
+    });
+    $('.filter-list li a').off('click').on('click', function(e){
+      e.preventDefault();
+      $('.filter-list li').removeClass('active');
+      var thisLi = $(this).parent('li').addClass('active');
+      var filterVal = e.target.getAttribute('data-filter');
+      if(filterVal == 'all'){
+        shuffleInstance.filter();
+      }else{
+        shuffleInstance.filter(function (element) {
+          if($(element).data('groups') != undefined)
+            return $(element).data('groups').indexOf(filterVal) != -1;
+        });
+      }
+      setTimeout(function(){
+        $('.pfl-wrapper').removeClass('open-sidebar');
+      },300)
+
+    })
+
+    // init fancybox api
+    $('.pfl-item i').off('click').on('click',function(){
+      $(this).parents('.pfl-item').find('.pfl-thumb').trigger('click')
+    })
+    $('.pfl-thumb').off('click').on('click',function(){
+      if($(this).data('gallery')) {
+        var imageArr = $(this).data('gallery').split(',');
+        var fancyObj = imageArr.map(function(image,index){
+          return ({
+            src  : image,
+            opts : {
+              caption : (index + 1) +' of '+ imageArr.length
+            }
+          })
+        });
+        $.fancybox.open(fancyObj,{
+          loop : true,
+          thumbs : {
+            autoStart : false
+          },
+          slideClass: "portfolio",
+          buttons: [
+          ],
+          clickSlide: "close",
+          mobile: {
+            clickSlide: function(current, event) {
+              return "close";
+            }
+          },
+          afterLoad: function(instance, slide){
+            // move caption into image box
+            instance.$caption.appendTo('.fancybox-image-wrap').text(instance.$caption.text());
+            // create close icon
+            $('.fancybox-image-wrap').append('<div class="close-box"></div>')
+            //close fancybox
+            $('.close-box').on('click touchend' ,function(){
+              instance.close();
+            })
+          }
+        });
+      }
+    })
+
+    //toggle sidebar
+    $('.pfl-filter-icon').off('click').on('click',function(){
+      $('.pfl-wrapper').toggleClass('open-sidebar');
+    })
+
+  }
+  $(document).ready(function(){
+    initShuffle();
+  })
+  $(document)
+  .on('shopify:section:load', initShuffle)
+  .on('shopify:section:unload', initShuffle)
+</script>
+
+<style>
+  .fancybox-slide.portfolio .fancybox-caption{
+    position:absolute;
+    bottom:-36px;
+    width:100%;
+    text-align: center;
+    color:#fff;
+    padding:0px;
+    border:none;
+    opacity:0;
+  }
+  .fancybox-slide.portfolio .fancybox-caption:nth-last-child(2){
+    opacity:1;
+  }
+  .fancybox-slide.portfolio .fancybox-image-wrap{
+
+  }
+  .fancybox-slide.portfolio .fancybox-image-wrap .close-box{
+    position:absolute;
+    width:30px;
+    height:30px;
+    display:block;
+    top:0;
+    right:-50px;
+    cursor:pointer;
+  }
+  .fancybox-slide.portfolio .fancybox-image-wrap .close-box:nth-child(n + 4){
+    display:none;
+  }
+  .fancybox-slide.portfolio .fancybox-image-wrap .close-box:before,
+  .fancybox-slide.portfolio .fancybox-image-wrap .close-box:after{
+    content:'';
+    display:block;
+    position:absolute;
+    width:100%;
+    height:2px;
+    background:#fff;
+    top:12px;
+    right:0;
+  }
+  .fancybox-slide.portfolio .fancybox-image-wrap .close-box:before{
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  .fancybox-slide.portfolio .fancybox-image-wrap .close-box:after{
+    -webkit-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    transform: rotate(135deg);
+  }
+  .pfl-item i{
+      cursor:pointer;
+    }
+@media (max-width:992px){
+ .fancybox-navigation button.fancybox-arrow{
+    display:none;
+  }
+
+
+}
+  @media (max-width:767px) {
+
+    .fancybox-slide.portfolio .fancybox-image-wrap .close-box{
+      display:none;
+    }
+    .pfl-item i{
+      opacity:1;
+    }
+  }
+
+
+  .fancybox-navigation button.fancybox-arrow{
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    border:2px solid #fff;
+  }
+
+  .fancybox-navigation button.fancybox-arrow:after{
+    content:'\f105';
+    position:absolute;
+    top:0;
+    left:3px;
+    width:100%;
+    height:100%;
+    background-image:none;
+    background-color:transparent;
+    
+    font-family:FontAwesome;
+    color:#fff;
+    text-align: center;
+    line-height:72px;
+    font-size: 40px;
+  }
+  .fancybox-navigation .fancybox-arrow--left{
+    left:60px;
+  }
+  .fancybox-navigation .fancybox-arrow--right{
+    right:60px;
+  }
+  }
+</style>

@@ -1,0 +1,124 @@
+{% comment %}
+List out your main-menu linklist (default)
+More info on linklists:
+- http://docs.shopify.com/themes/liquid-variables/linklists
+{% endcomment %}
+
+<ul class="site-nav">
+    {% if section.settings.vertical_linklist != blank %}
+    {% assign menu = linklists[section.settings.vertical_linklist].links %}
+    {% else %}
+    {% assign menu = linklists.main-menu.links %}
+    {% endif %}
+
+    {% for link in menu %}
+    
+    {% assign i = forloop.index | downcase %}
+    {% assign cat = link.title | handleize %}  
+
+    {% if section.settings.display_megamenu %}
+    
+    {% assign is_megamenu = false %}
+    
+    {% for block in section.blocks %}
+    
+    {% for i in (1..5) %}
+    
+    {% capture cap_megamenu_item %}megamenu_items_{{ i }}{% endcapture %} 
+    
+    {% capture cap_banner_first_style %}banner_first_style_{{ i }}{% endcapture %}
+    {% capture cap_link_banner_first_style %}link_banner_first_style_{{ i }}{% endcapture %}
+    
+    {% capture cap_banner_second_style %}banner_second_style_{{ i }}{% endcapture %}
+    {% capture cap_link_banner_second_style %}link_banner_second_style_{{ i }}{% endcapture %}
+    
+    {% capture cap_banner_third_style %}banner_third_style_{{ i }}{% endcapture %}
+    {% capture cap_link_banner_third_style %}link_banner_third_style_{{ i }}{% endcapture %}
+    
+    {% if block.settings[cap_megamenu_item] != blank %}
+        {% assign megamenu_item = block.settings[cap_megamenu_item] | handleize %}
+    
+        {% if megamenu_item == cat %}
+            {% assign is_megamenu = true %}  
+            {% assign block_style = block.type %}
+    
+            {%- assign title_featured_product = block.settings.title_featured_product -%}
+            {%- assign featured_product = block.settings.featured_product -%}  
+            {%- assign product = all_products[featured_product] -%}
+    
+            {%- assign banner_first_style = block.settings[cap_banner_first_style] -%}
+            {%- assign link_banner_first_style = block.settings[cap_link_banner_first_style] -%}
+    
+            {%- assign banner_second_style = block.settings[cap_banner_second_style] -%}
+            {%- assign link_banner_second_style = block.settings[cap_link_banner_second_style] -%}
+    
+            {%- assign banner_third_style = block.settings[cap_banner_third_style] -%}
+            {%- assign link_banner_third_style = block.settings[cap_link_banner_third_style] -%}
+
+            {%- assign display_cms_custom = block.settings.display_cms_custom -%}
+            {%- assign cms_custom_title = block.settings.cms_custom_title -%}  
+            {%- assign quote = block.settings.quote -%}  
+            {%- assign cms_read_more_text = block.settings.cms_read_more_text -%} 
+            {%- assign cms_read_more_link = block.settings.cms_read_more_link -%} 
+        {% endif %}  
+    {% endif %}
+    {% endfor %}
+    
+    {% endfor %}
+    
+    {% endif %} 
+
+    <li class="menu-lv-1 item{% if linklists[link.handle] != empty %} dropdown{% if is_megamenu %} mega-menu{% else %} no-mega-menu{% endif %}{% endif %}">
+        <a class="{%if linklists[link.handle] != empty %}menu__moblie {% endif %}{% if link.active %}current{% endif %}"  href="{{ link.url }}">
+            {% assign img = link.handle | downcase | replace: ' ', '-' | append: '.png' | file_url %}
+
+            <span class="icon-img">
+                <img src="{{ img }}" alt="{{ link.title }}" onError="style.display = 'none';">
+            </span>
+
+            {% include 'multilang' with link.title %}
+            
+            {% if linklists[link.handle] != empty %}
+            <span class="icon-dropdown" data-toggle-menu-mb>
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </span>
+            {% endif %}          
+        </a> 	    
+
+        {% if linklists[link.handle] != empty %}
+        <div class="sub-menu-mobile menu-mb-translate">
+            <div class="bg">
+                <div class="menu-mb-title">
+                    <span class="icon-dropdown">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    </span>
+                    {% include 'multilang' with link.title %}
+                </div>
+            
+            {% comment %}
+            Check if menu item is Mega menu
+            {% endcomment %}
+            
+                {% assign link_child = link.handle %}
+                
+                {% if section.settings.display_megamenu and is_megamenu %}  
+                <div class="site-nav-dropdown {{ block_style }}">
+                    <div class="container">
+                        {% include 'mega-menu' with link_child %}
+                    </div>        
+                </div>
+
+                {% else %}
+                
+                {% if linklists[link.handle] != empty %}
+                {% include 'dropdown-menu' with link_child %}
+                {% endif %}
+                
+                {% endif %}
+
+            </div>
+        </div>    
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>

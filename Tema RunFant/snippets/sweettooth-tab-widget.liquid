@@ -1,0 +1,13 @@
+{% if shop.metafields['sweettooth'].sweettooth_tab_widget == 1 %}
+  {% if customer %}
+    {% assign digest = customer.id | append: shop.metafields['sweettooth'].api_secret | md5 %}
+    {% assign customerId = customer.id %}
+  {% endif %}
+
+  <div class="sweettooth-widget"
+    data-widget-type="tab"
+    data-channel-key="{{ shop.metafields['sweettooth'].api_key }}"
+    data-channel-customer-id="{{ customerId }}"
+    data-digest="{{ digest }}"
+  ></div>
+{% endif %}

@@ -1,0 +1,18 @@
+{% assign payment_methods_string = 'visa, american-express, mastercard, discover, paypal, google-checkout,  maestro, cirrus,  2checkout' %}
+{% assign methods = payment_methods_string | split: ', ' %}
+
+<div id="payment-methods">
+	
+  {% for method in methods %}
+    {% assign display_current_method = method | prepend: 'payment_methods_display_' | append: '?' %}
+
+    {% if settings[display_current_method] %}
+      {% assign current_method_icon = method | prepend: 'icon-cc-' | append: '.png' %}
+      <span class="payment-method">
+        <a href="/cart" title="{{ method | replace: '-', ' ' | downcase | capitalize }}">
+          {{ current_method_icon | asset_url | img_tag: method }}
+        </a>
+      </span>
+    {% endif %}
+  {% endfor %}
+</div>

@@ -1,0 +1,21 @@
+<div class="product-template product-template-grouped">
+  <div class="container">
+    {% if collection %}
+    <div class="next_prev-groups">
+      {% include 'breadcrumb' %}
+      {% include 'next-prev-product' %} 	
+    </div>
+    
+    {% else %}
+    {% include 'breadcrumb' %}
+    {% endif %}
+  	   
+    <div class="halo-product-content">
+      <div class="row pro-page">
+        {% section 'product-template-grouped' %}
+      </div>
+      
+      {% section 'recently-viewed-products' %}
+    </div>   
+  </div>
+</div>

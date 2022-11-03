@@ -1,0 +1,25 @@
+<div class="product-template product-template-full-width">
+    <div class="bg-breddcrumb">
+        <div class="container-padd60">
+            {% if collection %}
+            <div class="next_prev-groups">
+                {% include 'breadcrumb' %}
+                {% include 'next-prev-product' %} 	
+            </div>
+
+            {% else %}
+            {% include 'breadcrumb' %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container-padd60">
+        <div class="halo-product-content">
+            <div class="row pro-page">
+                {% section 'product-template-full-width' %}
+            </div>
+        
+            {% section 'recently-viewed-products' %}
+        </div> 
+    </div>
+</div>

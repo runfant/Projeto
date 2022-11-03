@@ -1,0 +1,41 @@
+{% if settings.display_size_chart %}
+<div class="modal fade halo_modal-custom" id="size_chart" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                {% if settings.custom_size_chart_header != blank %}
+                <h5 class="modal-title">
+                    {% include 'multilang' with settings.custom_size_chart_header %}
+                </h5>
+                {% endif %}
+                
+                <a data-dismiss="modal" class="close close-modal" title="{{ 'cart.ajax_cart.close' | t }}" href="javascript:void(0)">
+                    {% include 'icon-close' %}
+                </a>
+            </div>
+        
+            <div class="modal-body">
+                <div class="size-chart-img">
+                    {% if settings.size_chart == 'product_vendor' %}          
+                    {% capture img_vendor %}{{ product.vendor | handle | append: '-sizechart.jpg' | file_url }}{% endcapture %}
+                    <img src="{{ img_vendor }}" alt="{{ settings.custom_size_chart_header }}"/>
+                    
+                    {% elsif settings.size_chart == 'product_type' %}          
+                    {% capture img_type %}{{ product.type | handle | append: '-sizechart.jpg' | file_url }}{% endcapture %}
+                    <img src="{{ img_type }}" alt="{{ settings.custom_size_chart_header }}"/>
+                    
+                    {% elsif settings.size_chart == 'different' %} 
+                    {% if product.metafields.c_f['Size Chart'] %}
+                        {% capture img_product %}{{ product.metafields.c_f['Size Chart'] }}{% endcapture %}
+                        <img class="a" src="{{ img_product }}" alt="{{ settings.custom_size_chart_header }}"/>
+                    {% endif %}
+
+                    {% elsif settings.size_chart == 'none' %} 
+                    <img src="{{ settings.custom_size_chart | img_url: 'original' }}" alt="{{ settings.custom_size_chart_header }}"/>
+                    {% endif %}               
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

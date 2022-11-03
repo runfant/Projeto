@@ -1,0 +1,179 @@
+{{ 'lang2.js' | asset_url | script_tag }}
+
+<script>
+    var translator = {
+        current_lang : $.cookie('language'),
+        
+        init: function() {
+            translator.updateStyling();
+            translator.updateInventoryText();  		
+        },
+        
+        updateStyling: function() {
+            var style;
+
+            if (translator.isLang2()) {
+                style = "<style>*[data-translate] {visibility:hidden} .lang1 {display:none}</style>";          
+            }
+            else {
+                style = "<style>*[data-translate] {visibility:visible} .lang2 {display:none}</style>";
+            };
+
+            $('head').append(style);
+        },
+        
+        updateLangSwitcher: function() {
+            if (translator.isLang2()) {
+                $('#lang-switcher [data-value="1"]').removeClass('active');
+                $('#lang-switcher [data-value="2"]').addClass('active');        
+            }
+        },
+        
+        getTextToTranslate: function(selector) {
+            var result = window.lang2;
+            
+            //check if there is parameter
+            var params;
+            
+            if (selector.indexOf("|") > 0) {
+                var devideList = selector.split("|");
+                
+                selector = devideList[0];
+                params = devideList[1].split(",");
+            }
+
+            var selectorArr = selector.split('.');
+            
+            if (selectorArr) {
+                for (var i = 0; i < selectorArr.length; i++) {
+                    result = result[selectorArr[i]];
+                }
+            }
+            else {
+                result = result[selector];
+            };
+
+            //check if result is object, case one and other
+            if (result && result.one && result.other) {
+                var countEqual1 = true;
+
+                for (var i = 0; i < params.length; i++) {
+                    if (params[i].indexOf("count") >= 0) {
+                        variables = params[i].split(":");
+
+                        if (variables.length>1) {
+                            var count = variables[1];
+                            if (count > 1) {
+                                countEqual1 = false;
+                            }
+                        }
+                    }
+                }
+
+                if (countEqual1) {
+                    result = result.one;
+                } else {
+                    result = result.other;
+                };
+            }
+
+            //replace params
+            {% raw %}
+            if (params && params.length>0) {
+                result = result.replace(/{{\s*/g, "{{");
+                result = result.replace(/\s*}}/g, "}}");
+                
+                for (var i = 0; i < params.length; i++) {
+                    variables = params[i].split(":");
+                    if (variables.length>1) {
+                        result = result.replace("{{"+variables[0]+"}}", variables[1]);
+                    }          
+                }
+            }
+            {% endraw %}
+
+            return result;
+        },
+                                        
+        isLang2: function() {
+            return translator.current_lang && translator.current_lang == 2;
+        },
+        
+        updateInventoryText: function() {
+            if (translator.isLang2()) {
+                window.inventory_text = {
+                    in_stock: window.lang2.products.product.in_stock,
+                    many_in_stock: window.lang2.products.product.many_in_stock,
+                    out_of_stock: window.lang2.products.product.out_of_stock,
+                    add_to_cart: window.lang2.products.product.add_to_cart,
+                    add_all_to_cart: window.lang2.products.product.add_all_to_cart,
+                    sold_out: window.lang2.products.product.sold_out,
+                    unavailable: window.lang2.products.product.unavailable,
+                    no_more_product: window.lang2.collections.general.no_more_product,
+                    select_options: window.lang2.products.product.select_options,
+                    hide_options: window.lang2.products.product.hide_options,
+                    show_options: window.lang2.products.product.show_options,
+                    adding: window.lang2.products.product.adding,
+                    thank_you: window.lang2.products.product.thank_you,
+                    add_more: window.lang2.products.product.add_more,
+                    cart_feedback: window.lang2.products.product.cart_feedback,
+                    add_wishlist: window.lang2.wishlist.general.add_to_wishlist,
+                    remove_wishlist: window.lang2.wishlist.general.remove_wishlist,
+                    previous: window.lang2.collections.toolbar.previous,
+                    next: window.lang2.collections.toolbar.next
+                };
+            }
+        },
+        
+        doTranslate: function(blockSelector) {
+            if (translator.isLang2()) {
+                $(blockSelector + " [data-translate]").each(function(e) {          
+                    var item = jQuery(this);
+                    var selector = item.attr("data-translate");
+                    var text = translator.getTextToTranslate(selector);
+                    
+                    //translate only title
+                    if (item.attr("translate-item")) {
+                        var attribute = item.attr("translate-item");
+                        if (attribute == 'blog-date-author') {
+                            item.html(text);
+                        }
+                        else if (attribute!="") {            
+                            item.attr(attribute,text);
+                        };
+                    }
+                    else if (item.is("input")) {
+                        item.val(text);
+                    }
+                    else {
+                        item.html(text);
+                    };
+                    
+                    item.css("visibility","visible");
+                    
+                    $('#lang-switcher [data-value="1"]').removeClass('active');
+                    $('#lang-switcher [data-value="2"]').addClass('active');          
+                });
+            }
+        }   
+    };
+            
+    translator.init();
+            
+    $(document).ready(function() {    
+        $('#lang-switcher [data-value]').on('click', function(e) {
+        e.preventDefault();
+        
+        if($(this).hasClass('active')){
+            return false;
+        }
+        
+        var value = $(this).data('value');
+        
+        $.cookie('language', value, {expires:10, path:'/'});
+            location.reload();
+        });    
+        
+        translator.doTranslate('body');    
+    });
+</script>

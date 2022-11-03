@@ -1,0 +1,96 @@
+{% comment %}
+  This snippet renders a custom widget based on the current 'paginate' context,
+  defined in { % paginate XXXX by 5 % } tags wrapping the content.
+  The example below breaks the pagination down so you can setup your own styles and behavior if you wish.
+
+  Basic Pagination Usage:
+    <div class="pagination">
+      {{ paginate | default_pagination }}
+    </div>
+
+  Replace Text:
+    <div class="pagination">
+      {{ paginate | default_pagination | replace: 'Previous', 'Newer articles' | replace: 'Next', 'Older articles' }}
+    </div>
+
+  More information:
+   - index#pagination
+   - http://docs.shopify.com/themes/liquid-variables/paginate
+{% endcomment %}
+
+{% if settings.collection_infinite_scrolling %}
+  {% if paginate.next %}    
+    <div class="infinite-scrolling">
+      <a class="btn" href="{{ paginate.next.url }}" {% if settings.enable_multilang %}data-translate="collections.general.show_more"{% endif %}>
+        {{ 'collections.general.show_more' | t}}
+      </a>
+    </div>
+  {% endif %}
+
+{% else %}
+<div class="toolbar-bottom">
+  <p class="page-total">
+    <span {% if settings.enable_multilang %}data-translate="collections.toolbar.showing"{% endif %}>{{ 'collections.toolbar.showing' | t }}</span>: 
+    {{ paginate.current_offset | plus: 1 }} -
+    {% if paginate.next %}
+      {{ paginate.current_offset | plus: paginate.page_size }}
+    {% else %}
+      {{ paginate.items }}
+    {% endif %}
+    <span {% if settings.enable_multilang %}data-translate="collections.toolbar.of"{% endif %}>{{ 'collections.toolbar.of' | t }}</span>
+    {{ paginate.items }}
+  </p>
+
+  <ul class="pagination-page">
+    {% if paginate.previous %}
+    <li class="text">
+      <a href="{{ paginate.previous.url }}" title="{{ 'collections.toolbar.previous' | t }}" {% if settings.enable_multilang %}data-translate="collections.toolbar.previous" translate-item="title"{% endif %}>
+        <i class="fa fa-angle-left" aria-hidden="true"></i>
+        <span {% if settings.enable_multilang %}data-translate="collections.toolbar.previous"{% endif %}>
+          {{ 'collections.toolbar.previous' | t }}
+        </span>
+      </a>
+    </li>
+    {% else %}
+    <li class="disabled">
+      <i class="fa fa-angle-left" aria-hidden="true"></i>
+      <span {% if settings.enable_multilang %}data-translate="collections.toolbar.previous"{% endif %}>
+        {{ 'collections.toolbar.previous' | t }}
+      </span>
+    </li>
+    {% endif %}
+
+    {% for part in paginate.parts %}
+      {% if part.is_link %}
+      <li>
+        <a href="{{ part.url }}">{{ part.title }}</a>
+      </li>
+      {% else %}
+        {% if part.title == paginate.current_page %}
+        <li class="active"><span>{{ part.title }}</span></li>
+        {% else %}
+        <li><span>{{ part.title }}</span></li>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {% if paginate.next %}
+    <li class="text">
+      <a href="{{ paginate.next.url }}" title="{{ 'collections.toolbar.next' | t }}" {% if settings.enable_multilang %}data-translate="collections.toolbar.next" translate-item="title"{% endif %}>
+        <span {% if settings.enable_multilang %}data-translate="collections.toolbar.next"{% endif %}>
+        {{ 'collections.toolbar.next' | t }}
+        </span>
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
+      </a>
+    </li>
+    {% else %}
+    <li class="disabled">
+      <span {% if settings.enable_multilang %}data-translate="collections.toolbar.next"{% endif %}>
+        {{ 'collections.toolbar.next' | t }}
+      </span>
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
+    </li>
+    {% endif %}
+  </ul>
+</div>
+{% endif %}

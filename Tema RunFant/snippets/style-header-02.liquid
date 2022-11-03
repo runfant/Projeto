@@ -1,0 +1,138 @@
+<style>
+    /*  Header Top  */
+    {% assign bg_header_top =  section.settings.bg_header_top %}
+    {% assign text_header_top_color = section.settings.text_header_top_color %}
+    
+    /*  Search  */
+    {% assign bg_search_color = section.settings.bg_search_color %}
+    {% assign search_color = section.settings.search_color %}
+    {% assign search_border_color = section.settings.search_border_color %}
+    
+    /*  Header Bottom  */
+    {% assign max_height_logo_mb =  section.settings.max_height_logo_mb %}
+    {% assign max_height_logo_pc =  section.settings.max_height_logo_pc %}
+    
+    {% assign bg_header_bottom_color = section.settings.bg_header_bottom_color %}
+    {% assign header_bottom_link_color = section.settings.header_bottom_link_color %}
+    
+    /*  Cart  */
+    {% assign bg_cart_color = section.settings.bg_cart_color %}
+    {% assign cart_color = section.settings.cart_color %}
+    
+    {% assign logo_color = section.settings.logo_text_color %}
+
+    .header-logo a.logo-title {
+      color: {{ logo_color }};
+    }
+  
+    .header-top {
+        background-color: {{ bg_header_top }};
+        color: {{ text_header_top_color }};
+    }
+    
+    .header-top a {
+        color: {{ text_header_top_color }};
+    }
+    
+    .header-top .top-message p a:hover {
+        border-bottom-color: {{ text_header_top_color }};
+    }
+    
+    .header-top .close:hover {
+        color: {{ text_header_top_color }};
+    }
+    
+    .cart-icon .cartCount {
+        background-color: {{ bg_cart_color }};
+        color: {{ cart_color }};
+    }
+    
+    .logo-img {
+        display: inline-block;
+    }
+    
+    .header-mb .logo-img img,
+    .logo-fixed .logo-img img {
+        max-height: {{ max_height_logo_mb }};
+    }
+    
+    .header-pc .logo-img img {
+        max-height: {{ max_height_logo_pc }};
+    }
+
+    .header-02 .search-form .input-group-field {
+        color: {{ search_color }};
+        background-color: {{ bg_search_color }};
+        border-bottom-color: {{ search_border_color }};
+    }
+
+    .header-02 .search-form .search-bar ::-webkit-input-placeholder {
+        color: {{ search_color }};
+    }
+
+    .header-02 .search-form .search-bar ::-moz-placeholder {
+        color: {{ search_color }};
+    }
+
+    .header-02 .search-form .search-bar :-ms-input-placeholder {
+        color: {{ search_color }};
+    }
+
+    .header-02 .search-form .search-bar :-moz-placeholder {
+        color: {{ search_color }};
+    } 
+
+    @media (max-width:1199px) {
+        .search-open .wrapper-header .search-bar {
+            background-color: {{ bg_search_color }};
+        }
+    }   
+  
+    @media (min-width:1200px) {
+        .search-open .wrapper_header_02 .search-form .search-bar {
+            background-color: {{ bg_search_color }};
+        }
+
+        .wrapper_header_02 .icon-search {
+            color: {{ search_color }};
+        }
+
+        .header-pc .cart-icon .cartCount {
+            background-color: rgba(255, 255, 255, 0);
+            color: {{ header_bottom_link_color }};
+        }
+
+        .header-02 .header-bottom {
+            background-color: {{ bg_header_bottom_color }};
+            color: {{ header_bottom_link_color }};
+        }
+        
+        .header-02 .lang-currency-groups .dropdown-label {
+            color: {{ header_bottom_link_color }};
+        }
+        
+        .lang-currency-groups .btn-group .dropdown-item {
+            color: {{ header_bottom_link_color }};
+        }
+        
+        .lang-currency-groups .btn-group .dropdown-item:hover,
+        .lang-currency-groups .btn-group .dropdown-item:focus:
+        .lang-currency-groups .btn-group .dropdown-item:active,
+        .lang-currency-groups .btn-group .dropdown-item.active {
+            color: {{ header_bottom_link_color }};
+        }
+        
+        .lang-currency-groups .dropdown-menu {
+            background-color: {{ bg_header_bottom_color }};
+        }
+        
+        .header-02 .header-panel-top,
+        .header-02 .header-panel-top a {
+            color: {{ header_bottom_link_color }};
+        }
+
+        .search-open .wrapper_header_02 .search-form .close-search  {
+            color: #fff;
+        } 
+    }
+</style>
