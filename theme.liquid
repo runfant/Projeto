@@ -1,0 +1,172 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="ie9 no-js"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+<!-- Added by AVADA SEO Suite -->
+{% include 'avada-seo' %}
+<!-- /Added by AVADA SEO Suite -->
+
+
+  <!-- Basic page needs ================================================== -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	
+  <!-- Title and description ================================================== -->
+  
+
+  <!-- Avada Size Chart Script -->
+ {% include 'avada-sc-setting' %}
+  <!-- /Avada Size Chart Script -->
+
+<title>
+  {{ page_title }}{% if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} &ndash; Page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+  </title>
+
+  {% if page_description %}
+  <meta name="description" content="{{ page_description | escape | split: '[/countdown]' | last | strip_html }}">
+  {% endif %}
+
+  <!-- Product meta ================================================== -->
+  {% include 'fb-open-graph-tags' %}
+  {% include 'twitter-card' %}
+
+  <!-- Helpers ================================================== -->
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, minimal-ui">
+  
+  <!-- Favicon -->
+  {% if settings.favicon != blank %}
+  <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+  {% endif %}
+ 
+   <!-- fonts -->
+  {% include 'head_fonts' %}
+  
+  <!-- Styles -->
+  {% include 'head_styles' %}
+  
+   <!-- Scripts -->
+  {% include 'head_scripts' %}
+
+  <!-- Header hook for plugins ================================ -->
+  {{ content_for_header }}
+
+  <!--[if lt IE 9]>
+  {{ '//html5shiv.googlecode.com/svn/trunk/html5.js' | script_tag }}
+  <![endif]-->
+
+  {% comment %}
+    If you store has customers disabled, you can remove the following JS file
+  {% endcomment %}
+  
+  {% if template contains 'customers' %}
+    {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+    {{ 'customer_area.js'  | shopify_asset_url | script_tag }}
+  {% endif %}
+
+  {% include 'linked-options' %}
+	  
+<!-- RYVIU APP :: Settings global -->	
+    <script>
+        var ryviu_global_settings = {{shop.metafields.ryviu.user_settings }};
+    </script>
+<!-- RYVIU APP -->
+</head>
+
+    {% if settings.layout_body == 'full' %}    
+        {%- assign layout_class = 'body-full' -%}   
+    {% elsif settings.layout_body == 'boxed' %} 
+        {%- assign layout_class = 'body-boxed' -%} 
+    {% endif %}
+
+    {% if settings.header_layout == 'vertical' %}
+        {%- assign header_class = 'header-vertical-tpl' -%} 
+    {% endif %}
+
+<body id="{{ page_title | handle }}" class="{{ header_class }} {{ layout_class }} {% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}">
+    {% if template contains 'index' %}  
+    <h1 style="display: none">{{ page_title | split: '|' | first }}</h1>
+    {% endif %}
+    {% include 'wrapper-header' %}   
+
+    {% if settings.header_layout == 'vertical' %}
+    <div class="flex-nav-vertical">
+    {% endif %}    
+
+    {% if settings.header_layout == 'vertical' %}
+    {% section 'navigation-vertical-menu' %}
+    {% endif %}
+	{% include 'scheme' %}
+    <div class="wrapper-container wrapper-body">	
+        <main class="main-content" role="main">      
+            {{ content_for_layout }}
+        </main>    
+            
+        {% if settings.footer_layout == 'default' %}        
+        {% section 'footer' %}
+        {% elsif settings.footer_layout == 'parallax' %}
+        {% section 'footer-parallax' %}
+        {% elsif settings.footer_layout == '02' %}
+        {% section 'footer-2' %}
+        {% elsif settings.footer_layout == '03' %}
+        {% section 'footer-3' %}
+        {% elsif settings.footer_layout == '04' %}
+        {% section 'footer-4' %}
+        {% elsif settings.footer_layout == '05' %}
+        {% section 'footer-5' %}
+        {% endif %}
+
+        {% unless template contains 'product' %}
+        <div class="footbar-fixed">
+            {% section 'someone-purchased' %}
+            {% section 'GDPR-modal' %}
+        </div>
+        {% endunless %}
+      {% if settings.enable_backtotop %}
+        <div id="back-top" style="display: none;">
+            <a class="nav_up" href="#top" title="Back to top">
+                <i class="fa fa-angle-up" aria-hidden="true"></i>
+            </a>
+        </div>  
+      {% endif %}
+    </div>
+
+    {% if settings.header_layout == 'vertical' %}
+    </div>
+    {% endif %}  
+    
+    {% include 'footer_scripts' %}
+    
+    {% include 'sweettooth-widgets' %}
+
+    {% include 'search-autocomplete' %}
+    
+    {% if settings.header_layout == 'default' %}
+    {% include 'customer_links' %}
+
+    {% else %}
+    <div class="translate-header" data-translate-header>
+        {% include 'customer_links' %}
+        {% include 'wrapper-top-cart' %}
+    </div>
+    {% endif %}
+
+    {% include 'size-chart' %}
+        
+    {% include 'message-modal' %}
+    
+    {% include 'newsletter' %}      
+    
+    {% if template contains 'product' %}
+    {% include 'ask_an_expert' %}  
+    {% endif %}
+    {% include 'recently-viewed-products'%}
+    <div class="wrapper-overlay"></div>
+{{ 'instant.js' | asset_url | script_tag }}<!-- Não remova. Checkout Yampi. -->
+{% capture yampi_snippet_content %}{% include 'YampiSnippet' %}{% endcapture %} {% unless yampi_snippet_content contains 'Liquid error' %} {% include 'YampiSnippet' %} {% endunless %}
+<!-- Não remova. Checkout Yampi. --> {% render 'spurit_sct_theme_snippet' %}
+</body>
+</html>
