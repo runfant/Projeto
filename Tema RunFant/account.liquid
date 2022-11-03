@@ -1,0 +1,140 @@
+{% comment %}
+  This template will be automatically generated for you if the file doesn't exist,
+  but where's the fun in having no control? Define your layout below.
+
+  The 'layout settings.customer_layout' line is inserted at the top of every customer account template.
+  Your theme's settings determine to use the 'default' or 'theme' customer templates.
+  More info:
+    - http://www.tetchi.ca/shopify-theme-from-scratch-part-11/
+
+  Template note:
+    - All IDs on this template are required to make the form(s) submit properly
+
+  For all available customer liquid tags:
+    - http://docs.shopify.com/themes/liquid-variables/customer
+{% endcomment %}
+
+{% layout settings.customer_layout %}
+
+<div class="account-page custom-acc-page">
+  <div class="container">
+    <header class="page-header">
+      <h1 {% if settings.enable_multilang %}data-translate="customer.account.title"{%endif%}>
+        {{ 'customer.account.title' | t }}
+      </h1>
+    </header>
+    
+    <div class="grid">
+      <div class="grid-item">
+        <h4 class="box-title" {% if settings.enable_multilang %}data-translate="customer.orders.title"{%endif%}>
+          {{ 'customer.orders.title' | t }}
+        </h4>
+
+        {% if customer.orders.size != 0 %}
+        <div style="overflow-x:auto;">
+          <table class="full">
+            <thead>
+              <tr>
+                <th {% if settings.enable_multilang %}data-translate="customer.orders.order_number"{%endif%}>
+                  {{ 'customer.orders.order_number' | t }}
+                </th>
+                <th {% if settings.enable_multilang %}data-translate="customer.orders.date"{%endif%}>
+                  {{ 'customer.orders.date' | t }}
+                </th>
+                <th {% if settings.enable_multilang %}data-translate="customer.orders.payment_status"{%endif%}>
+                  {{ 'customer.orders.payment_status' | t }}
+                </th>
+                <th {% if settings.enable_multilang %}data-translate="customer.orders.fulfillment_status"{%endif%}>
+                  {{ 'customer.orders.fulfillment_status' | t }}
+                </th>
+                <th {% if settings.enable_multilang %}data-translate="customer.orders.total"{%endif%}>
+                  {{ 'customer.orders.total' | t }}
+                </th>
+              </tr>
+            </thead>
+            
+            <tbody>
+              {% for order in customer.orders %}
+              <tr>
+                <td>{{ order.name | link_to: order.customer_url }}</td>
+                <td>{{ order.created_at | date: format: 'month_day_year' }}</td>
+                <td>{{ order.financial_status_label }}</td>
+                <td>{{ order.fulfillment_status_label }}</td>
+                <td>{{ order.total_price | money }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p class="note" {% if settings.enable_multilang %}data-translate="customer.orders.none"{%endif%}>
+          {{ 'customer.orders.none' | t }}
+        </p>
+        {% endif %}
+      </div>
+
+      <div class="grid-item">
+        <h4 class="box-title" {% if settings.enable_multilang %}data-translate="customer.account.details"{%endif%}>
+          {{ 'customer.account.details' | t }}
+        </h4>
+
+        <h5 class="acc-name">{{ customer.name }}</h5>
+
+        {% if customer.default_address != nil %}
+        <div class="addr">
+          <span class="cus-addr">
+            {{ customer.default_address.address1 }}
+          </span>
+
+          {% if customer.default_address.address2 != "" %}
+          <span class="cus-addr">
+            {{ customer.default_address.address2 }}
+          </span>
+          {% endif %}
+
+          {% if customer.default_address.city != "" %}
+          <span class="cus-addr">
+            {{ customer.default_address.city }}
+          </span>
+          {% endif %}
+
+          {% if customer.default_address.province_code != "" %}
+          <span class="cus-addr">
+            {{ customer.default_address.province_code | upcase }}
+          </span>
+          {% endif %}
+
+          {% if customer.default_address.zip != "" %}
+          <span class="cus-addr addr-zip">
+            {{ customer.default_address.zip | upcase }}
+          </span>
+          {% endif %}
+
+          {% if customer.default_address.country != "" %}
+          <span class="cus-addr">
+            {{ customer.default_address.country }}
+          </span>
+          {% endif %}
+
+          {% if customer.default_address.phone != "" %}
+          <span class="cus-addr">
+            {{ customer.default_address.phone }}
+          </span>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="action-btn">
+          <a class="btn btn-padd42" href="/account/addresses">
+            <span {% if settings.enable_multilang %}data-translate="customer.account.view_addresses"{%endif%}>
+              {{ 'customer.account.view_addresses' | t }}
+            </span>
+            <span>
+              ({{ customer.addresses_count }})
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
