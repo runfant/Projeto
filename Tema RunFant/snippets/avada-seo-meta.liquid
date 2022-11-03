@@ -1,0 +1,31 @@
+{% if request.page_type == 'product' %}
+{%- unless avada_seo_ovr_product_ids contains product.id -%}
+{%- capture avada_seo_meta_title -%}{{ product.title }}{%- endcapture -%}
+{%- capture avada_seo_meta_description -%}Buy {{ product.title }} at the lowest price in {{ shop.address.country }}. Check reviews and buy {{ product.title }} today.{%- endcapture -%}
+{% endunless %}
+{% endif %}
+
+{% if request.page_type == 'collection' %}
+{%- unless avada_seo_ovr_collection_ids contains collection.id -%}
+{%- capture avada_seo_meta_title -%}{{ collection.title }}{%- endcapture -%}
+{%- capture avada_seo_meta_description -%}Buy {{ collection.title }} at {{ shop.name }}. Check Price and Buy Online. ✓ Free Shipping ✓ Cash on Delivery ✓ Best Offers.{%- endcapture -%}
+{% endunless %}
+{% endif %}
+
+{% if request.page_type == 'article' %}
+{%- unless avada_seo_ovr_article_ids contains article.id -%}
+{%- capture avada_seo_meta_title -%}{{ article.title }}{%- endcapture -%}
+{%- capture avada_seo_meta_description -%}{{ article.excerpt_or_content }}{%- endcapture -%}
+{% endunless %}
+{% endif %}
+
+{% if avada_seo_meta_title %}
+{%- assign seo_title = avada_seo_meta_title | strip_html | strip -%}
+{%- assign page_title = seo_title -%}
+{%- assign og_title = seo_title -%}
+{% endif %}
+
+{% if avada_seo_meta_description %}
+{%- assign page_description = avada_seo_meta_description | strip_html | strip -%}
+{%- assign og_description = page_description -%}
+{% endif %}

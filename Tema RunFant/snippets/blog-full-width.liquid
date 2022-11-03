@@ -1,0 +1,28 @@
+<div class="blog-template blog-template-full-width">
+  <div class="bg-breddcrumb">
+    <div class="container-padd60">
+      {% include 'breadcrumb' %}
+    </div>
+  </div>
+  
+  <div class="container-padd60">
+    <div class="page-header">
+      {% if current_tags %}    
+      <h1>
+        <a href="{{ blog.url }}">{% include 'multilang' with page_title %}</a> &raquo; {{ current_tags.first }}
+      </h1>
+      {% else %}    
+      <h1>
+        {% include 'multilang' with page_title %}
+      </h1>
+      {% endif %}
+    </div>
+    
+    <div class="halo-blog-content">
+      <div class="row">
+        {% section 'sidebar-blog' %}
+        {% section 'blog-template-fullWidth' %}
+      </div>      
+    </div>   
+  </div>
+</div>

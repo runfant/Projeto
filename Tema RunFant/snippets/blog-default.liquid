@@ -1,0 +1,24 @@
+<div class="blog-template blog-template-default">
+  <div class="container">
+  	{% include 'breadcrumb' %}
+    
+    <div class="page-header">
+      {% if current_tags %}    
+      <h1>
+        <a href="{{ blog.url }}">{% include 'multilang' with page_title %}</a> &raquo; {{ current_tags.first }}
+      </h1>
+      {% else %}    
+      <h1>
+        {% include 'multilang' with page_title %}
+      </h1>
+      {% endif %}
+    </div>
+    
+    <div class="halo-blog-content">
+      <div class="row">
+        {% section 'sidebar-blog' %}
+        {% section 'blog-template' %}
+      </div>      
+    </div>   
+  </div>
+</div>

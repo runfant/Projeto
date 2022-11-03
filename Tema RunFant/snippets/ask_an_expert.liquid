@@ -1,0 +1,179 @@
+{% if settings.enable_ask_an_expert %}
+<div class="modal fade halo_modal-custom" id="ask_an_expert" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        {% if settings.ask_an_expert_header != blank %}
+        <h5 class="modal-title">
+          {% include 'multilang' with settings.ask_an_expert_header %}
+        </h5>
+        {% endif %}
+        
+        <a data-dismiss="modal" class="close close-modal" title="{{ 'cart.ajax_cart.close' | t }}" href="javascript:void(0)">
+          {% include 'icon-close' %}
+        </a>
+      </div>
+      
+      <div class="modal-body">
+        <div class="form-wrappder">
+          {% if settings.ask_an_expert_title != blank or settings.ask_an_expert_des != blank %}
+          <div class="title-wrapper">
+            {% if settings.ask_an_expert_title != blank %}
+            <h5 class="title">
+              {% include 'multilang' with settings.ask_an_expert_title %}
+            </h5>
+            {% endif %}
+            
+            {% if settings.ask_an_expert_des != blank %}
+            <div class="des">
+              {% if settings.enable_multilang and settings.ask_an_expert_des contains '|' %}
+              <div class="lang1">
+                {{ settings.ask_an_expert_des | split: '|' | first }}
+              </div>
+              <div class="lang2">
+                {{ settings.ask_an_expert_des | split: '|' | last }}
+              </div>
+              {% else %}
+              <div>
+                {{ settings.ask_an_expert_des | split: '|' | first }}
+              </div>
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
+          
+          {% if settings.ask_an_expert_questions != blank %}
+          <div class="questions">
+            {% if settings.enable_multilang and settings.ask_an_expert_questions contains '|' %}
+            <div class="lang1">
+              {{ settings.ask_an_expert_questions | split: '|' | first }}
+            </div>
+            <div class="lang2">
+              {{ settings.ask_an_expert_questions | split: '|' | last }}
+            </div>
+            {% else %}
+            <div>
+              {{ settings.ask_an_expert_questions | split: '|' | first }}
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
+          
+          <div class="form-inner">
+            {% form 'contact' %}
+
+            {% if form.errors %}
+            {{ form.errors | default_errors }}
+            {% endif %}
+            
+            {% if form.posted_successfully? %}
+            <div class="note form-success" {% if settings.enable_multilang %}data-translate="contact.form.post_success"{% endif %}>
+              {{ 'contact.form.post_success' | t }}
+            </div>
+            
+            <script>
+              $(document).ready(function(){
+                $('#ask_an_expert').modal();
+                $('#ask_an_expert .form-content').hide();
+                $('#ask_an_expert .questions').hide();
+              });
+            </script>
+            {% endif %}
+ 
+            <div class="form-content">
+              <div class="form-group">
+                <input type="text" required id="contactFormName" name="contact[Name]" autocapitalize="words" placeholder="{{ 'contact.form.name' | t }}">
+              </div>
+
+              <div class="form-group">
+                <input type="email" name="contact[email]" required id="contactFormEmail" autocorrect="off" autocapitalize="off" placeholder="{{ 'contact.form.email' | t }}">
+              </div>
+
+              <div class="form-group">
+                <input type="tel" required name="contact[Phone Number]" pattern="[0-9]*" placeholder="{{ 'contact.form.phone' | t }}">
+              </div>
+
+              {% if settings.enable_ask_do_you_need %}
+              <div class="form-group custom-radio">
+                {% if settings.ask_do_you_need != blank %}
+                <label>
+                  {% include 'multilang' with settings.ask_do_you_need %}
+                </label>
+                {% endif %}
+
+                {% if settings.ask_do_you_need_1 != blank %}
+                <input checked id="do-you-need-1" type="radio" name="contact[{{ settings.ask_do_you_need | split: '|' | first }}]" value="{{ settings.ask_do_you_need_1 | split: '|' | first }}"/>
+                <label for="do-you-need-1">
+                  {% include 'multilang' with settings.ask_do_you_need_1 %}
+                </label>
+                {% endif %}
+
+                {% if settings.ask_do_you_need_2 != blank %}
+                <input id="do-you-need-2" type="radio" name="contact[{{ settings.ask_do_you_need | split: '|' | first }}]" value="{{ settings.ask_do_you_need_2 | split: '|' | first }}"/>
+                <label for="do-you-need-2">
+                  {% include 'multilang' with settings.ask_do_you_need_2 %}
+                </label>
+                {% endif %}
+
+                {% if settings.ask_do_you_need_3 != blank %}
+                <input id="do-you-need-3" type="radio" name="contact[{{ settings.ask_do_you_need | split: '|' | first }}]" value="{{ settings.ask_do_you_need_3 | split: '|' | first }}"/>
+                <label for="do-you-need-3">
+                  {% include 'multilang' with settings.ask_do_you_need_3 %}
+                </label> 
+                {% endif %}
+              </div>
+              {% endif %}
+
+              <div class="form-group">
+                {% if settings.ask_form_mess != blank %}
+                <label for="contactFormMessage">
+                  {% include 'multilang' with settings.ask_form_mess %}
+                </label>
+                {% endif %}
+                <textarea rows="6" name="contact[Message]" id="contactFormMessage"></textarea>
+              </div>
+
+              {% if settings.enable_how_would_you_like_me_to_contact_you %}
+              <div class="form-group custom-radio last">
+                {% if settings.how_would_you_like_me_to_contact_you != blank %}
+                <label>
+                  {% include 'multilang' with settings.how_would_you_like_me_to_contact_you %}
+                </label>
+                {% endif %}
+
+                {% if settings.contact_with_you_1 != blank %}
+                <input checked id="contact-with-you-1" type="radio" name="contact[{{ settings.how_would_you_like_me_to_contact_you | split: '|' | first }}]" value="{{ settings.contact_with_you_1 | split: '|' | first }}"/>
+                <label for="contact-with-you-1">
+                  {% include 'multilang' with settings.contact_with_you_1 %}
+                </label>
+                {% endif %}
+
+                {% if settings.contact_with_you_2 != blank %}
+                <input id="contact-with-you-2" type="radio" name="contact[{{ settings.how_would_you_like_me_to_contact_you | split: '|' | first }}]" value="{{ settings.contact_with_you_2 | split: '|' | first }}"/>
+                <label for="contact-with-you-2">
+                  {% include 'multilang' with settings.contact_with_you_2 %}
+                </label>  
+                {% endif %}
+
+                {% if settings.contact_with_you_3 != blank %}
+                <input id="contact-with-you-3" type="radio" name="contact[{{ settings.how_would_you_like_me_to_contact_you | split: '|' | first }}]" value="{{ settings.contact_with_you_3 | split: '|' | first }}"/>
+                <label for="contact-with-you-3">
+                  {% include 'multilang' with settings.contact_with_you_3 %}
+                </label> 
+                {% endif %}
+              </div>
+              {% endif %}
+
+              <div class="actions">
+                <input type="submit" class="btn" {% if settings.enable_multilang %}data-translate="contact.form.send_question"{%endif%} value="{{ 'contact.form.send_question' | t }}">
+              </div>
+            </div>
+            {% endform %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

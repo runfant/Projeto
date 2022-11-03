@@ -1,0 +1,57 @@
+<li class="blog-item">
+  <h3 class="article-title">
+    <a href="{{ article.url }}">
+      {% include 'multilang' with article.title %}
+    </a>
+  </h3>
+
+  <div class="blog_author">    
+    {% if section.settings.blog_show_author %}
+    <span class="article__author">
+     by {{ article.author }}
+    </span>
+    {% endif %}
+    
+    {% if section.settings.blog_show_date %}
+    <span class="article__date">
+      on {{ article.published_at | time_tag: format: 'month_day_year' }}
+    </span>
+    {% endif %}
+    
+    {% if blog.comments_enabled? %}
+    <a class="blog-comment" href="{{ article.url }}#comments"{% if settings.enable_multilang %} data-translate="blogs.comments.comments_with_count|count:{{article.comments_count}}"{%endif%}>
+      {{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
+    </a>      
+    {% endif %}   
+  </div> 
+
+  <div class="article-details">
+    {% if article.image %}
+    {% assign image_alt = article.title | escape %}
+    <div class="article-img">
+      {{ article | img_url: '1024x1024' | img_tag: image_alt, 'article__image' | link_to: article.url | replace: '<a', '<a class="animate-scale"' }}
+    </div>
+    {% endif %}
+
+    <div class="rte article-excerpt">
+      <div class="des">
+        {% if settings.enable_multilang and article.excerpt_or_content contains '[lang2]' %}
+        <div class="lang1">
+          {{ article.excerpt_or_content | strip_html | truncatewords: 64 | split: "[lang2]" | first | split: "|" | first}}
+        </div>
+        <div class="lang2">
+          {{ article.excerpt_or_content | strip_html | truncatewords: 64 | split:"[lang2]" | last | split: "|" | last }}
+        </div>
+        {% else %}
+        {{ article.excerpt_or_content | strip_html | truncatewords: 64  | split:"[lang2]" | first | split: "|" | first }}
+        {% endif %}
+      </div>
+      
+      <div class="actions">
+        <a href="{{ article.url }}" class="btn btn-read-more" {% if settings.enable_multilang %}data-translate="blogs.article.read_more"{% endif %}>
+          {{ 'blogs.article.read_more' | t }}
+        </a>
+      </div>            
+    </div>
+  </div>
+</li>

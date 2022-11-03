@@ -1,0 +1,143 @@
+{% if section.blocks.size > 0 or section.settings.dpl_gallery_lookbook or section.settings.dpl_lookbook_description or section.settings.show_cart_best_sellers_product %}
+<div class="gallery_lookbook-blog_detail">
+  {% if section.blocks.size > 0 and section.settings.dpl_gallery_lookbook %}
+  <div class="gallery_lookbook-box">
+    {% if section.settings.gallery_lb_title != blank %}
+    <div class="widget-title">   
+      <h3 class="box-title">
+        <span class="title"> 
+          {% include 'multilang' with section.settings.gallery_lb_title %}
+        </span>
+      </h3>      
+    </div>
+    {% endif %}
+    
+    <div class="row">
+    {% for block in section.blocks %}
+    
+      {%- assign product_main = all_products[block.settings.main_pr_look] -%}    
+      
+      {%- assign img_1 = block.settings.image_1 -%}
+      {%- assign img_2 = block.settings.image_2 -%}
+      {%- assign img_3 = block.settings.image_3 -%} 
+      
+      {% if img_1 != blank and img_2 != blank and img_3 != blank %}
+      {%- assign col_grid = 'col-6 col-sm-6 col-md-4' -%}
+      {% else %}
+      {%- assign col_grid = 'col' -%}
+      {% endif %}
+      
+      {% include 'gallery_lookbook-item' %}
+
+    {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  
+  {% if section.settings.dpl_lookbook_description %}
+  {% if section.settings.quote_title != blank or section.settings.quote_title_2 != blank or section.settings.quote_des != blank or section.settings.quote_des_2 != blank %}
+  <div class="quote-detail rte">
+    {% if section.settings.quote_title != blank %}
+    <h4>
+      {% include 'multilang' with section.settings.quote_title %}
+    </h4>
+    {% endif %}
+
+    {% if section.settings.quote_des != blank %}
+    <blockquote>
+      {% include 'multilang' with section.settings.quote_des %}
+    </blockquote>
+    {% endif %}
+
+    {% if section.settings.quote_title_2 != blank %}
+    <h4>
+      {% include 'multilang' with section.settings.quote_title_2 %}
+    </h4>
+    {% endif %}
+
+    {% if section.settings.quote_des_2 != blank %}
+    {% if settings.enable_multilang %}
+    <div class="lang1">
+      {{ section.settings.quote_des_2 | split: '|' | first | strip }}
+    </div>
+    <div class="lang2">
+      {{ section.settings.quote_des_2  | split: '|' | last | strip }}
+    </div>
+    {% else %}
+    <div>
+      {{ section.settings.quote_des_2  | split: '|' | first }}
+    </div>
+    {% endif %}
+    {% endif %}
+  </div>
+  {% endif %}
+  {% endif %}
+  
+  {% if section.settings.show_cart_best_sellers_product %}
+  {% case section.settings.collection_results_per_row1 %}
+  {% when '2' %}
+  {%- assign grid_item_width = 'col-6' -%}
+  {%- assign row = 'two-items' -%}
+  {% when '3' %}
+  {%- assign grid_item_width = 'col-6 col-md-4' -%}
+  {%- assign row = 'three-items' -%}
+  {% when '4' %}
+  {%- assign grid_item_width = 'col-6 col-md-4 col-lg-3' -%}
+  {%- assign row = 'four-items' -%}
+  {% when '5' %}
+  {%- assign grid_item_width = 'col-6 col-md-4 col-lg-3 col5' -%}
+  {%- assign row = 'five-items' -%}
+  {% when '6' %}
+  {%- assign grid_item_width = 'col-6 col-md-4 col-lg-3 col-xl-2' -%}
+  {%- assign row = 'six-items' -%}
+  {% endcase %}
+
+  <section class="featured-product-article" data-featured-products>
+    {% if section.settings.title != blank %}
+    <div class="widget-title">
+      <h3 class="box-title">
+        <span class="title"> 
+          {% include 'multilang' with section.settings.title %}
+        </span>
+      </h3>
+    </div>
+    {% endif %}
+
+    <div class="widget-product">
+      <div class="products-grid row {{ row }}" data-row="{{ section.settings.collection_results_per_row1 }}">
+        {% for product in collections[section.settings.show_slider_featured_collection].products limit:section.settings.slider_featured_limit_all %}
+        <div class="grid-item {{ grid_item_width }}{% if settings.product_image_border %} grid-item-border{% endif %} ">
+          {% include 'product-grid-item' %}
+        </div>
+
+        {% else %}
+        {% for product in (1..section.settings.slider_featured_limit_all) %}
+        <div class="grid-item {{ grid_item_width }}">
+          <div class="grid-view-item no-product">
+            <div class="product-top">
+              <div class="not_img">
+                Product Img
+              </div>
+            </div>
+
+            <div class="product-bottom">
+              <div class="product-title">
+                <span>
+                  Your product's name
+                </span>`
+              </div>
+
+              <div class="price-box">
+                <span> $250.00 </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endif %}
