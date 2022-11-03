@@ -1,0 +1,356 @@
+{% comment %}
+  This template will be automatically generated for you if the file doesn't exist,
+  but where's the fun in having no control? Define your layout below.
+
+  The 'layout settings.customer_layout' line is inserted at the top of every customer account template.
+  Your theme's settings determine to use the 'default' or 'theme' customer templates.
+  More info:
+    - http://www.tetchi.ca/shopify-theme-from-scratch-part-11/
+
+  Template note:
+    - All IDs on this template are required to make the form(s) submit properly
+    - There are two instances of inline JS below. Best practices advise separating this
+      into an external JS file
+    - There are separate 'add new' and 'edit' address forms
+{% endcomment %}
+
+{% layout settings.customer_layout %}
+
+<div class="account-page addresses-page custom-acc-page">
+  <div class="container">
+    <header class="page-header">
+      <h1 class="large--left" {% if settings.enable_multilang %}data-translate="customer.account.title"{% endif %}>
+        {{ 'customer.account.title' | t }}
+      </h1>
+    </header>
+    
+    <div class="grid">
+      <div class="grid-item">
+        <div class="large--right">
+          <a href="#" class="btn btn-padd42" onclick="Shopify.CustomerAddress.toggleNewForm(); return false;" {% if settings.enable_multilang %}data-translate="customer.addresses.add_new"{% endif %}>
+            {{ 'customer.addresses.add_new' | t }}
+          </a>
+        </div>
+
+        <div class="last">
+          <a href="/account"{% if settings.enable_multilang %} data-translate="customer.account.return"{% endif %}>
+            {{ 'customer.account.return' | t }}
+          </a>
+        </div>
+      </div>
+
+        {% comment %}
+        Add address form, hidden by default
+        {% endcomment %}
+
+      <div class="grid-item">
+        <div class="add-edit-addr" id="add_address" style="display: none;">
+          {% form 'customer_address', customer.new_address %}
+          <h4 class="box-title"{% if settings.enable_multilang %} data-translate="customer.addresses.add_new"{% endif %}>
+            {{ 'customer.addresses.add_new' | t }}
+          </h4>
+
+          <div class="form-group">
+            <label for="address_first_name_new" {% if settings.enable_multilang %}data-translate="customer.addresses.first_name"{% endif %}>
+              {{ 'customer.addresses.first_name' | t }}
+            </label>
+            <input type="text" id="address_first_name_new" class="address_form" name="address[first_name]" value="{{form.first_name}}" autocapitalize="words">
+          </div>
+
+          <div class="form-group">
+            <label for="address_last_name_new" {% if settings.enable_multilang %}data-translate="customer.addresses.last_name"{% endif %}>
+              {{ 'customer.addresses.last_name' | t }}
+            </label>
+            <input type="text" id="address_last_name_new" class="address_form" name="address[last_name]" value="{{form.last_name}}" autocapitalize="words">
+          </div>
+
+          <div class="form-group">
+            <label for="address_company_new" {% if settings.enable_multilang %}data-translate="customer.addresses.company"{% endif %}>
+              {{ 'customer.addresses.company' | t }}
+            </label>
+            <input type="text" id="address_company_new" class="address_form" name="address[company]" value="{{form.company}}" autocapitalize="words">
+          </div>
+
+          <div class="form-group">
+            <label for="address_address1_new" {% if settings.enable_multilang %}data-translate="customer.addresses.address1"{% endif %}>
+              {{ 'customer.addresses.address1' | t }}
+            </label>
+            <input type="text" id="address_address1_new" class="address_form" name="address[address1]" value="{{form.address1}}" autocapitalize="words">
+          </div>
+
+          <div class="form-group">
+            <label for="address_address2_new" {% if settings.enable_multilang %}data-translate="customer.addresses.address2"{% endif %}>
+              {{ 'customer.addresses.address2' | t }}
+            </label>
+            <input type="text" id="address_address2_new" class="address_form" name="address[address2]" value="{{form.address2}}" autocapitalize="words">
+          </div>
+
+          <div class="form-group">
+            <label for="address_city_new" {% if settings.enable_multilang %}data-translate="customer.addresses.city"{% endif %}>
+              {{ 'customer.addresses.city' | t }}
+            </label>
+            <input type="text" id="address_city_new" class="address_form" name="address[city]" value="{{form.city}}" autocapitalize="words">
+          </div>
+
+          <div class="form-group" style="position: relative; max-width: 380px;">
+            <label for="address_country_new" {% if settings.enable_multilang %}data-translate="customer.addresses.country"{% endif %}>
+              {{ 'customer.addresses.country' | t }}
+            </label>
+            <select id="address_country_new" name="address[country]" data-default="{{form.country}}">{{ country_option_tags }}</select>
+            <span class="icon-dropdown">
+              <i class="fa fa-angle-down"></i>
+            </span>
+          </div>
+
+          <div id="address_province_container_new" class="form-group" style="position: relative; max-width: 380px;">
+            <label for="address_province_new" {% if settings.enable_multilang %}data-translate="customer.addresses.province"{% endif %}>
+              {{ 'customer.addresses.province' | t }}
+            </label>
+            <select id="address_province_new" class="address_form" name="address[province]" data-default="{{form.province}}"></select>
+            <span class="icon-dropdown">
+              <i class="fa fa-angle-down"></i>
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="address_zip_new" {% if settings.enable_multilang %}data-translate="customer.addresses.zip"{% endif %}>
+              {{ 'customer.addresses.zip' | t }}
+            </label>
+            <input type="text" id="address_zip_new" class="address_form" name="address[zip]" value="{{form.zip}}" autocapitalize="characters">
+          </div>
+
+          <div class="form-group">
+            <label for="address_phone_new" {% if settings.enable_multilang %}data-translate="customer.addresses.phone"{% endif %}>
+              {{ 'customer.addresses.phone' | t }}
+            </label>
+            <input type="tel" id="address_phone_new" class="address_form" name="address[phone]" value="{{form.phone}}" placeholder="555-555-1234">
+          </div>
+
+          <div class="form-group">
+            {{ form.set_as_default_checkbox }}
+            <label style="display: inline-block;" for="address_default_address_new" class="inline" {% if settings.enable_multilang %}data-translate="customer.addresses.set_default"{% endif %}>
+              {{ 'customer.addresses.set_default' | t }}
+            </label>
+          </div>
+
+          <div class="action-btn">
+            <input type="submit" class="btn btn-padd42" {% if settings.enable_multilang %}data-translate="customer.addresses.add"{% endif %} value="{{ 'customer.addresses.add' | t }}">
+            <a style="display: inline-block; padding: 8px 0 6px 10px; margin-bottom: 25px; vertical-align: middle;" href="#" onclick="Shopify.CustomerAddress.toggleNewForm(); return false;" {% if settings.enable_multilang %}data-translate="customer.addresses.cancel"{% endif %}>
+              {{ 'customer.addresses.cancel' | t }}
+            </a>
+          </div>
+          {% endform %}
+        </div>
+      </div>
+      
+      <div class="grid-item">
+        <h4 class="box-title" {% if settings.enable_multilang %}data-translate="customer.addresses.title"{% endif %}>
+          {{ 'customer.addresses.title' | t }}
+        </h4>
+
+        {% comment %}
+        List all customer addresses with a unique edit form.
+        Also add pagination in case they have a large number of address (unlikely)
+        {% endcomment %}
+
+        {% paginate customer.addresses by 5 %}
+        {% for address in customer.addresses %}
+
+        <h5 class="acc-name">
+          {{ address.first_name | capitalize }} {{address.last_name | capitalize }}
+
+          {% if address == customer.default_address %}
+          <span {% if settings.enable_multilang %}data-translate="customer.addresses.default"{% endif %}>
+            ({{ 'customer.addresses.default' | t }})
+          </span>
+          {% endif %}
+        </h5>            
+
+        <div class="addr">
+          <span class="cus-addr">
+            {{ address.company }}
+          </span>
+          <span class="cus-addr">
+            {{ address.street }}
+          </span>
+          <span class="cus-addr">
+            {{ address.city | capitalize }}
+          </span>
+          {% if address.province_code %}
+          <span class="cus-addr">
+            {{ address.province_code | upcase }}
+          </span>
+          {% endif %}
+          <span class="cus-addr">
+            {{ address.zip | upcase }}
+          </span>
+          <span class="cus-addr">
+            {{ address.country }}
+          </span>
+          <span class="cus-addr">
+            {{ address.phone }}
+          </span>
+        </div>
+      
+        <div class="action-btn btn-edit-delete">
+          {{ 'customer.addresses.edit' | t | edit_customer_address_link: address.id }}
+          {{ 'customer.addresses.delete' | t | delete_customer_address_link: address.id }}
+        </div>
+      </div>
+      
+      <div class="grid-item">
+        <div class="add-edit-addr" id="edit_address_{{address.id}}" style="display:none;">
+          {% form 'customer_address', address %}
+          <h4 class="box-title" {% if settings.enable_multilang %}data-translate="customer.addresses.edit_address"{% endif %}>
+            {{ 'customer.addresses.edit_address' | t }}
+          </h4>
+
+          <div class="form-group">
+            <label for="address_first_name_{{form.id}}" {% if settings.enable_multilang %}data-translate="customer.addresses.first_name"{% endif %}>{{ 'customer.addresses.first_name' | t }}</label>
+            <input type="text" id="address_first_name_{{form.id}}" class="address_form" name="address[first_name]" value="{{form.first_name}}" autocapitalize="words">
+          </div>
+
+          <div class="form-group">
+            <label for="address_last_name_{{form.id}}" {% if settings.enable_multilang %}data-translate="customer.addresses.last_name"{% endif %}>{{ 'customer.addresses.last_name' | t }}</label>
+            <input type="text" id="address_last_name_{{form.id}}" class="address_form" name="address[last_name]" value="{{form.last_name}}" autocapitalize="words">
+          </div>
+
+          <div class="form-group">
+            <label for="address_company_{{form.id}}" {% if settings.enable_multilang %}data-translate="customer.addresses.company"{% endif %}>
+              {{ 'customer.addresses.company' | t }}
+            </label>
+            <input type="text" id="address_company_{{form.id}}" class="address_form" name="address[company]" value="{{form.company}}" autocapitalize="words">
+          </div>
+
+          <div class="form-group">
+            <label for="address_address1_{{form.id}}" {% if settings.enable_multilang %}data-translate="customer.addresses.address1"{% endif %}>
+              {{ 'customer.addresses.address1' | t }}
+            </label>
+            <input type="text" id="address_address1_{{form.id}}" class="address_form" name="address[address1]" value="{{form.address1}}" autocapitalize="words">
+          </div>
+
+          <div class="form-group">
+            <label for="address_address2_{{form.id}}" {% if settings.enable_multilang %}data-translate="customer.addresses.address2"{% endif %}>
+              {{ 'customer.addresses.address2' | t }}
+            </label>
+            <input type="text" id="address_address2_{{form.id}}" class="address_form" name="address[address2]" value="{{form.address2}}" autocapitalize="words">
+          </div>
+
+          <div class="form-group">
+            <label for="address_city_{{form.id}}" {% if settings.enable_multilang %}data-translate="customer.addresses.city"{% endif %}>
+              {{ 'customer.addresses.city' | t }}
+            </label>
+            <input type="text" id="address_city_{{form.id}}" class="address_form" name="address[city]" value="{{form.city}}" autocapitalize="words">
+          </div>
+
+          <div class="form-group" style="position: relative; max-width: 380px;">
+            <label for="address_country_{{form.id}}" {% if settings.enable_multilang %}data-translate="customer.addresses.country"{% endif %}>{{ 'customer.addresses.country' | t }}</label>
+            <select id="address_country_{{form.id}}" name="address[country]" data-default="{{form.country}}">{{ country_option_tags }}</select>
+            <span class="icon-dropdown">
+              <i class="fa fa-angle-down"></i>
+            </span>
+          </div>
+
+          <div class="form-group" id="address_province_container_{{form.id}}" style="position: relative; max-width: 380px;">
+            <label for="address_province_{{form.id}}" {% if settings.enable_multilang %}data-translate="customer.addresses.province"{% endif %}>{{ 'customer.addresses.province' | t }}</label>
+            <select id="address_province_{{form.id}}" class="address_form" name="address[province]" data-default="{{form.province}}"></select>
+            <span class="icon-dropdown">
+              <i class="fa fa-angle-down"></i>
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="address_zip_{{form.id}}" {% if settings.enable_multilang %}data-translate="customer.addresses.zip"{% endif %}>
+              {{ 'customer.addresses.zip' | t }}
+            </label>
+            <input type="text" id="address_zip_{{form.id}}" class="address_form" name="address[zip]" value="{{form.zip}}" autocapitalize="characters">
+          </div>
+
+          <div class="form-group">
+            <label for="address_phone_{{form.id}}" {% if settings.enable_multilang %}data-translate="customer.addresses.phone"{% endif %}>
+              {{ 'customer.addresses.phone' | t }}
+            </label>
+            <input type="tel" id="address_phone_{{form.id}}" class="address_form" name="address[phone]" value="{{form.phone}}" placeholder="555-555-1234">
+          </div>
+
+          <div class="form-group">
+            {{ form.set_as_default_checkbox }}
+            <label style="display: inline-block;" for="address_default_address_{{form.id}}" class="inline" {% if settings.enable_multilang %}data-translate="customer.addresses.set_default"{% endif %}>
+              {{ 'customer.addresses.set_default' | t }}
+            </label>
+          </div>
+
+          <div class="action-btn"> 
+            <input type="submit" class="btn" {% if settings.enable_multilang %}data-translate="customer.addresses.update"{% endif %} value="{{ 'customer.addresses.update' | t }}">
+            <a style="display: inline-block; padding: 8px 0 6px 10px; margin-bottom: 25px; vertical-align: middle;" href="#" onclick="Shopify.CustomerAddress.toggleForm({{form.id}}); return false;" {% if settings.enable_multilang %}data-translate="customer.addresses.cancel"{% endif %}>
+              {{ 'customer.addresses.cancel' | t }}
+            </a>
+          </div>
+          {% endform %}
+        </div>
+
+        {% endfor %}
+        {% if settings.enable_multilang %}
+        <script>
+          $(".button").find("a:eq(0)").attr("data-translate","customer.addresses.edit");
+          $(".button").find("a:eq(1)").attr("data-translate","customer.addresses.delete");
+        </script>
+        {% endif %}
+
+        {% if paginate.pages > 1 %}
+        <div class="text-center">
+          {% include 'pagination' %}
+        </div>
+        {% endif %}
+        {% endpaginate %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // Initialize observers on address selectors
+
+  
+  
+
+  // Setup province selector on each customer address
+  {% for address in customer.addresses %}
+    new Shopify.CountryProvinceSelector('address_country_{{address.id}}', 'address_province_{{address.id}}', {
+      hideElement: 'address_province_container_{{address.id}}'}
+    );
+  {% endfor %}
+  
+  new Shopify.CountryProvinceSelector('address_country_new', 'address_province_new', {
+    hideElement: 'address_province_container_new'
+  });
+
+  // Contents of customer_area.js (global asset)
+  Shopify.CustomerAddress = {
+    toggleForm: function(id) {
+      var editEl = document.getElementById('edit_address_'+id);
+      var viewEl = document.getElementById('view_address_'+id);
+      editEl.style.display = editEl.style.display == 'none' ? '' : 'none';
+      viewEl.style.display = viewEl.style.display == 'none' ? '' : 'none';
+      return false;
+    },
+
+    toggleNewForm: function() {
+      var el = document.getElementById('add_address');
+      el.style.display = el.style.display == 'none' ? '' : 'none';
+      return false;
+    },
+
+    destroy: function(id, confirm_msg) {
+      var msg = "{{ 'customer.addresses.delete_message' | t}}";
+      {% if settings.enable_multilang %}
+      if (translator.isLang2())
+        var msg = lang2.customer.addresses.delete_message;      
+      {% endif %}
+      if (confirm(msg)) {
+        Shopify.postLink('/account/addresses/'+id, {'parameters': {'_method': 'delete'}});
+      }
+    }
+  }
+</script>

@@ -1,0 +1,137 @@
+{% comment %}
+  This template will be automatically generated for you if the file doesn't exist,
+  but where's the fun in having no control? Define your layout below.
+
+  The 'layout settings.customer_layout' line is inserted at the top of every customer account template.
+  Your theme's settings determine to use the 'default' or 'theme' customer templates.
+  More info:
+    - http://www.tetchi.ca/shopify-theme-from-scratch-part-11/
+
+  Template note:
+    - All IDs on this template are required to make the forms submit properly
+    - There are two instances of inline JS below. Best practices advise separating this
+      into an external JS file.
+{% endcomment %}
+
+{% layout settings.customer_layout %}
+
+{% include 'breadcrumb' %}
+<div class="login-page">
+  {% comment %}
+    If a user has successfully requested a new password, the form.posted_successfully? variable
+    is set to true within the 'recover_customer_password' form only. Within that form you'll see
+    us assign a variable 'reset_success' to true, which is used in JS to show our success message.
+  {% endcomment %}
+  
+  <div class="note form-success" id="resetSuccess" style="display:none;">
+    We've sent you an email with a link to update your password.
+  </div>
+  
+  {% comment %}
+    This form must use 'customer_login'
+  {% endcomment %}
+  {% form 'customer_login' %}
+  <header class="page-header">
+    <h1 {% if settings.enable_multilang %}data-translate="customer.login.title"{%endif%}>{{ 'customer.login.title' | t }}</h1>
+  </header>
+  
+  {{ form.errors | default_errors }}
+  <label for="customer_email"><span {% if settings.enable_multilang %}data-translate="customer.login.email"{%endif%}>{{ 'customer.login.email' | t }}</span><em>*</em></label>
+  <input type="email" value="" name="customer[email]" id="customer_email" {% if form.errors contains "email" %}class="error"{% endif %} >
+  
+  {% if form.password_needed %}
+  <label for="customer_password"><span {% if settings.enable_multilang %}data-translate="customer.login.password"{%endif%}>{{ 'customer.login.password' | t }}</span><em>*</em></label>
+  <input type="password" value="" name="customer[password]" id="customer_password" {% if form.errors contains "password" %}class="error"{% endif %}>
+  {% endif %}
+  
+  <div class="action-btn">
+    <p><input type="submit" {% if settings.enable_multilang %}data-translate="customer.login.login"{%endif%} class="btn" value="{{ 'customer.login.login' | t }}"></p>
+    <p class="last">
+      <a href="#" onclick="showRecoverPasswordForm();return false;" {% if settings.enable_multilang %}data-translate="customer.login.forgot_password"{%endif%}>{{ 'customer.login.forgot_password' | t }}</a>
+      <span>{{ 'cart.label.or' | t }}</span> <a href="{{ shop.url }}" {% if settings.enable_multilang %}data-translate="customer.login.cancel"{%endif%}>
+      {{ 'customer.login.cancel' | t }}
+      </a>
+    </p>
+  </div>
+  {% endform %}
+  
+  {% comment %}
+    This page uses JavaScript to show/hide the recover password form
+  {% endcomment %}
+  <div id="recover_password" style="display: none;">
+    <header class="page-header">
+      <h2 {% if settings.enable_multilang %}data-translate="customer.recover_password.title"{%endif%}>{{ 'customer.recover_password.title' | t }}</h2>
+    </header>
+    <p {% if settings.enable_multilang %}data-translate="customer.recover_password.subtext"{%endif%}>{{ 'customer.recover_password.subtext' | t }}</p>
+    
+    {% comment %}
+      This form must use 'recover_customer_password'
+    {% endcomment %}
+    {% form 'recover_customer_password' %}
+    
+    {{ form.errors | default_errors }}
+    
+    {% comment %}
+      form.posted_successfully? is true only inside this form, but we want
+      to show a success message outside of it. To do so, set the variable
+      reset_success to true, then use JS to show our success message above.
+    {% endcomment %}
+    {% if form.posted_successfully? %}
+      {% assign resetPassword = true %}
+    {% endif %}
+    
+    <label for="recover-email" {% if settings.enable_multilang %}data-translate="customer.recover_password.email"{%endif%}>{{ 'customer.recover_password.email' | t }}</label>
+    <input type="email" value="" name="email" id="recover-email" {% if settings.enable_multilang %}data-translate="customer.recover_password.email" translate-item="placeholder" {%endif%} placeholder="{{ 'customer.recover_password.email' | t }}" >
+    
+    <div class="action-btn">
+      <p>
+        <input type="submit" class="btn" {% if settings.enable_multilang %}data-translate="customer.recover_password.submit"{%endif%} value="{{ 'customer.recover_password.submit' | t }}">
+      </p>
+      <span {% if settings.enable_multilang %}data-translate="cart.label.or"{%endif%}>
+        {{ 'cart.label.or' | t }}
+      </span>
+      <a href="#" onclick="hideRecoverPasswordForm();return false;" {% if settings.enable_multilang %}data-translate="customer.recover_password.cancel"{%endif%}>
+        {{ 'customer.recover_password.cancel' | t }}
+      </a>
+    </div>
+    {% endform %}
+    
+    {% comment %}
+      If accounts are set as optional, the following will be shown as an option
+      during checkout, not on the default /login page.
+    {% endcomment %}
+    
+    {% if shop.checkout.guest_login %}
+    <hr>
+    <h2 {% if settings.enable_multilang %}data-translate="customer.login.guest_title"{%endif%}>{{ 'customer.login.guest_title' | t }}</h2>
+    {% form 'guest_login' %}
+    <input type="submit" {% if settings.enable_multilang %}data-translate="customer.login.guest_continue"{%endif%} class="btn" value="{{ 'customer.login.guest_continue' | t }}">
+    {% endform %}
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  /*
+    Show/hide the recover password form when requested.
+    I'd suggest using some CSS3 transitions to make this change look cool,
+    but this gets the job done for now.
+  */
+  function showRecoverPasswordForm() {
+    document.getElementById('recover_password').style.display = 'block';
+    document.getElementById('customer_login').style.display='none';
+  }
+
+  function hideRecoverPasswordForm() {
+    document.getElementById('recover_password').style.display = 'none';
+    document.getElementById('customer_login').style.display = 'block';
+  }
+
+  // Allow deep linking to the recover password form
+  if (window.location.hash == '#recover') { showRecoverPasswordForm() }
+
+  // reset_success is only true when the reset form is
+  {% if reset_success %}
+    document.getElementById('resetSuccess').style.display = 'block';
+  {% endif %}
+</script>
