@@ -1,0 +1,20 @@
+{% assign variantCount = product.variants | size %}
+<form action="/cart/add" method="post" class="variants" id="{{id}}-{{ product.id }}" data-id="product-actions-{{ product.id }}" enctype="multipart/form-data">
+  {% if sold_out %}
+  <button class="btn add-to-cart-btn" type="submit" disabled="disabled" {% if settings.enable_multilang %}data-translate="products.product.unavailable"{% endif %}>
+    {{ 'products.product.unavailable' | t }}
+  </button>
+  {% else %}
+  {% if variantCount > 1 %}
+  <a class="btn" href="{{ product.url }}" title="{{ product.title }}" {% if settings.enable_multilang %}data-translate="products.product.select_options"{% endif %}>
+    {{ 'products.product.select_options' | t }}
+  </a>
+  {% else %}
+  <input type="hidden" name="id" value="{{ product.variants[0].id }}" />
+  <input type="hidden" name="quantity" value="1" />
+  <button data-btn-addToCart class="btn add-to-cart-btn" type="submit" data-form-id="#{{id}}-{{ product.id }}" {% if settings.enable_multilang %}data-translate="products.product.add_to_cart"{% endif %}>
+    {{ 'products.product.add_to_cart' | t }} 
+  </button>
+  {% endif %}
+  {% endif %}
+</form>
