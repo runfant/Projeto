@@ -1,0 +1,246 @@
+<div class="fof-wrapper">
+  <div class="background">
+    <h2>404</h2>
+    {% if section.settings.background %}
+    <img src="{{section.settings.background | img_url:'4000x4000'}}">
+    {% else %}
+    <div class="not_img">1840 x 960 px</div>
+    {% endif %}
+  </div>
+  <div class="content">
+    <h2>404</h2>
+    <p>{% include 'multilang' with section.settings.subtitle %}</p>
+    {% if section.settings.btn_text_1 != blank %}
+    <a href="{{section.settings.btn_link_1}}" class="btn">
+      {% include 'multilang' with section.settings.btn_text_1 %}
+    </a>
+    {% endif %}
+    {% if section.settings.btn_text_2 != blank %}
+    <a href="{{section.settings.btn_link_2}}" class="btn">
+      {% include 'multilang' with section.settings.btn_text_2 %}
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .background{
+    position:relative;
+  }
+  .background img{
+    display:block;
+    margin: 0 auto;
+  }
+  .background:before{
+    position:absolute;
+    content:'';
+    display:block;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    {% assign overlay_opacity = section.settings.overlay_opacity | plus: 0 %}
+    background:{{section.settings.overlay_color | color_modify:'alpha',overlay_opacity}};
+  }
+  .background h2{
+    display:none;
+  }
+  .content{
+    color:{{section.settings.text_color}};
+  }
+  .content h2{
+    font-size: {{section.settings.number_size}}px;
+    line-height:{{section.settings.number_size}}px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    margin-bottom:10px;
+  }
+  .content p{
+    font-size: {{section.settings.subtitle_size}}px;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-bottom:40px;
+  }
+
+  .content .btn{
+    width: 270px;
+    padding:12px 41px 10px;
+    margin:0px 15px 15px;
+    background-color: {{section.settings.btn_bgc}};
+    color:{{section.settings.btn_txtc}};
+    border-color:{{section.settings.btn_bdc}};
+  }
+  .content .btn:hover{
+    background-color: {{section.settings.btn_bgc_h}};
+    color:{{section.settings.btn_txtc_h}};
+    border-color:{{section.settings.btn_bdc_h}};
+  }
+
+  @media (max-width:1024px){
+    .content h2{
+      {% assign number_size = section.settings.number_size | plus: 0 %}
+      {% if number_size > 150 %}
+      font-size: 150px;
+      line-height:150px;
+      {% endif %}
+    }
+  }
+
+  @media (max-width:991px){
+    .background h2{
+      display:block;
+      {% if number_size > 120 %}
+      font-size: 120px;
+      line-height:120px;
+      {% endif %}
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      position:absolute;
+      top:50%;
+      left:50%;
+      -moz-transform: translate(-50%, -50%);
+      -o-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+    .fof-wrapper .content{
+      position:static;
+      -moz-transform: translate(0%, 0%);
+      -o-transform: translate(0%, 0%);
+      -ms-transform: translate(0%, 0%);
+      -webkit-transform: translate(0%, 0%);
+      transform: translate(0%, 0%);
+      width:100%;
+      padding:40px 20px 20px;
+    }
+    .content h2{
+      display:none;
+    }
+  }
+    @media (max-width:767px){
+      .fof-wrapper{
+        padding:10px;
+      }
+      .background h2{
+        {% if number_size > 80 %}
+        font-size: 80px;
+        line-height:80px;
+        {% endif %}
+      }
+      .content .btn{
+        padding: 10px 41px 8px;
+      }
+    }
+</style>
+{% schema %}
+{
+  "name": "404 Page",
+  "settings": [
+    {
+      "type":"image_picker",
+      "id":"background",
+      "label":"Background"
+    },
+    {
+      "type":"color",
+      "id":"overlay_color",
+      "label":"Overlay Layer Background Color",
+      "default":"#fff"
+    },
+    {
+      "type":"text",
+      "id":"overlay_opacity",
+      "label":"Overlay Layer Opacity",
+      "default":"0.35",
+      "info":"From 0 to 1"
+    },
+    {
+      "type":"text",
+      "id":"number_size",
+      "label":"Number 404 Size",
+      "default":"200"
+    },
+    {
+      "type":"text",
+      "id":"subtitle",
+      "label":"Subtitle",
+      "default":"Oops... the page you looking for clocked out!"
+    },
+    {
+      "type":"text",
+      "id":"subtitle_size",
+      "label":"Subtitle Size",
+      "default":"16"
+    },
+    {
+      "type":"color",
+      "id":"text_color",
+      "label":"Text Color",
+      "default":"#232323"
+    },
+    {
+      "type":"color",
+      "id":"btn_bgc",
+      "label":"Button Background Color",
+      "default":"#232323"
+    },
+    {
+      "type":"color",
+      "id":"btn_txtc",
+      "label":"Button Text Color",
+      "default":"#fff"
+    },
+    {
+      "type":"color",
+      "id":"btn_bdc",
+      "label":"Button Border Color",
+      "default":"#232323"
+    },
+    {
+      "type":"color",
+      "id":"btn_bgc_h",
+      "label":"Button Background Color Hover",
+      "default":"#fff"
+    },
+    {
+      "type":"color",
+      "id":"btn_txtc_h",
+      "label":"Button Text Color Hover",
+      "default":"#232323"
+    },
+    {
+      "type":"color",
+      "id":"btn_bdc_h",
+      "label":"Button Border Color Hover",
+      "default":"#232323"
+    },
+    {
+      "type":"url",
+      "id":"btn_link_1",
+      "label":"Button Link 1",
+      "default":"/"
+    },
+    {
+      "type":"text",
+      "id":"btn_text_1",
+      "label":"Button Text 1",
+      "default":"Return to Store"
+    },
+    {
+      "type":"url",
+      "id":"btn_link_2",
+      "label":"Button Link 2",
+      "default":"/collections/all"
+    },
+    {
+      "type":"text",
+      "id":"btn_text_2",
+      "label":"Button Text 2",
+      "default":"Shop the Collections"
+    }
+
+  ]
+}
+{% endschema %}
